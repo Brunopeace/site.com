@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    <link rel="icon" href="https://image.winudf.com/v2/image1/Y29tLmpjYW5kcm9pZC51bmlvbmlwdHZicl9pY29uXzE1NDc3MTExMzdfMDE0/icon.png?w=184&fakeurl=1">
+    <title>GERENCIAMENTO DE CLIENTE</title>
+</head>
+<body>
+    <img src="https://image.winudf.com/v2/image1/Y29tLmpjYW5kcm9pZC51bmlvbmlwdHZicl9pY29uXzE1NDc3MTExMzdfMDE0/icon.png?w=184&fakeurl=1" alt="Logomarca" class="logo">
+    <h1 class="slide-in"><strong>Painel de vencimento</strong></h1>
+    
+    <button onclick="toggleDarkMode()" class="slide-in">Claro / Escuro</button>
+
+    <div class="input-container slide-in">
+        <label for="inputPesquisar">Pesquisar Cliente:</label>
+        <input type="text" id="inputPesquisar" oninput="pesquisarCliente()" placeholder="Pesquisar cliente">
+    </div>
+    
+    <div class="input-container slide-in">
+        <label for="inputNome">Nome do cliente:</label>
+        <input type="text" id="inputNome" required placeholder="Nome do cliente">
+    </div>
+    
+    <div class="input-container slide-in">
+        <label for="inputTelefone">Telefone do cliente:</label>
+        <input type="tel" id="inputTelefone" required placeholder="Telefone do cliente">
+    </div>
+    
+    <div class="input-container slide-in">
+        <label for="inputData">Data de vencimento:</label>
+        <input type="date" id="inputData" required>
+    </div>
+    
+    <button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button>
+    <br><br>
+    
+    <div id="infoClientes" class="slide-in"></div>
+    
+    <div class="table-container slide-in">
+        <table id="tabelaClientes">
+            <thead>
+                <tr>
+                    <th>Nome do Cliente</th>
+                    <th>Telefone</th>
+                    <th>Data de Vencimento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="corpoTabela">
+                
+       <!-- Linhas de clientes serão adicionadas aqui -->
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+</html>
+    <script src="javascript/script.js"></script>
+</body>
+</html>
