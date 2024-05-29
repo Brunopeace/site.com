@@ -1,5 +1,28 @@
 /* Estilos CSS */
+        
+        footer {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #000000;
+    color: #ecf0f1;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    font-size: 16px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
+}
 
+footer a {
+    color: #1abc9c;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: #16a085;
+}
+        
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
