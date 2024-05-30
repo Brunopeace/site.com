@@ -2,7 +2,7 @@
         
         footer {
     text-align: center; /* Centraliza o texto no footer */
-    padding: 20px 0; /* Espaçamento interno para cima e para baixo */
+    padding: 1px 0; /* Espaçamento interno para cima e para baixo */
     background-color: #000000; /* Cor de fundo escura para destacar o footer */
     color: #ecf0f1; /* Cor do texto clara para contraste */
     position: fixed; /* Fixa o footer na parte inferior da página */
