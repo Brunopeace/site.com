@@ -1,26 +1,26 @@
 /* Estilos CSS */
         
         footer {
-    text-align: center;
-    padding: 20px 0;
-    background-color: #000000;
-    color: #ecf0f1;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    font-size: 16px;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
+    text-align: center; /* Centraliza o texto no footer */
+    padding: 20px 0; /* Espaçamento interno para cima e para baixo */
+    background-color: #000000; /* Cor de fundo escura para destacar o footer */
+    color: #ecf0f1; /* Cor do texto clara para contraste */
+    position: fixed; /* Fixa o footer na parte inferior da página */
+    width: 100%; /* Largura total do footer */
+    bottom: 0; /* Alinha o footer na parte inferior da página */
+    font-size: 16px; /* Tamanho da fonte um pouco maior para melhor legibilidade */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.3); /* Adiciona uma sombra para dar profundidade */
 }
 
 footer a {
-    color: #1abc9c;
-    text-decoration: none;
-    font-weight: bold;
+    color: #1abc9c; /* Cor do link que se destaca no fundo escuro */
+    text-decoration: none; /* Remove a sublinha padrão dos links */
+    font-weight: bold; /* Adiciona negrito aos links para destaque */
 }
 
 footer a:hover {
-    text-decoration: underline;
-    color: #16a085;
+    text-decoration: underline; /* Adiciona sublinha ao passar o mouse para indicar interatividade */
+    color: #16a085; /* Muda a cor ao passar o mouse para melhor feedback visual */
 }
         
         body {
