@@ -267,21 +267,30 @@ function salvarClientes(clientes) {
         }
 
         function toggleDarkMode() {
-            const body = document.body;
-            body.classList.toggle('dark-mode');
+    const body = document.body;
+    body.classList.toggle('dark-mode');
 
-            const isDarkMode = body.classList.contains('dark-mode');
-            localStorage.setItem('dark-mode', isDarkMode);
-        }
+    const footer = document.querySelector('footer');
+    footer.classList.toggle('footer-light'); // Alterna a classe para o footer
 
-        function carregarDarkMode() {
-            const isDarkMode = localStorage.getItem('dark-mode') === 'true';
-            if (isDarkMode) {
-                document.body.classList.add('dark-mode');
-            }
-        }
+    const isDarkMode = body.classList.contains('dark-mode');
+    localStorage.setItem('dark-mode', isDarkMode);
+}
 
-        window.onload = function() {
-            carregarPagina();
-            carregarDarkMode();
-        };
+function carregarDarkMode() {
+    const isDarkMode = localStorage.getItem('dark-mode') === 'true';
+    const body = document.body;
+    const footer = document.querySelector('footer');
+    
+    if (isDarkMode) {
+        body.classList.add('dark-mode');
+        footer.classList.remove('footer-light'); // Garante que a classe correta seja aplicada
+    } else {
+        footer.classList.add('footer-light'); // Garante que a classe correta seja aplicada
+    }
+}
+
+window.onload = function() {
+    carregarPagina();
+    carregarDarkMode();
+};
