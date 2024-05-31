@@ -9,13 +9,13 @@ footer {
         bottom: 0; /* Alinha o footer na parte inferior da página */
         font-size: 18px; /* Tamanho da fonte maior para melhor legibilidade */
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.7); /* Adiciona uma sombra mais forte para dar profundidade */
-        background-image: linear-gradient(45deg, #1abc9c, #3498db); /* Fundo gradiente para chamar atenção */
+        background-image: linear-gradient(45deg, #008a18, #00ee4e); /* Fundo gradiente para chamar atenção */
         animation: pulse 2s infinite; /* Animação pulsante para chamar atenção */
         z-index: 1000; /* Garante que o footer fique acima de outros elementos */
     }
 
     footer a {
-        color: #ffeb3b; /* Cor do link que se destaca no fundo escuro */
+        color: #000000; /* Cor do link que se destaca no fundo escuro */
         text-decoration: none; /* Remove a sublinha padrão dos links */
         font-weight: bold; /* Adiciona negrito aos links para destaque */
         transition: color 0.3s ease; /* Transição suave na cor do link */
@@ -23,7 +23,7 @@ footer {
 
     footer a:hover {
         text-decoration: underline; /* Adiciona sublinha ao passar o mouse para indicar interatividade */
-        color: #f39c12; /* Muda a cor ao passar o mouse para melhor feedback visual */
+        color: #fff242; /* Muda a cor ao passar o mouse para melhor feedback visual */
     }
 
     @keyframes pulse {
@@ -36,23 +36,21 @@ footer {
     }
 
     .footer-light {
-        background-image: linear-gradient(45deg, #ffeb3b, #f39c12); /* Fundo gradiente para modo claro */
+        background-image: linear-gradient(45deg, #00ee4e, #008a18); /* Fundo gradiente para modo claro */
         color: #333; /* Cor do texto para modo claro */
     }
 
     .footer-light a {
-        color: #1abc9c; /* Cor do link no modo claro */
+        color: #ffffff; /* Cor do link no modo claro */
     }
 
     .footer-light a:hover {
-        color: #16a085; /* Cor do link no modo claro ao passar o mouse */
+        color: #00f518; /* Cor do link no modo claro ao passar o mouse */
     }
         
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 20px;
+            
         }
         h1, button {
             opacity: 0;
