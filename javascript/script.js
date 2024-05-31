@@ -246,7 +246,7 @@ function salvarClientes(clientes) {
             const tabela = document.getElementById('corpoTabela');
             tabela.innerHTML = ''; // Limpa a tabela antes de adicionar os clientes ordenados
 
-            // Adicionar clientes na ordem correta
+            // Adicionar clientes na ordem corretta
             clientesOrdenados.doisDias.forEach(cliente => {
                 adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
             });
