@@ -14,7 +14,6 @@ function verificarAcesso() {
 }
 
 function gerarUUID() {
-fc30c781-e382-406b-b65a-4e850382e014;
 
     // Implemente a geração de um UUID 
     // Você pode usar bibliotecas externas ou gerar manualmente
