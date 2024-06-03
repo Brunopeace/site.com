@@ -1,3 +1,33 @@
+const codigoAcessoCorreto = "9436631200";
+
+// Função para verificar se o usuário está autenticado
+function verificarAutenticacao() {
+    const usuarioAutenticado = localStorage.getItem('usuarioAutenticado');
+    if (!usuarioAutenticado) {
+        // Solicitar código de acesso
+        const codigoAcesso = prompt("Digite o código de acesso:");
+        if (codigoAcesso === codigoAcessoCorreto) {
+            // Armazenar autenticação no LocalStorage
+            localStorage.setItem('usuarioAutenticado', true);
+            console.log("Autenticação bem-sucedida.");
+        } else {
+            alert("Código de acesso incorreto. Você não está autenticado.");
+            window.location.href = "pagina_publica.html"; // Redirecionar para página pública
+        }
+    }
+}
+
+// Função para fazer logout
+function fazerLogout() {
+    localStorage.removeItem('usuarioAutenticado');
+    console.log("Logout realizado com sucesso.");
+    // Redirecionar para a página pública ou para onde desejar
+    window.location.href = "pagina_publica.html";
+}
+
+// Exemplo de uso: Verificar autenticação antes de acessar uma área protegida
+verificarAutenticacao();
+
 function verificarAcesso() {
     const uuidEsperado = 'coloque-aqui-seu-uuid-esperado';
     let uuidArmazenado = localStorage.getItem('uuid');
