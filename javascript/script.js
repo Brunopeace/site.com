@@ -1,5 +1,51 @@
+function verificarAcesso() {
+    const uuidEsperado = 'coloque-aqui-seu-uuid-esperado';
+    let uuidArmazenado = localStorage.getItem('uuid');
 
-function salvarClientes(clientes) {
+    if (!uuidArmazenado) {
+        uuidArmazenado = gerarUUID();
+        localStorage.setItem('uuid', uuidArmazenado);
+    }
+
+    if (uuidArmazenado !== uuidEsperado) {
+        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
+        window.location.href = "pagina-de-acesso-negado.html"; // redirecionar para a página de acesso negado
+    }
+}
+
+function gerarUUID() {
+    'fc30c781-e382-406b-b65a-4e850382e014';
+    // Implemente a geração de um UUID único aqui
+    // Você pode usar bibliotecas externas ou gerar manualmente
+    // Retorna um UUID válido
+}
+
+function carregarSaudacao() {
+            const saudacaoElement = document.getElementById('saudacao');
+            const hora = new Date().getHours();
+            let saudacao;
+
+            if (hora >= 0 && hora < 12) {
+                saudacao = "Bom dia!";
+            } else if (hora >= 12 && hora < 18) {
+                saudacao = "Boa tarde!";
+            } else {
+                saudacao = "Boa noite!";
+            }
+
+            saudacaoElement.innerHTML = `<div class="saudacao">${saudacao}</div>`;
+        }
+
+window.onload = function() {
+    verificarAcesso();
+    carregarPagina();
+    carregarDarkMode();
+    carregarSaudacao();
+};
+
+
+        
+        function salvarClientes(clientes) {
             localStorage.setItem('clientes', JSON.stringify(clientes));
         }
 
@@ -291,48 +337,7 @@ function carregarDarkMode() {
     }
 }
 
-
-
-function verificarVencimentosHoje() {
-    const clientes = carregarClientes();
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const hojeString = hoje.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-
-    // Verifica se a mensagem já foi exibida hoje
-    const mensagemExibida = localStorage.getItem('mensagemExibida');
-    if (mensagemExibida === hojeString) {
-        return;
-    }
-
-    let clientesVencendoHoje = [];
-
-    clientes.forEach(cliente => {
-        const dataVencimento = new Date(cliente.data);
-        if (dataVencimento.getTime() === hoje.getTime()) {
-            clientesVencendoHoje.push(cliente.nome);
-        }
-    });
-
-    if (clientesVencendoHoje.length > 0) {
-        const mensagem = `Os seguintes clientes estão vencendo hoje:\n${clientesVencendoHoje.join('\n')}`;
-        exibirCustomAlert(mensagem);
-        // Marca a mensagem como exibida para o dia de hoje
-        localStorage.setItem('mensagemExibida', hojeString);
-    }
-}
-
-function exibirCustomAlert(mensagem) {
-    const customAlert = document.getElementById('customAlert');
-    customAlert.textContent = mensagem;
-    customAlert.style.display = 'block'; // Exibe o balão de mensagem
-    setTimeout(function() {
-        customAlert.style.display = 'none'; // Esconde o balão após alguns segundos
-    }, 3000); // Tempo em milissegundos (3 segundos)
-}
-
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
-    verificarVencimentosHoje(); // Chama a função para verificar vencimentos ao carregar a página
 };
