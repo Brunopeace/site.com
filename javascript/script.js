@@ -297,6 +297,13 @@ function verificarVencimentosHoje() {
     const clientes = carregarClientes();
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
+    const hojeString = hoje.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+
+    // Verifica se a mensagem já foi exibida hoje
+    const mensagemExibida = localStorage.getItem('mensagemExibida');
+    if (mensagemExibida === hojeString) {
+        return;
+    }
 
     let clientesVencendoHoje = [];
 
@@ -310,6 +317,8 @@ function verificarVencimentosHoje() {
     if (clientesVencendoHoje.length > 0) {
         const mensagem = `Os seguintes clientes estão vencendo hoje:\n${clientesVencendoHoje.join('\n')}`;
         alert(mensagem);
+        // Marca a mensagem como exibida para o dia de hoje
+        localStorage.setItem('mensagemExibida', hojeString);
     }
 }
 
