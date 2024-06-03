@@ -1,4 +1,28 @@
 /* Estilos CSS */
+
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Cor de fundo da tabela */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 9999;
+    display: none; /* Inicia escondido */
+    animation: fadeInOut 3s ease forwards; /* Animação de fadeInOut */
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
         footer {
         text-align: center; /* Centraliza o texto no footer */
         padding: 1px 0; /* Espaçamento interno maior para mais destaque */
