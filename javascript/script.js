@@ -316,10 +316,19 @@ function verificarVencimentosHoje() {
 
     if (clientesVencendoHoje.length > 0) {
         const mensagem = `Os seguintes clientes estão vencendo hoje:\n${clientesVencendoHoje.join('\n')}`;
-        alert(mensagem);
+        exibirCustomAlert(mensagem);
         // Marca a mensagem como exibida para o dia de hoje
         localStorage.setItem('mensagemExibida', hojeString);
     }
+}
+
+function exibirCustomAlert(mensagem) {
+    const customAlert = document.getElementById('customAlert');
+    customAlert.textContent = mensagem;
+    customAlert.style.display = 'block'; // Exibe o balão de mensagem
+    setTimeout(function() {
+        customAlert.style.display = 'none'; // Esconde o balão após alguns segundos
+    }, 3000); // Tempo em milissegundos (3 segundos)
 }
 
 window.onload = function() {
