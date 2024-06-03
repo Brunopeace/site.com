@@ -28,42 +28,6 @@ function fazerLogout() {
 // Exemplo de uso: Verificar autenticação antes de acessar uma área protegida
 verificarAutenticacao();
 
-function verificarAcesso() {
-    const uuidEsperado = 'coloque-aqui-seu-uuid-esperado';
-    let uuidArmazenado = localStorage.getItem('uuid');
-
-    if (!uuidArmazenado) {
-        uuidArmazenado = gerarUUID();
-        localStorage.setItem('uuid', uuidArmazenado);
-    }
-
-    if (uuidArmazenado !== uuidEsperado) {
-        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
-        window.location.href = "pagina-de-acesso-negado.html"; // redirecionar para a página de acesso negado
-    }
-}
-
-function gerarUUID() {
-    fc30c781-e382-406b-b65a-4e850382e014;
-// Implemente a geração de um UUID único aqui
-    // Você pode usar bibliotecas externas ou gerar manualmente
-    // Retorna um UUID válido
-}
-
-window.onload = function() {
-    verificarAcesso();
-    carregarPagina();
-    carregarDarkMode();
-};
-
-function gerarUUID() {
-    // Gera um número aleatório hexadecimal de 32 bits
-    const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-
-    // Retorna o UUID no formato "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
-    return s4() + s4() + '-' + s4() + '-4' + s4().substr(0, 3) + '-' + s4() + '-' + s4() + s4() + s4();
-}
-
 function salvarClientes(clientes) {
             localStorage.setItem('clientes', JSON.stringify(clientes));
         }
