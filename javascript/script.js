@@ -1,32 +1,3 @@
-const codigoAcessoCorreto = "9436631200";
-
-// Função para verificar se o usuário está autenticado
-function verificarAutenticacao() {
-    const usuarioAutenticado = localStorage.getItem('usuarioAutenticado');
-    if (!usuarioAutenticado) {
-        // Solicitar código de acesso
-        const codigoAcesso = prompt("Digite o código de acesso:");
-        if (codigoAcesso === codigoAcessoCorreto) {
-            // Armazenar autenticação no LocalStorage
-            localStorage.setItem('usuarioAutenticado', true);
-            console.log("Autenticação bem-sucedida.");
-        } else {
-            alert("Código de acesso incorreto. Você não está autenticado.");
-            window.location.href = "pagina_publica.html"; // Redirecionar para página pública
-        }
-    }
-}
-
-// Função para fazer logout
-function fazerLogout() {
-    localStorage.removeItem('usuarioAutenticado');
-    console.log("Logout realizado com sucesso.");
-    // Redirecionar para a página pública ou para onde desejar
-    window.location.href = "pagina_publica.html";
-}
-
-// Exemplo de uso: Verificar autenticação antes de acessar uma área protegida
-verificarAutenticacao();
 
 function salvarClientes(clientes) {
             localStorage.setItem('clientes', JSON.stringify(clientes));
@@ -320,7 +291,30 @@ function carregarDarkMode() {
     }
 }
 
+
+
+function verificarVencimentosHoje() {
+    const clientes = carregarClientes();
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    let clientesVencendoHoje = [];
+
+    clientes.forEach(cliente => {
+        const dataVencimento = new Date(cliente.data);
+        if (dataVencimento.getTime() === hoje.getTime()) {
+            clientesVencendoHoje.push(cliente.nome);
+        }
+    });
+
+    if (clientesVencendoHoje.length > 0) {
+        const mensagem = `Os seguintes clientes estão vencendo hoje:\n${clientesVencendoHoje.join('\n')}`;
+        alert(mensagem);
+    }
+}
+
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
+    verificarVencimentosHoje(); // Chama a função para verificar vencimentos ao carregar a página
 };
