@@ -1,35 +1,6 @@
-.flex-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px; /* Ajuste conforme necessário */
-}
-
-.drop {
-
-    margin: 10px;
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    /* background: #ccc; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.0em;
-    text-shadow: -2px -2px 5px #fff;
-    filter: drop-shadow(4px 4px 10px #fff);
-    box-shadow: inset 10px 10px 10px rgba(0,0,0,0.05),
-                15px 25px 10px rgba(0,0,0,0.05),
-                15px 20px 20px rgba(0,0,0,0.05),
-                inset -10px -10px 15px rgba(255,255,255,0.9);
-}
 
 
 
-
-/* estilos CSS... */
-      
         footer {
         text-align: center; /* Centraliza o texto no footer */
         padding: 1px 0; /* Espaçamento interno maior para mais destaque */
@@ -115,6 +86,17 @@
         }
         h1 {
             color: #4CAF50;
+            padding-left: 50px;
+            
+        }
+        
+        .negado {
+            text-aline: center;
+            
+        }
+        
+        .corpo {
+            backgrouns-color: #000000;
         }
         
         .logo {
