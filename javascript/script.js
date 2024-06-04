@@ -22,6 +22,10 @@ function verificarAcesso() {
 
 
 
+        function salvarClientes(clientes) {
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+        }
+
         function carregarClientes() {
             return JSON.parse(localStorage.getItem('clientes')) || [];
         }
@@ -141,7 +145,7 @@ function verificarAcesso() {
     const btnWhatsapp = criarBotao("WhatsApp", function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
         const mensagem = encodeURIComponent(
-            `*Olá bom dia, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX EMAIL* \n \n *brunopeaceandlove60@gmail.com*`
+            `*Olá bom dia, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX CPF* \n \n *05222280462*`
         );
         const telefoneCliente = telefone.replace(/\D/g, '');
         abrirWhatsApp(telefoneCliente, mensagem);
