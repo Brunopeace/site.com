@@ -17,7 +17,7 @@ function gerarUUID() {
     // Implemente a geração de um UUID único aqui
     // Você pode usar bibliotecas externas ou gerar manualmente
     // Retorna um UUID válido
-    return 'fc30c781-e382-406b-b65a-4e850382e014'; // Exemplo de UUID fixo
+    return ''; // Exemplo de UUID fixo
 }
 
 
