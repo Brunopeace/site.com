@@ -1,24 +1,24 @@
 function verificarAcesso() {
-    const uuidEsperado = '';
-    let uuidArmazenado = localStorage.getItem('uuid');
+            const uuidEsperado = 'fc30c781-e382-406b-b65a-4e850382e014';
+            let uuidArmazenado = localStorage.getItem('uuid');
 
-    if (!uuidArmazenado) {
-        uuidArmazenado = gerarUUID();
-        localStorage.setItem('uuid', uuidArmazenado);
-    }
+            if (!uuidArmazenado) {
+                uuidArmazenado = gerarUUID();
+                localStorage.setItem('uuid', uuidArmazenado);
+            }
 
-    if (uuidArmazenado !== uuidEsperado) {
-        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
-        window.location.href = "pagina-de-acesso-negado.html"; // redirecionar para a página de acesso negado
-    }
-}
+            if (uuidArmazenado !== uuidEsperado) {
+                alert("Acesso Negado. Você não tem permissão para acessar esta página.");
+                window.location.href = "pagina-de-acesso-negado.html";
+            }
+        }
 
-function gerarUUID() {
-    // Implemente a geração de um UUID único aqui
-    // Você pode usar bibliotecas externas ou gerar manualmente
-    // Retorna um UUID válido
-    return ''; // Exemplo de UUID fixo
-}
+        function gerarUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
 
 
 
