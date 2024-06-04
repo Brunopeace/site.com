@@ -21,7 +21,6 @@ function verificarAcesso() {
         }
 
 
-
         function salvarClientes(clientes) {
             localStorage.setItem('clientes', JSON.stringify(clientes));
         }
