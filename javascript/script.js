@@ -9,7 +9,7 @@ function verificarAcesso() {
 
             if (uuidArmazenado !== uuidEsperado) {
                 alert("Acesso Negado. Você não tem permissão para acessar esta página.");
-                window.location.href = "pagina-de-acesso-negado.html";
+                window.location.href = "../acessonegado/acessonegado.html";
             }
         }
 
