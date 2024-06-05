@@ -212,7 +212,8 @@
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #faff38;
+            color: #00b921;
             transform: scale(1.1);
         }
         .table-container {
