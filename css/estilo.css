@@ -244,7 +244,8 @@
             color: #ffffff;
         }
         body.dark-mode button:hover {
-            background-color: #2fa804;
+            background-color: #000000;
+            color: #00f56c;
         }
         
         /* Estilos para dispositivos com largura de tela até 414px (Galaxy S23) */
