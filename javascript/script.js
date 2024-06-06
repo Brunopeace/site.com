@@ -197,38 +197,41 @@ function verificarAcesso() {
         }
 
         function atualizarInfoClientes() {
-            const totalVencidos = calcularTotalClientesVencidos();
-            const totalNaoVencidos = calcularTotalClientesNaoVencidos();
-            document.getElementById('infoClientes').innerText = `Clientes vencidos: ${totalVencidos}\nClientes ativos: ${totalNaoVencidos}`;
-        }
+    const totalVencidos = calcularTotalClientesVencidos();
+    const totalNaoVencidos = calcularTotalClientesNaoVencidos();
+    document.getElementById('infoClientes').innerHTML = `
+        <span class="clientes-vencidos">Clientes vencidos: ${totalVencidos}</span><br>
+        <span class="clientes-ativos">Clientes ativos: ${totalNaoVencidos}</span>
+    `;
+}
 
-        function calcularTotalClientesVencidos() {
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-            const clientes = carregarClientes();
-            let totalVencidos = 0;
-            clientes.forEach(function(cliente) {
-                const dataVencimento = new Date(cliente.data);
-                if (dataVencimento < hoje) {
-                    totalVencidos++;
-                }
-            });
-            return totalVencidos;
+function calcularTotalClientesVencidos() {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const clientes = carregarClientes();
+    let totalVencidos = 0;
+    clientes.forEach(function(cliente) {
+        const dataVencimento = new Date(cliente.data);
+        if (dataVencimento < hoje) {
+            totalVencidos++;
         }
+    });
+    return totalVencidos;
+}
 
-        function calcularTotalClientesNaoVencidos() {
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-            const clientes = carregarClientes();
-            let totalNaoVencidos = 0;
-            clientes.forEach(function(cliente) {
-                const dataVencimento = new Date(cliente.data);
-                if (dataVencimento >= hoje) {
-                    totalNaoVencidos++;
-                }
-            });
-            return totalNaoVencidos;
+function calcularTotalClientesNaoVencidos() {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const clientes = carregarClientes();
+    let totalNaoVencidos = 0;
+    clientes.forEach(function(cliente) {
+        const dataVencimento = new Date(cliente.data);
+        if (dataVencimento >= hoje) {
+            totalNaoVencidos++;
         }
+    });
+    return totalNaoVencidos;
+}
 
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
