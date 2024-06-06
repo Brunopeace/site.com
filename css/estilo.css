@@ -201,16 +201,24 @@
             color: white;
         }
         .input-container {
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .input-container input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-color: #01e02d;
-            border-radius: 5px;
-        }
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .input-container input, .input-container label {
+        display: block;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .input-container input {
+        margin-top: 5px;
+        border-color: #01e02d;
+    }
         
         button {
             background-color: #4CAF50;
