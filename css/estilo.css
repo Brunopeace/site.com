@@ -231,14 +231,15 @@
             color: #2fa804;
         }
         body.dark-mode th {
-            background-color: #333;
-            color: #e0e0e0;
+            background-color: #e0ffe4;
+            color: #000000;
         }
         body.dark-mode tr:nth-child(even) {
-            background-color: #2c2c2c;
+            background-color: #737373;
         }
         body.dark-mode tr:hover {
-            background-color: #444;
+            background-color: #00992a;
+            color: black;
         }
         body.dark-mode button {
             background-color: #2fa804;
