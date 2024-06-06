@@ -200,8 +200,8 @@ function verificarAcesso() {
     const totalVencidos = calcularTotalClientesVencidos();
     const totalNaoVencidos = calcularTotalClientesNaoVencidos();
     document.getElementById('infoClientes').innerHTML = `
-      \n  <span class="clientes-vencidos">Clientes vencidos: ${totalVencidos}</span><br>
-     \n   <span class="clientes-ativos">Clientes ativos: ${totalNaoVencidos}</span>
+        <span class="clientes-vencidos">Clientes vencidos: ${totalVencidos}</span><br>
+        <span class="clientes-ativos">Clientes ativos: ${totalNaoVencidos}</span>
     `;
 }
 
