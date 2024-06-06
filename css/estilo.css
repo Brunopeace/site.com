@@ -1,5 +1,17 @@
 /* Estilos CSS */
-               
+         
+.clientes-vencidos {
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.clientes-ativos {
+    color: green;
+    font-size: 24px;
+    font-weight: bold;
+}
+      
 
 .flex-container {
     display: flex;
