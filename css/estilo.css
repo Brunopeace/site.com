@@ -1,16 +1,28 @@
 /* Estilos CSS */
          
 .clientes-vencidos {
-    color: red;
-    font-size: 20px;
-    font-weight: bold;
-}
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px;
+        background-color: #ffe6e6;
+        border: 2px solid red;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+    }
 
-.clientes-ativos {
-    color: green;
-    font-size: 24px;
-    font-weight: bold;
-}
+    .clientes-ativos {
+        color: green;
+        font-size: 24px;
+        font-weight: bold;
+        padding: 10px;
+        background-color: #e6ffe6;
+        border: 2px solid green;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+    }
       
 
 .flex-container {
