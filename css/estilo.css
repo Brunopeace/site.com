@@ -1,8 +1,68 @@
-/* Estilos CSS */
+ .loading-coracao {
+  display:block;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  margin:auto;
+  transform: rotate(45deg);
+  transform-origin: 40px 40px;
+  padding-left: 45px;
+  padding-bottom: 45px;
+}
 
 
-         
-.clientes-vencidos {
+.loading-coracao span {
+  top: 32px;
+  left: 32px;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: #fd0000;
+  animation: loading-coracao 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.loading-coracao span:after,
+.loading-coracao span:before {
+  content: " ";
+  position: absolute;
+  display: block;
+  width: 32px;
+  height: 32px;
+  background: #fd0000;
+}
+.loading-coracao span:before {
+  left: -24px;
+  border-radius: 50% 0 0 50%;
+}
+.loading-coracao span:after {
+  top: -24px;
+  border-radius: 50% 50% 0 0;
+}
+@keyframes loading-coracao {
+  0% {
+    transform: scale(0.95);
+  }
+  5% {
+    transform: scale(1.1);
+  }
+  39% {
+    transform: scale(0.85);
+  }
+  45% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(0.9);
+  }
+}
+    
+    
+    
+    
+    /* Estilos CSS */
+    .clientes-vencidos {
         color: red;
         font-size: 16px;
         font-weight: bold;
@@ -13,7 +73,7 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         display: flex;
         margin-bottom: 5px;
-        padding-left: 110px;
+        padding-left: 100px;
     }
 
     .clientes-ativos {
@@ -27,68 +87,57 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         display: flex;
         margin-bottom: 5px;
-        padding-left: 110px;
+        padding-left: 100px;
     }
-      
 
-.flex-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px; /* Ajuste conforme necessário */
-}
+    .flex-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+    }
 
-.drop {
+    .drop {
+        margin: 10px;
+        position: relative;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.0em;
+        text-shadow: -2px -2px 5px #fff;
+        filter: drop-shadow(4px 4px 10px #fff);
+        box-shadow: inset 10px 10px 10px rgba(0, 0, 0, 0.05), 15px 25px 10px rgba(0, 0, 0, 0.05), 15px 20px 20px rgba(0, 0, 0, 0.05), inset -10px -10px 15px rgba(255, 255, 255, 0.9);
+    }
 
-    margin: 10px;
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    /* background: #ccc; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.0em;
-    text-shadow: -2px -2px 5px #fff;
-    filter: drop-shadow(4px 4px 10px #fff);
-    box-shadow: inset 10px 10px 10px rgba(0,0,0,0.05),
-                15px 25px 10px rgba(0,0,0,0.05),
-                15px 20px 20px rgba(0,0,0,0.05),
-                inset -10px -10px 15px rgba(255,255,255,0.9);
-}
-
-
-
-
-/* estilos CSS... */
-      
-        footer {
-        text-align: center; /* Centraliza o texto no footer */
-        padding: 1px 0; /* Espaçamento interno maior para mais destaque */
-        background-color: #000000; /* Cor de fundo escura para destacar o footer */
-        color: #ecf0f1; /* Cor do texto clara para contraste */
-        position: fixed; /* Fixa o footer na parte inferior da página */
-        left: 0; /* Faz o footer começar na borda esquerda da tela */
-        right: 0; /* Faz o footer terminar na borda direita da tela */
-        bottom: 0; /* Alinha o footer na parte inferior da página */
-        font-size: 18px; /* Tamanho da fonte maior para melhor legibilidade */
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.7); /* Adiciona uma sombra mais forte para dar profundidade */
-        background-image: linear-gradient(45deg, #008a18, #00ee4e); /* Fundo gradiente para chamar atenção */
-        animation: pulse 2s infinite; /* Animação pulsante para chamar atenção */
-        z-index: 1000; /* Garante que o footer fique acima de outros elementos */
+    footer {
+        text-align: center;
+        padding: 1px 0;
+        background-color: #000000;
+        color: #ecf0f1;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        font-size: 18px;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.7);
+        background-image: linear-gradient(45deg, #008a18, #00ee4e);
+        animation: pulse 2s infinite;
+        z-index: 1000;
     }
 
     footer a {
-        color: #000000; /* Cor do link que se destaca no fundo escuro */
-        text-decoration: none; /* Remove a sublinha padrão dos links */
-        font-weight: bold; /* Adiciona negrito aos links para destaque */
-        transition: color 0.3s ease; /* Transição suave na cor do link */
+        color: #000000;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
     }
 
     footer a:hover {
-        text-decoration: underline; /* Adiciona sublinha ao passar o mouse para indicar interatividade */
-        color: #fff242; /* Muda a cor ao passar o mouse para melhor feedback visual */
+        text-decoration: underline;
+        color: #fff242;
     }
 
     @keyframes pulse {
@@ -101,124 +150,104 @@
     }
 
     .footer-light {
-        background-image: linear-gradient(45deg, #00ee4e, #008a18); /* Fundo gradiente para modo claro */
-        color: #333; /* Cor do texto para modo claro */
+        background-image: linear-gradient(45deg, #00ee4e, #008a18);
+        color: #333;
     }
 
     .footer-light a {
-        color: #ffffff; /* Cor do link no modo claro */
+        color: #ffffff;
     }
 
     .footer-light a:hover {
-        color: #00f518; /* Cor do link no modo claro ao passar o mouse */
+        color: #00f518;
     }
-        
-        body {
-            font-family: Arial, sans-serif;
-            
-        }
-        h1, button {
-            opacity: 0;
-            animation: slideIn 0.5s ease forwards;
-        }
 
-        .table-container {
-            opacity: 0;
-            animation: slideIn 0.5s ease forwards 0.5s;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 20px;
+    }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+    h1, button {
+        opacity: 0;
+        animation: slideIn 0.5s ease forwards;
+    }
+
+    .table-container {
+        opacity: 0;
+        animation: slideIn 0.5s ease forwards 0.5s;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
         }
-        
-        /* Estilos CSS */
-        
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 20px;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
-        
-        .negado {
-            text-aline: center;
-            
-        }
-        
-        .corpo {
-            backgrouns-color: #000000;
-        }
-        
-        .logo {
-            display: block;
-            /* Centraliza e adiciona margem inferior */
-            margin: 0 auto 10px; 
-            /* Limita a largura da logomarca */
-            max-width: 300px; 
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 20px;
-        }
-        h1 {
-            color: #4CAF50;
-        }
-        
-        .logo {
-            display: block;
-            /* Centraliza e adiciona margem inferior */
-            margin: 0 auto 10px; 
-            /* Limita a largura da logomarca */
-            max-width: 300px; 
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 12px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-            color: #333;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        .orange {
-            background-color: orange;
-            color: white;
-        }
-        .yellow {
-            background-color: yellow;
-            color: black;
-        }
-        .red {
-            background-color: red;
-            color: white;
-        }
-        .input-container {
+    }
+
+    .negado {
+        text-align: center;
+    }
+
+    .corpo {
+        background-color: #000000;
+    }
+
+    .logo {
+        display: block;
+        margin: 0 auto 10px;
+        max-width: 300px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        color: #333;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .orange {
+        background-color: orange;
+        color: white;
+    }
+
+    .yellow {
+        background-color: yellow;
+        color: black;
+    }
+
+    .red {
+        background-color: red;
+        color: white;
+    }
+
+    .input-container {
         margin-bottom: 15px;
         text-align: center;
     }
@@ -237,67 +266,75 @@
         margin-top: 5px;
         border-color: #01e02d;
     }
-        
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border-color:#ffffff;
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            border-radius: 10px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #faff38;
-            color: #00b921;
-            transform: scale(1.1);
-        }
-        .table-container {
-            overflow-x: auto;
-            max-width: 100%;
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        border-color: #ffffff;
+        padding: 10px 20px;
+        margin: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        border-radius: 10px;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #faff38;
+        color: #00b921;
+        transform: scale(1.1);
+    }
+
+    .table-container {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    /* Estilos para o modo escuro */
+    body.dark-mode {
+        background-color: #000000;
+        color: #e0e0e0;
+    }
+
+    body.dark-mode h1 {
+        color: #2fa804;
+    }
+
+    body.dark-mode th {
+        background-color: #e0ffe4;
+        color: #000000;
+    }
+
+    body.dark-mode tr:nth-child(even) {
+        background-color: #737373;
+    }
+
+    body.dark-mode tr:hover {
+        background-color: #00992a;
+        color: black;
+    }
+
+    body.dark-mode button {
+        background-color: #2fa804;
+        color: #ffffff;
+    }
+
+    body.dark-mode button:hover {
+        background-color: #000000;
+        color: #00f56c;
+    }
+
+    /* Estilos para dispositivos com largura de tela até 414px (Galaxy S23) */
+    @media only screen and (max-width: 414px) {
+        body {
+            margin: 10px;
         }
 
-        /* Estilos para o modo escuro */
-        
-        body.dark-mode {
-            background-color: #000000;
-            color: #e0e0e0;
+        .input-container input {
+            width: calc(100% - 16px);
         }
-        body.dark-mode h1 {
-            color: #2fa804;
+
+        table, th, td {
+            font-size: 0.8em;
         }
-        body.dark-mode th {
-            background-color: #e0ffe4;
-            color: #000000;
-        }
-        body.dark-mode tr:nth-child(even) {
-            background-color: #737373;
-        }
-        body.dark-mode tr:hover {
-            background-color: #00992a;
-            color: black;
-        }
-        body.dark-mode button {
-            background-color: #2fa804;
-            color: #ffffff;
-        }
-        body.dark-mode button:hover {
-            background-color: #000000;
-            color: #00f56c;
-        }
-        
-        /* Estilos para dispositivos com largura de tela até 414px (Galaxy S23) */
-        
-@media only screen and (max-width: 414px) {
-    body {
-        margin: 10px; /* Reduzir a margem */
     }
-    .input-container input {
-        width: calc(100% - 16px); /* Largura total menos a margem do lado */
-    }
-    table, th, td {
-        font-size: 0.8em; /* Reduzir o tamanho da fonte da tabela */
-    }
-}
