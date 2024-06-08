@@ -258,14 +258,14 @@
             text-align: center;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #d6ffe8;
             color: #333;
         }
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
         tr:hover {
-            background-color: #f1f1f1;
+            background-color: #a3ffcc;
         }
         .orange {
             background-color: orange;
@@ -320,7 +320,7 @@
             max-width: 100%;
         }
 
-        /* Estilos para o modo escuro */
+                         /* Estilos para o modo escuro */
         
         body.dark-mode {
             background-color: #000000;
