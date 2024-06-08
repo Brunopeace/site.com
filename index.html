@@ -15,24 +15,27 @@
         <div class="drop">
             <p>BRUNO</p>
         </div>
+        
         <div class="drop">
             <p>FABIANA</p>
         </div>
+        
         <div class="drop">
             <div class="loading-coracao">
             <span></span>
         </div>
+        </div>
     </div>
 
-    <h1 class="slide-in"><strong>Painel de vencimento</strong></h1>
+    <h1 class="slide-in"><strong>Painel de vencimento.</strong></h1>
 
-    <button onclick="toggleDarkMode()" class="slide-in">Claro / Escuro </button><br><br>
+    <button onclick="toggleDarkMode()" class="slide-in">Claro / Escuro</button><br><br>
 
     <div class="input-container slide-in">
         <label for="inputPesquisar">Pesquisar Cliente 🔎</label>
         <input type="text" id="inputPesquisar" oninput="pesquisarCliente()" placeholder="Pesquisar cliente">
     </div>
-    
+
     <div class="input-container slide-in">
         <label for="inputNome">Adicionar cliente aqui 👱</label>
         <input type="text" id="inputNome" required placeholder="Nome do cliente">
@@ -53,7 +56,7 @@
     <div id="infoClientes" class="slide-in"></div>
     
     <div class="table-container slide-in">
-        <table id="tabelaClientes">
+        <table id="tabelaClientes" class="table">
             <thead>
                 <tr>
                     <th>Nome do cliente 👱</th>
@@ -62,14 +65,11 @@
                     <th>Ações 🌐</th>
                 </tr>
             </thead>
-            
             <tbody id="corpoTabela">
-                
-       <!-- Linhas de clientes serão adicionadas aqui -->
+                <!-- Linhas de clientes serão adicionadas aqui -->
             </tbody>
         </table>
     </div>
-    
     <script src="javascript/script.js"></script>
     
 <footer>
