@@ -316,6 +316,11 @@ function carregarDarkMode() {
     }
 }
 
+
+
+
+
+
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
