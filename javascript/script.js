@@ -1,6 +1,6 @@
 function verificarAcesso() {
             const uuidEsperado = 'fc30c781-e382-406b-b65a-4e850382e014';
-'cd9d84ca-cf22-407c-a116-1a035bc4a415';
+'90aecf6d-4a99-4afb-b4ec-33ff75709e6d';
             let uuidArmazenado = localStorage.getItem('uuid');
 
             if (!uuidArmazenado) {
