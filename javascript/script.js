@@ -1,81 +1,80 @@
 function verificarAcesso() {
-            const uuidEsperado = 'fc30c781-e382-406b-b65a-4e850382e014' '90aecf6d-4a99-4afb-b4ec-33ff75709e6d';
-            let uuidArmazenado = localStorage.getItem('uuid');
+    const uuidEsperado = ['fc30c781-e382-406b-b65a-4e850382e014', '90aecf6d-4a99-4afb-b4ec-33ff75709e6d'];
+    let uuidArmazenado = localStorage.getItem('uuid');
 
-            if (!uuidArmazenado) {
-                uuidArmazenado = gerarUUID();
-                localStorage.setItem('uuid', uuidArmazenado);
-            }
+    if (!uuidArmazenado) {
+        uuidArmazenado = gerarUUID();
+        localStorage.setItem('uuid', uuidArmazenado);
+    }
 
-            if (uuidArmazenado !== uuidEsperado) {
-                alert("Acesso Negado. Você não tem permissão para acessar esta página.");
-                window.location.href = "acessonegado.html";
-            }
+    if (!uuidEsperado.includes(uuidArmazenado)) {
+        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
+        window.location.href = "acessonegado.html";
+    }
+}
+
+function gerarUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function salvarClientes(clientes) {
+    localStorage.setItem('clientes', JSON.stringify(clientes));
+}
+
+function carregarClientes() {
+    return JSON.parse(localStorage.getItem('clientes')) || [];
+}
+
+function adicionarCliente() {
+    const nome = document.getElementById('inputNome').value.trim();
+    const telefone = document.getElementById('inputTelefone').value.trim();
+    const data = new Date(document.getElementById('inputData').value);
+
+    if (nome && validarTelefone(telefone) && !isNaN(data.getTime())) {
+        const clientes = carregarClientes();
+        const clienteExistente = clientes.some(cliente => cliente.nome.toLowerCase() === nome.toLowerCase());
+
+        if (clienteExistente) {
+            alert("Cliente com o mesmo nome já existe.");
+            return;
         }
 
-        function gerarUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
+        const dataVencimento = calcularDataVencimento(data);
+        clientes.push({ nome: nome, telefone: telefone, data: dataVencimento });
+        salvarClientes(clientes);
 
+        window.location.reload();
+    } else {
+        alert("Por favor, preencha o nome, telefone válido e a data.");
+    }
+}
 
-        function salvarClientes(clientes) {
-            localStorage.setItem('clientes', JSON.stringify(clientes));
-        }
+function validarTelefone(telefone) {
+    return telefone.length === 11 && /^\d+$/.test(telefone);
+}
 
-        function carregarClientes() {
-            return JSON.parse(localStorage.getItem('clientes')) || [];
-        }
+function calcularDataVencimento(data) {
+    let dia = data.getDate();
+    let mes = data.getMonth() + 1; // Próximo mês
+    let ano = data.getFullYear();
 
-        function adicionarCliente() {
-            const nome = document.getElementById('inputNome').value.trim();
-            const telefone = document.getElementById('inputTelefone').value.trim();
-            const data = new Date(document.getElementById('inputData').value);
+    if (mes > 11) {
+        mes = 0;
+        ano += 1;
+    }
 
-            if (nome && validarTelefone(telefone) && !isNaN(data.getTime())) {
-                const clientes = carregarClientes();
-                const clienteExistente = clientes.some(cliente => cliente.nome.toLowerCase() === nome.toLowerCase());
+    let dataVencimento = new Date(ano, mes, dia);
+    if (dataVencimento.getMonth() !== mes) {
+        dataVencimento = new Date(ano, mes + 1, 0);
+    }
 
-                if (clienteExistente) {
-                    alert("Cliente com o mesmo nome já existe.");
-                    return;
-                }
+    return new Date(dataVencimento.getTime() + data.getTimezoneOffset() * 60000);
+}
 
-                const dataVencimento = calcularDataVencimento(data);
-                clientes.push({ nome: nome, telefone: telefone, data: dataVencimento });
-                salvarClientes(clientes);
-
-                window.location.reload();
-            } else {
-                alert("Por favor, preencha o nome, telefone válido e a data.");
-            }
-        }
-
-        function validarTelefone(telefone) {
-            return telefone.length === 11 && /^\d+$/.test(telefone);
-        }
-
-        function calcularDataVencimento(data) {
-            const dia = data.getDate();
-            let mes = data.getMonth() + 1; // Próximo mês
-            let ano = data.getFullYear();
-
-            if (mes > 11) {
-                mes = 0;
-                ano += 1;
-            }
-
-            let dataVencimento = new Date(ano, mes, dia);
-            if (dataVencimento.getMonth() !== mes) {
-                dataVencimento = new Date(ano, mes + 1, 0);
-            }
-
-            return new Date(dataVencimento.getTime() + data.getTimezoneOffset() * 60000);
-        }
-
-        function adicionarLinhaTabela(nome, telefone, data) {
+function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
 
@@ -90,7 +89,7 @@ function verificarAcesso() {
 
     const celulaAcoes = novaLinha.insertCell(3);
 
-    const btnEditar = criarBotao("Editar", function() {
+    celulaAcoes.appendChild(criarBotao("Editar", function() {
         const novoNome = prompt("Digite o novo nome do cliente:", nome);
         const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
         const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", data.toLocaleDateString('pt-BR'));
@@ -123,10 +122,9 @@ function verificarAcesso() {
         } else {
             alert("Por favor, preencha todos os campos corretamente.");
         }
-    });
-    celulaAcoes.appendChild(btnEditar);
+    }));
 
-    const btnExcluir = criarBotao("Excluir", function() {
+    celulaAcoes.appendChild(criarBotao("Excluir", function() {
         if (confirm("Tem certeza de que deseja excluir este cliente?")) {
             const clientes = carregarClientes();
             const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
@@ -138,65 +136,63 @@ function verificarAcesso() {
                 window.location.reload();
             }
         }
-    });
-    celulaAcoes.appendChild(btnExcluir);
+    }));
 
-    const btnWhatsapp = criarBotao("WhatsApp", function() {
+    celulaAcoes.appendChild(criarBotao("WhatsApp", function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
         const mensagem = encodeURIComponent(
             `*Olá bom dia, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX EMAIL* \n \n *brunopeaceandlove60@gmail.com*`
         );
         const telefoneCliente = telefone.replace(/\D/g, '');
         abrirWhatsApp(telefoneCliente, mensagem);
-    });
-    celulaAcoes.appendChild(btnWhatsapp);
+    }));
 
     atualizarCorCelulaData(celulaData, data);
 
     tabela.appendChild(novaLinha);
+}
+
+function criarBotao(texto, callback) {
+    const btn = document.createElement("button");
+    btn.innerText = texto;
+    btn.onclick = callback;
+    return btn;
+}
+
+function abrirWhatsApp(telefoneCliente, mensagem) {
+    window.open(`https://api.whatsapp.com/send?phone=55${telefoneCliente}&text=${mensagem}`, '_blank');
+}
+
+function atualizarCorCelulaData(celulaData, dataVencimento) {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
+
+    celulaData.classList.remove('red', 'yellow', 'orange');
+    if (diferencaDias < 0) {
+        celulaData.classList.add('red');
+    } else if (diferencaDias === 0) {
+        celulaData.classList.add('yellow');
+    } else if (diferencaDias === 2) {
+        celulaData.classList.add('orange');
     }
+}
 
-        function criarBotao(texto, callback) {
-            const btn = document.createElement("button");
-            btn.innerText = texto;
-            btn.onclick = callback;
-            return btn;
+function pesquisarCliente() {
+    const termoPesquisa = document.getElementById('inputPesquisar').value.toLowerCase();
+    const linhas = document.getElementById('corpoTabela').getElementsByTagName('tr');
+    for (let i = 0; i < linhas.length; i++) {
+        const nome = linhas[i].getElementsByTagName('td')[0].innerText.toLowerCase();
+        if (nome.includes(termoPesquisa)) {
+            linhas[i].style.display = '';
+        } else {
+            linhas[i].style.display = 'none';
         }
+    }
+}
 
-        function abrirWhatsApp(telefoneCliente, mensagem) {
-            window.open(`https://api.whatsapp.com/send?phone=55${telefoneCliente}&text=${mensagem}`, '_blank');
-        }
-
-        function atualizarCorCelulaData(celulaData, dataVencimento) {
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-
-            const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
-
-            celulaData.classList.remove('red', 'yellow', 'orange');
-            if (diferencaDias < 0) {
-                celulaData.classList.add('red');
-            } else if (diferencaDias === 0) {
-                celulaData.classList.add('yellow');
-            } else if (diferencaDias === 2) {
-                celulaData.classList.add('orange');
-            }
-        }
-
-        function pesquisarCliente() {
-            const termoPesquisa = document.getElementById('inputPesquisar').value.toLowerCase();
-            const linhas = document.getElementById('corpoTabela').getElementsByTagName('tr');
-            for (let i = 0; i < linhas.length; i++) {
-                const nome = linhas[i].getElementsByTagName('td')[0].innerText.toLowerCase();
-                if (nome.includes(termoPesquisa)) {
-                    linhas[i].style.display = '';
-                } else {
-                    linhas[i].style.display = 'none';
-                }
-            }
-        }
-
-        function atualizarInfoClientes() {
+function atualizarInfoClientes() {
     const totalVencidos = calcularTotalClientesVencidos();
     const totalNaoVencidos = calcularTotalClientesNaoVencidos();
     document.getElementById('infoClientes').innerHTML = `
@@ -233,66 +229,57 @@ function calcularTotalClientesNaoVencidos() {
     return totalNaoVencidos;
 }
 
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
+function carregarPagina() {
+    const clientes = carregarClientes();
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const clientesOrdenados = {
+        doisDias: [],
+        hoje: [],
+        vencidos: [],
+        outros: []
+    };
+
+    clientes.forEach(cliente => {
+        const dataVencimento = new Date(cliente.data);
+        const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
+        
+        if (diferencaDias === 2) {
+            clientesOrdenados.doisDias.push(cliente);
+        } else if (diferencaDias === 0) {
+            clientesOrdenados.hoje.push(cliente);
+        } else if (diferencaDias < 0) {
+            clientesOrdenados.vencidos.push(cliente);
+        } else {
+            clientesOrdenados.outros.push(cliente);
         }
+    });
 
-        function carregarPagina() {
-            const clientes = carregarClientes();
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
+    const tabela = document.getElementById('corpoTabela');
+    tabela.innerHTML = ''; // Limpa a tabela antes de adicionar os clientes ordenados
 
-            const clientesOrdenados = {
-                doisDias: [],
-                hoje: [],
-                vencidos: [],
-                outros: []
-            };
+    // Adicionar clientes na ordem correta
+    clientesOrdenados.doisDias.forEach(cliente => {
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
+    });
 
-            clientes.forEach(cliente => {
-                const dataVencimento = new Date(cliente.data);
-                const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
-                
-                if (diferencaDias === 2) {
-                    clientesOrdenados.doisDias.push(cliente);
-                } else if (diferencaDias === 0) {
-                    clientesOrdenados.hoje.push(cliente);
-                } else if (diferencaDias < 0) {
-                    clientesOrdenados.vencidos.push(cliente);
-                } else {
-                    clientesOrdenados.outros.push(cliente);
-                }
-            });
+    clientesOrdenados.hoje.forEach(cliente => {
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
+    });
 
-            const tabela = document.getElementById('corpoTabela');
-            tabela.innerHTML = ''; // Limpa a tabela antes de adicionar os clientes ordenados
+    clientesOrdenados.outros.forEach(cliente => {
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
+    });
 
-            // Adicionar clientes na ordem corretta
-            clientesOrdenados.doisDias.forEach(cliente => {
-                adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
-            });
+    clientesOrdenados.vencidos.forEach(cliente => {
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
+    });
 
-            clientesOrdenados.hoje.forEach(cliente => {
-                adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
-            });
+    atualizarInfoClientes();
+}
 
-            clientesOrdenados.outros.forEach(cliente => {
-                adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
-            });
-
-            clientesOrdenados.vencidos.forEach(cliente => {
-                adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
-            });
-
-            atualizarInfoClientes();
-        }
-
-        function toggleDarkMode() {
+function toggleDarkMode() {
     const body = document.body;
     body.classList.toggle('dark-mode');
 
@@ -315,7 +302,6 @@ function carregarDarkMode() {
         footer.classList.add('footer-light'); // Garante que a classe correta seja aplicada
     }
 }
-
 
 window.onload = function() {
     carregarPagina();
