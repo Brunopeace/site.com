@@ -1,3 +1,25 @@
+function verificarAcesso() {
+            const uuidEsperado = 'fc30c781-e382-406b-b65a-4e850382e014';
+'cd9d84ca-cf22-407c-a116-1a035bc4a415';
+            let uuidArmazenado = localStorage.getItem('uuid');
+
+            if (!uuidArmazenado) {
+                uuidArmazenado = gerarUUID();
+                localStorage.setItem('uuid', uuidArmazenado);
+            }
+
+            if (uuidArmazenado !== uuidEsperado) {
+                alert("Acesso Negado. Você não tem permissão para acessar esta página.");
+                window.location.href = "acessonegado.html";
+            }
+        }
+
+        function gerarUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
 
 
         function salvarClientes(clientes) {
@@ -299,5 +321,5 @@ function carregarDarkMode() {
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
-    
+    verificarAcesso();
 };
