@@ -3,22 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de UUID</title>
+    <link rel="icon" href="https://image.winudf.com/v2/image1/Y29tLmpjYW5kcm9pZC51bmlvbmlwdHZicl9pY29uXzE1NDc3MTExMzdfMDE0/icon.png?w=184&fakeurl=1">
+    <title>Gerenciador de clientes</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css">
 </head>
 <body>
-    <h1>Gerador de UUID</h1>
-    <button onclick="gerarUUID()">Gerar UUID</button>
-    <input type="text" id="uuidDisplay" readonly>
+    <img src="https://i.ibb.co/WGqGFtb/Background-Eraser-20240531-232044622.png" alt="Logomarca" class="logo">
 
-    <script>
-        // Função para gerar UUID
-        function gerarUUID() {
-            const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-            document.getElementById('uuidDisplay').value = uuid;
-        }
-    </script>
+    <!-- Novo código HTML -->
+    <div class="flex-container">
+        <div class="drop">
+            <p>BRUNO</p>
+        </div>
+        
+        <div class="drop">
+            <p>FABIANA</p>
+        </div>
+        
+        <div class="drop">
+            <div class="loading-coracao">
+            <span></span>
+        </div>
+        </div>
+    </div>
+
+    <h1 class="slide-in"><strong>Painel de vencimento</strong></h1>
+
+    <button onclick="toggleDarkMode()" class="slide-in">Claro / Escuro</button><br><br>
+
+    <div class="input-container slide-in">
+        <label for="inputPesquisar">Pesquisar Cliente 🔎</label>
+        <input type="text" id="inputPesquisar" oninput="pesquisarCliente()" placeholder="Pesquisar cliente">
+    </div>
+
+    <div class="input-container slide-in">
+        <label for="inputNome">Adicionar cliente aqui 👱</label>
+        <input type="text" id="inputNome" required placeholder="Nome do cliente">
+    </div>
+    
+    <div class="input-container slide-in">
+        <label for="inputTelefone">Telefone do cliente 📞</label>
+        <input type="tel" id="inputTelefone" required placeholder="Telefone do cliente">
+    </div>
+    
+    <div class="input-container slide-in">
+        <label for="inputData">Data de vencimento 🗓️</label>
+        <input type="date" id="inputData" required>
+    </div>
+    
+    <button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button><br><br>
+    
+    <div id="infoClientes" class="slide-in"></div>
+    
+    <div class="table-container slide-in">
+        <table id="tabelaClientes" class="table">
+            <thead>
+                <tr>
+                    <th>Nome do cliente 👱</th>
+                    <th>Telefone 📞</th>
+                    <th>Data de Vencimento 🗓️</th>
+                    <th>Ações 🌐</th>
+                </tr>
+            </thead>
+            <tbody id="corpoTabela">
+                <!-- Linhas de clientes serão adicionadas aqui -->
+            </tbody>
+        </table>
+    </div>
+    <script src="javascript/script.js"></script>
+    
+<footer>
+        © 2024 Produzido por <a href="https://wa.me/5581982258462?text=%2AOl%C3%A1%2C+fiquei+interessado+nesse+seu+aplicativo+web%2C+quanto+custa+%3F%2A"><strong>BRUNO-PEACE</strong></a>
+</footer>
 </body>
-</html>site.html
+</html>
