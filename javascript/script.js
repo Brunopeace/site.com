@@ -91,7 +91,7 @@ function validarTelefone(telefone) {
 }
 
 function calcularDataVencimento(data) {
-    let dia = data.getDate();
+    let dia = data.getDate() + 1;
     let mes = data.getMonth() + 1; // Próximo mês
     let ano = data.getFullYear();
 
