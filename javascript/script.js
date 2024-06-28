@@ -303,6 +303,38 @@ function carregarDarkMode() {
     }
 }
 
+function exportarClientes() {
+    const clientes = carregarClientes();
+    const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'clientes.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+
+function importarClientes(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const clientesImportados = JSON.parse(e.target.result);
+            const clientesAtuais = carregarClientes();
+            const novosClientes = [...clientesAtuais, ...clientesImportados];
+            salvarClientes(novosClientes);
+            window.location.reload();
+        };
+        reader.readAsText(file);
+    }
+}
+
+
+
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
