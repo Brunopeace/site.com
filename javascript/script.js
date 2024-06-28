@@ -33,7 +33,7 @@ setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
 
 
 function verificarAcesso() {
-    const uuidEsperado = ['fc30c781-e382-406b-b65a-4e850382e014', '90aecf6d-4a99-4afb-b4ec-33ff75709e6d'];
+    const uuidEsperado = ['fc30c781-e382-406b-b65a-4e850382e014', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
