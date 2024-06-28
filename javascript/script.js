@@ -101,11 +101,13 @@ function calcularDataVencimento(data) {
     }
 
     let dataVencimento = new Date(ano, mes, dia);
+
+    // Verifica se o dia caiu no mês seguinte (ex. dia 31 em meses com menos de 31 dias)
     if (dataVencimento.getMonth() !== mes) {
-        dataVencimento = new Date(ano, mes + 1, 0);
+        dataVencimento = new Date(ano, mes + 1, 0); // Último dia do mês anterior
     }
 
-    return new Date(dataVencimento.getTime() + data.getTimezoneOffset() * 60000);
+    return dataVencimento;
 }
 
 function adicionarLinhaTabela(nome, telefone, data) {
