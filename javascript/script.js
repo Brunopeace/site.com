@@ -1,37 +1,3 @@
-        function backupClientes() {
-    const clientes = carregarClientes();
-    const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'clientes_backup.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
-// Função para verificar e realizar o backup diário
-function verificarBackupDiario() {
-    const hoje = new Date();
-    const ultimaBackupStr = localStorage.getItem('ultimaBackup');
-    const ultimaBackup = ultimaBackupStr ? new Date(ultimaBackupStr) : null;
-
-    // Se não houve backup antes ou se um dia passou desde o último backup
-    if (!ultimaBackup || (hoje.getTime() - ultimaBackup.getTime()) >= 24 * 60 * 60 * 1000) {
-        backupClientes();
-        localStorage.setItem('ultimaBackup', hoje.toISOString());
-    }
-}
-
-// Agendar a verificação de backup diário
-setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
-
-// Verificação inicial ao carregar a página
-verificarBackupDiario();
-
-
 function verificarAcesso() {
     const uuidEsperado = ['fc30c781-e382-406b-b65a-4e850382e014', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
     let uuidArmazenado = localStorage.getItem('uuid');
@@ -368,6 +334,43 @@ function importarClientes(event) {
         reader.readAsText(file);
     }
 }
+
+
+
+
+function backupClientes() {
+    const clientes = carregarClientes();
+    const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'clientes_backup.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Função para verificar e realizar o backup diário
+function verificarBackupDiario() {
+    const hoje = new Date();
+    const ultimaBackupStr = localStorage.getItem('ultimaBackup');
+    const ultimaBackup = ultimaBackupStr ? new Date(ultimaBackupStr) : null;
+
+    // Se não houve backup antes ou se um dia passou desde o último backup
+    if (!ultimaBackup || (hoje.getTime() - ultimaBackup.getTime()) >= 24 * 60 * 60 * 1000) {
+        backupClientes();
+        localStorage.setItem('ultimaBackup', hoje.toISOString());
+    }
+}
+
+// Agendar a verificação de backup diário
+setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
+
+// Verificação inicial ao carregar a página
+verificarBackupDiario();
+
 
 
 
