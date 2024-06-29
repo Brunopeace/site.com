@@ -369,7 +369,6 @@ function verificarBackupDiario() {
 setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
 
 // Verificação inicial ao carregar a página
-verificarBackupDiario();
 
 
 
