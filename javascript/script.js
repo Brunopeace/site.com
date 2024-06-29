@@ -1,5 +1,4 @@
-        // Função para realizar o backup dos clientes
-function backupClientes() {
+        function backupClientes() {
     const clientes = carregarClientes();
     const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -29,7 +28,8 @@ function verificarBackupDiario() {
 // Agendar a verificação de backup diário
 setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
 
-// Funções existentes aqui...
+// Verificação inicial ao carregar a página
+verificarBackupDiario();
 
 
 function verificarAcesso() {
