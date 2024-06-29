@@ -1,3 +1,4 @@
+// Funções existentes
 function verificarAcesso() {
     const uuidEsperado = ['fc30c781-e382-406b-b65a-4e850382e014', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
     let uuidArmazenado = localStorage.getItem('uuid');
@@ -211,8 +212,7 @@ function calcularTotalClientesVencidos() {
     clientes.forEach(function(cliente) {
         const dataVencimento = new Date(cliente.data);
         if (dataVencimento < hoje) {
-            totalVencidos++;
-        }
+            totalVencidos++; }
     });
     return totalVencidos;
 }
@@ -319,7 +319,6 @@ function exportarClientes() {
     URL.revokeObjectURL(url);
 }
 
-
 function importarClientes(event) {
     const file = event.target.files[0];
     if (file) {
@@ -334,9 +333,6 @@ function importarClientes(event) {
         reader.readAsText(file);
     }
 }
-
-
-
 
 function backupClientes() {
     const clientes = carregarClientes();
@@ -369,13 +365,9 @@ function verificarBackupDiario() {
 setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
 
 // Verificação inicial ao carregar a página
-
-
-
-
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
     verificarAcesso();
-verificarBackupDiario(); // Verificar backup diário quando a página carrega
+    verificarBackupDiario(); // Verificar backup diário quando a página carrega
 };
