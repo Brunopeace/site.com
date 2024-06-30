@@ -1,25 +1,4 @@
-// Funções existentes
-function verificarAcesso() {
-    const uuidEsperado = ['fc30c781-e382-406b-b65a-4e850382e014'];
-    let uuidArmazenado = localStorage.getItem('uuid');
 
-    if (!uuidArmazenado) {
-        uuidArmazenado = gerarUUID();
-        localStorage.setItem('uuid', uuidArmazenado);
-    }
-
-    if (!uuidEsperado.includes(uuidArmazenado)) {
-        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
-        window.location.href = "acessonegado.html";
-    }
-}
-
-function gerarUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
 
 function salvarClientes(clientes) {
     localStorage.setItem('clientes', JSON.stringify(clientes));
@@ -368,6 +347,6 @@ setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
-    verificarAcesso();
+    
     verificarBackupDiario(); // Verificar backup diário quando a página carrega
 };
