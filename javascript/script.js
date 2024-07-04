@@ -1,4 +1,3 @@
-// Funções existentes
 function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800'];
     let uuidArmazenado = localStorage.getItem('uuid');
@@ -326,8 +325,29 @@ function importarClientes(event) {
         reader.onload = function(e) {
             const clientesImportados = JSON.parse(e.target.result);
             const clientesAtuais = carregarClientes();
-            const novosClientes = [...clientesAtuais, ...clientesImportados];
-            salvarClientes(novosClientes);
+            
+            // Mapa para rastrear clientes já existentes pelo nome
+            const mapaClientes = new Map();
+            clientesAtuais.forEach(cliente => {
+                mapaClientes.set(cliente.nome.toLowerCase(), cliente);
+            });
+
+            // Atualizar clientes existentes e adicionar novos clientes do backup
+            clientesImportados.forEach(clienteImportado => {
+                const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+                if (mapaClientes.has(nomeClienteImportado)) {
+                    // Cliente já existe, atualizar com informações do backup
+                    const clienteExistente = mapaClientes.get(nomeClienteImportado);
+                    clienteExistente.telefone = clienteImportado.telefone;
+                    clienteExistente.data = clienteImportado.data;
+                } else {
+                    // Novo cliente do backup, adicionar à lista
+                    clientesAtuais.push(clienteImportado);
+                }
+            });
+
+            // Salvar a lista atualizada de clientes
+            salvarClientes(clientesAtuais);
             window.location.reload();
         };
         reader.readAsText(file);
