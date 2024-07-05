@@ -1,6 +1,6 @@
 // Funções existentes
 function verificarAcesso() {
-    const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
+    const uuidEsperado = ['fc30c781-e382-406b-b65a-4e850382e014', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -192,8 +192,9 @@ function atualizarCorCelulaData(celulaData, dataVencimento) {
 function pesquisarCliente() {
     const termoPesquisa = document.getElementById('inputPesquisar').value.toLowerCase();
     const linhas = document.getElementById('corpoTabela').getElementsByTagName('tr');
+
     for (let i = 0; i < linhas.length; i++) {
-        const nome = linhas[i].getElementsByTagName('td')[1].innerText.toLowerCase();
+        const nome = linhas[i].getElementsByTagName('td')[1].innerText.toLowerCase(); // Mudança do índice de 0 para 1
         if (nome.includes(termoPesquisa)) {
             linhas[i].style.display = '';
         } else {
@@ -201,6 +202,7 @@ function pesquisarCliente() {
         }
     }
 }
+
 
 function atualizarInfoClientes() {
     const totalVencidos = calcularTotalClientesVencidos();
