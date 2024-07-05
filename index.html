@@ -3,50 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de UUID</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        #uuid {
-            font-size: 1.5em;
-            margin: 20px 0;
-            word-break: break-all;
-        }
-    </style>
+    <link rel="icon" href="https://image.winudf.com/v2/image1/Y29tLmpjYW5kcm9pZC51bmlvbmlwdHZicl9pY29uXzE1NDc3MTExMzdfMDE0/icon.png?w=184&fakeurl=1">
+    <title>Gerenciador de clientes</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css">
 </head>
 <body>
-    <h1>Gerador de UUID</h1>
-    <button onclick="displayUUID()">Gerar UUID</button>
-    <div id="uuid">Clique no botão para gerar um UUID.</div>
+    <img src="https://i.ibb.co/89T9gGF/Background-Eraser-20240530-194623249.png" alt="Logomarca" class="logo">
 
-    <script>
-        function generateUUID() {
-            // Função para gerar um UUID v4
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
+    <!-- Novo código HTML -->
+    <div class="flex-container">
+        <div class="drop">
+            <p>BRUNO</p>
+        </div>
+        
+        <div class="drop">
+            <p>FABIANA</p>
+        </div>
+        
+        <div class="drop">
+            <div class="loading-coracao">
+            <span></span>
+        </div>
+        </div>
+    </div>
 
-        function displayUUID() {
-            let uuid = localStorage.getItem('uuid');
-            if (!uuid) {
-                uuid = generateUUID();
-                localStorage.setItem('uuid', uuid);
-            }
-            document.getElementById('uuid').innerText = uuid;
-        }
+    <h1 class="slide-in"><strong>Painel de vencimento</strong></h1>
 
-        // Exibe o UUID ao carregar a página, se já estiver armazenado
-        window.onload = function() {
-            displayUUID();
-        }
-    </script>
+<button onclick="toggleDarkMode()" class="slide-in">Claro / Escuro</button><button onclick="exportarClientes()">Backup Clientes</button><br><br>
+
+    <div class="input-container slide-in">
+<input type="file" id="importarClientes" onchange="importarClientes(event)" style="display: none;">
+<label for="importarClientes" class="button">Importar Backup 💾</label><br><br>
+        <label for="inputPesquisar">Pesquisar Cliente 🔎</label>
+        <input type="text" id="inputPesquisar" oninput="pesquisarCliente()" placeholder="Pesquisar cliente">
+    </div>
+
+    <div class="input-container slide-in">
+        <label for="inputNome">Adicionar cliente aqui 👱</label>
+        <input type="text" id="inputNome" required placeholder="Nome do cliente">
+    </div>
+    
+    <div class="input-container slide-in">
+        <label for="inputTelefone">Telefone do cliente 📞</label>
+        <input type="tel" id="inputTelefone" required placeholder="Telefone do cliente">
+    </div>
+    
+    <div class="input-container slide-in">
+        <label for="inputData">Data de vencimento 🗓️</label>
+        <input type="date" id="inputData" required>
+    </div>
+    
+    <button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button><button id="btnExcluirSelecionados" onclick="excluirClientesSelecionados()">Excluir Seleção</button><br><br>
+    
+    <div id="infoClientes" class="slide-in"></div>
+    
+    <div class="table-container slide-in">
+        <table>
+    <thead>
+        <tr>
+            <th>Selecionar</th>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Data de Vencimento</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody id="corpoTabela">
+        <!-- Linhas de clientes adicionadas dinamicamente -->
+    </tbody>
+</table>
+    </div>
+    <script src="javascript/script.js"></script>
+    
+<footer>
+        © 2024 Produzido por <a href="https://wa.me/5581982258462?text=%2AOl%C3%A1%2C+fiquei+interessado+nesse+seu+aplicativo+web%2C+quanto+custa+%3F%2A"><strong>BRUNO-PEACE</strong></a>
+</footer>
 </body>
 </html>
