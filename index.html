@@ -53,24 +53,25 @@
         <input type="date" id="inputData" required>
     </div>
     
-    <button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button><br><br>
+    <button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button><button id="btnExcluirSelecionados" onclick="excluirClientesSelecionados()">Excluir Seleção</button><br><br>
     
     <div id="infoClientes" class="slide-in"></div>
     
     <div class="table-container slide-in">
-        <table id="tabelaClientes" class="table">
-            <thead>
-                <tr>
-                    <th>Nome do cliente 👱</th>
-                    <th>Telefone 📞</th>
-                    <th>Data de Vencimento 🗓️</th>
-                    <th>Ações 🌐</th>
-                </tr>
-            </thead>
-            <tbody id="corpoTabela">
-                <!-- Linhas de clientes serão adicionadas aqui -->
-            </tbody>
-        </table>
+        <table>
+    <thead>
+        <tr>
+            <th>Selecionar</th>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Data de Vencimento</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody id="corpoTabela">
+        <!-- Linhas de clientes adicionadas dinamicamente -->
+    </tbody>
+</table>
     </div>
     <script src="javascript/script.js"></script>
     
