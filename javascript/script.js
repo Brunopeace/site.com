@@ -1,6 +1,6 @@
 // Funções existentes
 function verificarAcesso() {
-    const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
+    const uuidEsperado = ['fc30c781-e382-406b-b65a-4e850382e014', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -81,16 +81,23 @@ function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
 
-    const celulaNome = novaLinha.insertCell(0);
+    // Adiciona a caixa de seleção
+    const celulaSelecionar = novaLinha.insertCell(0);
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.classList.add('cliente-checkbox');
+    celulaSelecionar.appendChild(checkbox);
+
+    const celulaNome = novaLinha.insertCell(1);
     celulaNome.innerText = nome;
 
-    const celulaTelefone = novaLinha.insertCell(1);
+    const celulaTelefone = novaLinha.insertCell(2);
     celulaTelefone.innerText = telefone;
 
-    const celulaData = novaLinha.insertCell(2);
+    const celulaData = novaLinha.insertCell(3);
     celulaData.innerText = new Date(data).toLocaleDateString('pt-BR');
 
-    const celulaAcoes = novaLinha.insertCell(3);
+    const celulaAcoes = novaLinha.insertCell(4);
 
     celulaAcoes.appendChild(criarBotao("Editar", function() {
         const novoNome = prompt("Digite o novo nome do cliente:", nome);
@@ -386,10 +393,37 @@ function verificarBackupDiario() {
 setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
 
 
+
+function excluirClientesSelecionados() {
+    const checkboxes = document.querySelectorAll('.cliente-checkbox:checked');
+    if (checkboxes.length === 0) {
+        alert('Selecione pelo menos um cliente para excluir.');
+        return;
+    }
+
+    if (confirm(`Tem certeza de que deseja excluir ${checkboxes.length} clientes?`)) {
+        let clientes = carregarClientes();
+
+        checkboxes.forEach(checkbox => {
+            const linha = checkbox.closest('tr');
+            const nome = linha.cells[1].innerText;
+            clientes = clientes.filter(cliente => cliente.nome.toLowerCase() !== nome.toLowerCase());
+            linha.remove();
+        });
+
+        salvarClientes(clientes);
+        atualizarInfoClientes();
+        window.location.reload();
+    }
+}
+
+
+
 // Verificação inicial ao carregar a página
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
     verificarAcesso();
     verificarBackupDiario(); // Verificar backup diário quando a página carrega
+    
 };
