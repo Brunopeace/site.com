@@ -58,10 +58,6 @@
   }
 }
     
-    
-    
-    
-    /* Estilos CSS */
          
 .clientes-vencidos {
         color: red;
@@ -120,9 +116,6 @@
 }
 
 
-
-
-/* estilos CSS... */
       
         footer {
         text-align: center; /* Centraliza o texto no footer */
@@ -199,7 +192,6 @@
             }
         }
         
-        /* Estilos CSS */
         
         
         body {
@@ -298,10 +290,44 @@
         margin-top: 5px;
         border-color: #01e02d;
     }
+    
+    .button {
+        background-color: #00BFFF;
+        color: #ffffff;
+    }
+    
+    
+    #btnExcluirSelecionados {
+    background-color: #FF0000;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+    #btnExcluirSelecionados:hover {
+    background-color: #000000;
+    color: #FF0000;
+   
+}
+#backup {
+       background-color: #1E90FF;
+       color: #ffffff;
+    
+}
+
+#backup:hover {
+       background-color: #000000;
+       color: #1E90FF;
+    
+}
+
+   
+    
+    
+    
         
         button {
             background-color: #4CAF50;
-            color: white;
+            color: #ffffff;
             border-color:#ffffff;
             padding: 10px 20px;
             margin: 5px;
@@ -310,6 +336,9 @@
             border-radius: 10px;
             transition: background-color 0.3s;
         }
+        
+        
+        
         button:hover {
             background-color: #faff38;
             color: #00b921;
