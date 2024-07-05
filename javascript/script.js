@@ -190,17 +190,17 @@ function atualizarCorCelulaData(celulaData, dataVencimento) {
 }
 
 function pesquisarCliente() {
-    const termoPesquisa = document.getElementById('inputPesquisar').value.toLowerCase();
-    const linhas = document.getElementById('corpoTabela').getElementsByTagName('tr');
-    for (let i = 0; i < linhas.length; i++) {
-        const nome = linhas[i].getElementsByTagName('td')[0].innerText.toLowerCase();
-        if (nome.includes(termoPesquisa)) {
-            linhas[i].style.display = '';
-        } else {
-            linhas[i].style.display = 'none';
+            const termoPesquisa = document.getElementById('inputPesquisar').value.toLowerCase();
+            const linhas = document.getElementById('corpoTabela').getElementsByTagName('tr');
+            for (let i = 0; i < linhas.length; i++) {
+                const nome = linhas[i].getElementsByTagName('td')[0].innerText.toLowerCase();
+                if (nome.includes(termoPesquisa)) {
+                    linhas[i].style.display = '';
+                } else {
+                    linhas[i].style.display = 'none';
+                }
+            }
         }
-    }
-}
 
 function atualizarInfoClientes() {
     const totalVencidos = calcularTotalClientesVencidos();
