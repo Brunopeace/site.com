@@ -29,7 +29,7 @@
 
     <h1 class="slide-in"><strong>Painel de vencimento</strong></h1>
 
-<button onclick="toggleDarkMode()" class="slide-in">Claro / Escuro</button><button onclick="exportarClientes()">Backup Clientes</button><br><br>
+<button onclick="toggleDarkMode()" class="slide-in">Claro / Escuro</button><button id="backup" onclick="exportarClientes()">Backup Clientes</button><br><br>
 
     <div class="input-container slide-in">
 <input type="file" id="importarClientes" onchange="importarClientes(event)" style="display: none;">
@@ -53,7 +53,7 @@
         <input type="date" id="inputData" required>
     </div>
     
-    <button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button><button id="btnExcluirSelecionados" onclick="excluirClientesSelecionados()">Excluir Seleção</button><br><br>
+    <button id="btnExcluirSelecionados" onclick="excluirClientesSelecionados()">Excluir Seleção</button><button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button><br><br>
     
     <div id="infoClientes" class="slide-in"></div>
     
