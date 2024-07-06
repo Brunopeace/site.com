@@ -1,4 +1,42 @@
-// Funções existentes
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+        console.log('Service Worker registrado com sucesso:', registration);
+      }, function(err) {
+        console.log('Falha ao registrar o Service Worker:', err);
+      });
+    });
+  }
+
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Opcional: Mostre um botão para o usuário instalar
+    const installButton = document.createElement('button');
+    installButton.innerText = 'Instalar App';
+    installButton.style.position = 'fixed';
+    installButton.style.bottom = '10px';
+    installButton.style.right = '10px';
+    document.body.appendChild(installButton);
+
+    installButton.addEventListener('click', () => {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('Usuário aceitou instalar o app');
+        } else {
+          console.log('Usuário rejeitou instalar o app');
+        }
+        deferredPrompt = null;
+        document.body.removeChild(installButton);
+      });
+    });
+  });
+        
+        
+        
+
 function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
     let uuidArmazenado = localStorage.getItem('uuid');
@@ -20,6 +58,10 @@ function gerarUUID() {
         return v.toString(16);
     });
 }
+
+
+
+
 
 function salvarClientes(clientes) {
     localStorage.setItem('clientes', JSON.stringify(clientes));
@@ -141,9 +183,15 @@ function adicionarLinhaTabela(nome, telefone, data) {
             if (clienteIndex !== -1) {
                 clientes.splice(clienteIndex, 1);
                 salvarClientes(clientes);
-                tabela.deleteRow(novaLinha.rowIndex - 1);
-                atualizarInfoClientes();
-                window.location.reload();
+
+                // Adiciona a classe de animação de desintegração
+                novaLinha.classList.add('desintegrate');
+
+                // Remove a linha da tabela após a animação
+                setTimeout(() => {
+                    tabela.deleteRow(novaLinha.rowIndex - 1);
+                    atualizarInfoClientes();
+                }, 500); // Tempo da animação em milissegundos
             }
         }
     }));
