@@ -45,7 +45,7 @@ function verificarLogoComemorativa() {
             
            // Datas comemorativas
            
-    if (mes === 12 && dia === 25) { // Natal
+    if (mes === 7 && dia === 7) { // Natal
         logo.src = 'img/logo-natal.png';
         
         
