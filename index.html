@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://image.winudf.com/v2/image1/Y29tLmpjYW5kcm9pZC51bmlvbmlwdHZicl9pY29uXzE1NDc3MTExMzdfMDE0/icon.png?w=184&fakeurl=1">
+    <title>Gerenciador de clientes</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <img src="https://i.ibb.co/89T9gGF/Background-Eraser-20240530-194623249.png" alt="Logomarca" class="logo">
+
+    <!-- Novo código HTML -->
+    <div class="flex-container">
+        <div class="drop">
+            <p>BRUNO</p>
+        </div>
+        
+        <div class="drop">
+            <p>FABIANA</p>
+        </div>
+        
+        <div class="drop">
+            <div class="loading-coracao">
+            <span></span>
+        </div>
+        </div>
+    </div>
+
+    <h1 class="slide-in"><strong>Painel de vencimento</strong></h1>
+
+<button onclick="toggleDarkMode()" class="slide-in">Claro / Escuro</button><button id="backup" onclick="exportarClientes()">Backup Clientes</button><br><br>
+
+    <div class="input-container slide-in">
+<input type="file" id="importarClientes" onchange="importarClientes(event)" style="display: none;">
+<label for="importarClientes" class="button">Importar Backup 💾</label><br><br>
+        <label for="inputPesquisar">Pesquisar Cliente 🔎</label>
+        <input type="text" id="inputPesquisar" oninput="pesquisarCliente()" placeholder="Pesquisar cliente">
+    </div>
+
+    <div class="input-container slide-in">
+        <label for="inputNome">Adicionar cliente aqui 👱</label>
+        <input type="text" id="inputNome" required placeholder="Nome do cliente">
+    </div>
+    
+    <div class="input-container slide-in">
+        <label for="inputTelefone">Telefone do cliente 📞</label>
+        <input type="tel" id="inputTelefone" required placeholder="Telefone do cliente">
+    </div>
+    
+    <div class="input-container slide-in">
+        <label for="inputData">Data de vencimento 🗓️</label>
+        <input type="date" id="inputData" required>
+    </div>
+    
+    <button id="btnExcluirSelecionados" onclick="excluirClientesSelecionados()">Excluir Seleção</button><button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button><br><br>
+    
+    <div id="infoClientes" class="slide-in"></div>
+    
+    <div class="table-container slide-in">
+        <table>
+    <thead>
+        <tr>
+            <th>Selecionar</th>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Data de Vencimento</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody id="corpoTabela">
+        <!-- Linhas de clientes adicionadas dinamicamente -->
+    </tbody>
+</table>
+    </div>
+    <script src="javascript/script.js"></script>
+    
+<footer>
+        © 2024 Produzido por <a href="https://wa.me/5581982258462?text=%2AOl%C3%A1%2C+fiquei+interessado+nesse+seu+aplicativo+web%2C+quanto+custa+%3F%2A"><strong>BRUNO-PEACE</strong></a>
+</footer>
+</body>
+</html>

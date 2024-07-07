@@ -1,0 +1,20 @@
+{
+  "name": "Gerenciador de Clientes",
+  "short_name": "Clientes",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "icons": [
+    {
+      "src": "https://image.winudf.com/v2/image1/Y29tLmpjYW5kcm9pZC51bmlvbmlwdHZicl9pY29uXzE1NDc3MTExMzdfMDE0/icon.png?w=184&fakeurl=1",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://image.winudf.com/v2/image1/Y29tLmpjYW5kcm9pZC51bmlvbmlwdHZicl9pY29uXzE1NDc3MTExMzdfMDE0/icon.png?w=184&fakeurl=1",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
