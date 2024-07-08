@@ -57,7 +57,7 @@ function verificarLogoComemorativa() {
         logo.src = 'img/logo-independencia.png';
         
         
-    } else if (mes === 7 && dia === 7) { // Halloween
+    } else if (mes === 7 && dia === 7) {
         logo.src = 'img/logo-halloween.png';
         
         
