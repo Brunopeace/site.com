@@ -132,9 +132,13 @@ function salvarClientes(clientes) {
     localStorage.setItem('clientes', JSON.stringify(clientes));
 }
 
+
+
 function carregarClientes() {
     return JSON.parse(localStorage.getItem('clientes')) || [];
 }
+
+
 
 function adicionarCliente() {
     const nome = document.getElementById('inputNome').value.trim();
@@ -160,9 +164,13 @@ function adicionarCliente() {
     }
 }
 
+
+
 function validarTelefone(telefone) {
     return telefone.length === 11 && /^\d+$/.test(telefone);
 }
+
+
 
 function calcularDataVencimento(data) {
     let dia = data.getDate() + 1;
@@ -183,6 +191,8 @@ function calcularDataVencimento(data) {
 
     return dataVencimento;
 }
+
+
 
 function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
@@ -241,6 +251,8 @@ function adicionarLinhaTabela(nome, telefone, data) {
         }
     }));
 
+
+
     celulaAcoes.appendChild(criarBotao("Excluir", function() {
         if (confirm("Tem certeza de que deseja excluir este cliente?")) {
             const clientes = carregarClientes();
@@ -261,6 +273,8 @@ function adicionarLinhaTabela(nome, telefone, data) {
         }
     }));
 
+
+
     celulaAcoes.appendChild(criarBotao("WhatsApp", function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
         const mensagem = encodeURIComponent(
@@ -275,6 +289,8 @@ function adicionarLinhaTabela(nome, telefone, data) {
     tabela.appendChild(novaLinha);
 }
 
+
+
 function criarBotao(texto, callback) {
     const btn = document.createElement("button");
     btn.innerText = texto;
@@ -282,9 +298,13 @@ function criarBotao(texto, callback) {
     return btn;
 }
 
+
+
 function abrirWhatsApp(telefoneCliente, mensagem) {
     window.open(`https://api.whatsapp.com/send?phone=55${telefoneCliente}&text=${mensagem}`, '_blank');
 }
+
+
 
 function atualizarCorCelulaData(celulaData, dataVencimento) {
     const hoje = new Date();
@@ -302,6 +322,8 @@ function atualizarCorCelulaData(celulaData, dataVencimento) {
     }
 }
 
+
+
 function pesquisarCliente() {
     const termoPesquisa = document.getElementById('inputPesquisar').value.toLowerCase();
     const linhas = document.getElementById('corpoTabela').getElementsByTagName('tr');
@@ -317,6 +339,7 @@ function pesquisarCliente() {
 }
 
 
+
 function atualizarInfoClientes() {
     const totalVencidos = calcularTotalClientesVencidos();
     const totalNaoVencidos = calcularTotalClientesNaoVencidos();
@@ -325,6 +348,8 @@ function atualizarInfoClientes() {
         <span class="clientes-ativos">Clientes ativos: ${totalNaoVencidos}</span>
     `;
 }
+
+
 
 function calcularTotalClientesVencidos() {
     const hoje = new Date();
@@ -339,6 +364,8 @@ function calcularTotalClientesVencidos() {
     return totalVencidos;
 }
 
+
+
 function calcularTotalClientesNaoVencidos() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -352,6 +379,8 @@ function calcularTotalClientesNaoVencidos() {
     });
     return totalNaoVencidos;
 }
+
+
 
 function carregarPagina() {
     const clientes = carregarClientes();
@@ -403,6 +432,8 @@ function carregarPagina() {
     atualizarInfoClientes();
 }
 
+
+
 function toggleDarkMode() {
     const body = document.body;
     body.classList.toggle('dark-mode');
@@ -427,6 +458,8 @@ function carregarDarkMode() {
     }
 }
 
+
+
 function exportarClientes() {
     const clientes = carregarClientes();
     const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
@@ -440,6 +473,8 @@ function exportarClientes() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+
 
 function importarClientes(event) {
     const file = event.target.files[0];
@@ -477,6 +512,8 @@ function importarClientes(event) {
     }
 }
 
+
+
 function backupClientes() {
     const clientes = carregarClientes();
     const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
@@ -490,6 +527,8 @@ function backupClientes() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+
 
 // Função para verificar e realizar o backup diário
 function verificarBackupDiario() {
