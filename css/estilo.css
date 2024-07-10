@@ -167,7 +167,6 @@
         color: #00f518; /* Cor do link no modo claro ao passar o mouse */
     }
         
-
         h1, button {
             opacity: 0;
             animation: slideIn 0.5s ease forwards;
@@ -227,9 +226,7 @@
         
         .logo {
             display: block;
-            /* Centraliza e adiciona margem inferior */
-            margin: 0 auto 10px; 
-            /* Limita a largura da logomarca */
+            margin: 0 auto 10px;
             max-width: 300px; 
         }
         
@@ -238,7 +235,7 @@
             color: #4CAF50;
         }
         
-       
+        
         table {
             width: 100%;
             border-collapse: collapse;
