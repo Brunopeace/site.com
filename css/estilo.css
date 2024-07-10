@@ -167,10 +167,7 @@
         color: #00f518; /* Cor do link no modo claro ao passar o mouse */
     }
         
-        body {
-            font-family: Arial, sans-serif;
-            
-        }
+
         h1, button {
             opacity: 0;
             animation: slideIn 0.5s ease forwards;
@@ -236,12 +233,7 @@
             max-width: 300px; 
         }
         
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 20px;
-        }
+
         h1 {
             color: #4CAF50;
         }
