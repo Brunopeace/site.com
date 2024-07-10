@@ -238,14 +238,7 @@
             color: #4CAF50;
         }
         
-        .logo {
-            display: block;
-            /* Centraliza e adiciona margem inferior */
-            margin: 0 auto 10px; 
-            /* Limita a largura da logomarca */
-            max-width: 300px; 
-        }
-        
+       
         table {
             width: 100%;
             border-collapse: collapse;
