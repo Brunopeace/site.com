@@ -36,55 +36,6 @@ if ('serviceWorker' in navigator) {
 
 
 
-
-
-
-
-          //mensagem automatica
-          
-          
-          if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-            console.log('Service Worker registrado com sucesso:', registration);
-        }, function(err) {
-            console.log('Falha ao registrar o Service Worker:', err);
-        });
-
-        // Solicitar permissão para notificações
-        Notification.requestPermission().then(function(permission) {
-            if (permission === 'granted') {
-                console.log('Permissão para notificações concedida');
-            } else {
-                console.log('Permissão para notificações negada');
-            }
-        });
-    });
-}
-
-
-
-
-
-
-
-
-
-
-
-if ('serviceWorker' in navigator && 'SyncManager' in window) {
-    navigator.serviceWorker.ready.then(function(registration) {
-        return registration.sync.register('verificar-vencimentos');
-    }).catch(function(err) {
-        console.error('Erro ao registrar sincronização: ', err);
-    });
-}
-
-
-
-
-
-
 function verificarLogoComemorativa() {
     const logo = document.getElementById('logo');
     const hoje = new Date();
@@ -151,58 +102,34 @@ function verificarLogoComemorativa() {
         
         
 
+function verificarAcesso() {
+    const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
+    let uuidArmazenado = localStorage.getItem('uuid');
 
+    if (!uuidArmazenado) {
+        uuidArmazenado = gerarUUID();
+        localStorage.setItem('uuid', uuidArmazenado);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-function salvarClientesNoIndexedDB(clientes) {
-    const request = indexedDB.open('ClientesDB', 1);
-
-    request.onupgradeneeded = function(event) {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains('clientes')) {
-            db.createObjectStore('clientes', { keyPath: 'nome' });
-        }
-    };
-
-    request.onsuccess = function(event) {
-        const db = event.target.result;
-        const transaction = db.transaction(['clientes'], 'readwrite');
-        const store = transaction.objectStore('clientes');
-
-        clientes.forEach(cliente => {
-            store.put(cliente);
-        });
-
-        transaction.oncomplete = function() {
-            console.log('Clientes salvos no IndexedDB com sucesso');
-        };
-
-        transaction.onerror = function() {
-            console.error('Erro ao salvar clientes no IndexedDB', transaction.error);
-        };
-    };
-
-    request.onerror = function() {
-        console.error('Erro ao abrir o IndexedDB', request.error);
-    };
+    if (!uuidEsperado.includes(uuidArmazenado)) {
+        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
+        window.location.href = "acessonegado.html";
+    }
 }
 
-// Modifique a função existente para incluir a chamada ao salvarClientesNoIndexedDB
+function gerarUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+
+
+
+
 function salvarClientes(clientes) {
     localStorage.setItem('clientes', JSON.stringify(clientes));
-    salvarClientesNoIndexedDB(clientes);
 }
 
 
@@ -650,6 +577,7 @@ function excluirClientesSelecionados() {
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
+    verificarAcesso();
     verificarBackupDiario();
     verificarLogoComemorativa();
 };
