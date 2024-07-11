@@ -23,3 +23,30 @@ self.addEventListener('fetch', event => {
       })
   );
 });
+
+
+
+
+
+
+
+
+self.addEventListener('push', function(event) {
+    const data = event.data.json();
+    const title = data.title;
+    const options = {
+        body: data.body,
+        icon: 'img/logo-padrao.png', // Caminho para o ícone da notificação
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(title, options)
+    );
+});
+
+self.addEventListener('notificationclick', function(event) {
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow('/') // Caminho para abrir ao clicar na notificação
+    );
+});
