@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-site-cache-v1';
+const CACHE_NAME = 'clientes-cache-v1';
 const urlsToCache = [
   '/',
   '/css/estilo.css',
