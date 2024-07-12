@@ -3,9 +3,19 @@
   "short_name": "Clientes",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  
+  "background_color": "#000000",
+  "theme_color": "#4CAF50",
   "icons": [
+    {
+      "src": "/assets/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
     {
       "src": "/assets/icon-192x192.png",
       "sizes": "192x192",
@@ -33,7 +43,7 @@
     {
       "name": "Adicionar Cliente",
       "short_name": "Adicionar",
-      "description": "Adicione um novo cliente",
+      "description": "Adicione um novo cliente ao sistema de gerenciamento",
       "url": "/add-client",
       "icons": [
         {
@@ -45,8 +55,8 @@
     },
     {
       "name": "Listar Clientes",
-      "short_name": "Clientes",
-      "description": "Veja a lista de todos os clientes",
+      "short_name": "Listar",
+      "description": "Veja todos os clientes cadastrados no sistema",
       "url": "/list-clients",
       "icons": [
         {
@@ -56,5 +66,11 @@
         }
       ]
     }
-  ]
+  ],
+  "author": {
+    "name": "Nome do Desenvolvedor",
+    "email": "email@exemplo.com",
+    "url": "https://www.exemplo.com"
+  },
+  "version": "1.0.0"
 }
