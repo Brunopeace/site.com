@@ -1,52 +1,47 @@
-const CACHE_NAME = 'clientes-cache-v1';
+const CACHE_NAME = 'my-site-cache-v1';
 const urlsToCache = [
   '/',
-  '/css/estilo.css',
-  '/manifest.json',
-  // adicione outros recursos que deseja armazenar em cache
+  '/styles/main.css',
+  '/script/main.js',
+  '/images/logo.png'
 ];
 
+// Evento de instalação do Service Worker
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
+        console.log('Cache aberto');
         return cache.addAll(urlsToCache);
       })
   );
 });
 
+// Evento de ativação do Service Worker
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+
+// Evento de fetch para interceptar requisições e servir arquivos do cache
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        return response || fetch(event.request);
+        if (response) {
+          return response; // Arquivo encontrado no cache
+        }
+        return fetch(event.request); // Arquivo não encontrado no cache, fazer requisição à rede
       })
   );
-});
-
-
-
-
-
-
-
-
-self.addEventListener('push', function(event) {
-    const data = event.data.json();
-    const title = data.title;
-    const options = {
-        body: data.body,
-        icon: 'img/logo-padrao.png', // Caminho para o ícone da notificação
-    };
-
-    event.waitUntil(
-        self.registration.showNotification(title, options)
-    );
-});
-
-self.addEventListener('notificationclick', function(event) {
-    event.notification.close();
-    event.waitUntil(
-        clients.openWindow('/') // Caminho para abrir ao clicar na notificação
-    );
 });
