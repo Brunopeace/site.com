@@ -1,96 +1,62 @@
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-            console.log('Service Worker registrado com sucesso:', registration);
-
-            if ('PushManager' in window) {
-                navigator.serviceWorker.ready.then(function(reg) {
-                    reg.pushManager.subscribe({
-                        userVisibleOnly: true,
-                        applicationServerKey: urlBase64ToUint8Array('YOUR_PUBLIC_VAPID_KEY')
-                    }).then(function(sub) {
-                        console.log('Endpoint de Push:', sub.endpoint);
-                        // Envie o subscription para o seu servidor para armazenamento
-                    }).catch(function(e) {
-                        if (Notification.permission === 'denied') {
-                            console.warn('Permissão de Notificação foi negada');
-                        } else {
-                            console.error('Falha na subscription:', e);
-                        }
-                    });
-                });
-            }
-        }, function(err) {
-            console.log('Falha ao registrar o Service Worker:', err);
-        });
+      navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+        console.log('Service Worker registrado com sucesso:', registration);
+      }, function(err) {
+        console.log('Falha ao registrar o Service Worker:', err);
+      });
     });
-}
+  }
 
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Opcional: Mostre um botão para o usuário instalar
+    const installButton = document.createElement('button');
+    installButton.innerText = 'Instalar App';
+    installButton.style.position = 'fixed';
+    installButton.style.bottom = '10px';
+    installButton.style.right = '10px';
+    document.body.appendChild(installButton);
 
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
+    installButton.addEventListener('click', () => {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('Usuário aceitou instalar o app');
+        } else {
+          console.log('Usuário rejeitou instalar o app');
+        }
+        deferredPrompt = null;
+        document.body.removeChild(installButton);
+      });
+    });
+  });
 
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
+
+
+function verificarAcesso() {
+    const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
+    let uuidArmazenado = localStorage.getItem('uuid');
+
+    if (!uuidArmazenado) {
+        uuidArmazenado = gerarUUID();
+        localStorage.setItem('uuid', uuidArmazenado);
     }
-    return outputArray;
+
+    if (!uuidEsperado.includes(uuidArmazenado)) {
+        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
+        window.location.href = "acessonegado.html";
+    }
 }
 
-
-
-
-
-
-
-
-function enviarNotificacoes() {
-    const clientes = carregarClientes();
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    clientes.forEach(cliente => {
-        const dataVencimento = new Date(cliente.data);
-        const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
-
-        if (diferencaDias === 2) {
-            const mensagem = {
-                title: "Lembrete de Vencimento",
-                body: `O plano do cliente ${cliente.nome} está vencendo em 2 dias.`
-            };
-            navigator.serviceWorker.ready.then(function(registration) {
-                registration.showNotification(mensagem.title, {
-                    body: mensagem.body,
-                    icon: 'img/logo-padrao.png'
-                });
-            });
-        }
+function gerarUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
     });
 }
-
-function verificarNotificacoesDiarias() {
-    enviarNotificacoes();
-    setInterval(enviarNotificacoes, 24 * 60 * 60 * 1000); // Verifica uma vez ao dia
-}
-
-
-
-
-
-
-
-if ('Notification' in window && navigator.serviceWorker) {
-    Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-            console.log('Permissão para notificações concedida.');
-        }
-    });
-}
-
-
-
 
 
 
@@ -160,27 +126,7 @@ function verificarLogoComemorativa() {
         
         
 
-function verificarAcesso() {
-    const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800', '26e2f93a-a423-47d9-80d1-c85f83f45db5'];
-    let uuidArmazenado = localStorage.getItem('uuid');
 
-    if (!uuidArmazenado) {
-        uuidArmazenado = gerarUUID();
-        localStorage.setItem('uuid', uuidArmazenado);
-    }
-
-    if (!uuidEsperado.includes(uuidArmazenado)) {
-        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
-        window.location.href = "acessonegado.html";
-    }
-}
-
-function gerarUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
 
 
 
@@ -638,11 +584,6 @@ window.onload = function() {
     verificarAcesso();
     verificarBackupDiario();
     verificarLogoComemorativa();
-    if ('Notification' in window && navigator.serviceWorker) {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                verificarNotificacoesDiarias();
-            }
-        });
-    }
+    
+    
 };
