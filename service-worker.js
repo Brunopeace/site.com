@@ -1,9 +1,9 @@
 const CACHE_NAME = 'my-site-cache-v1';
 const urlsToCache = [
   '/',
-  '/styles/main.css',
-  '/script/main.js',
-  '/images/logo.png'
+  '/css/estilo.css',
+  '/javascript/script.js',
+  '/img/logo-padrao.png'
 ];
 
 // Evento de instalação do Service Worker
