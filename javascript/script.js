@@ -136,6 +136,26 @@ function verificarLogoComemorativa() {
 
 
 
+// Mostra o botão quando o usuário rola 20px para baixo
+window.onscroll = function() {
+    const backToTopButton = document.getElementById('backToTop');
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
+};
+
+// Função para rolar para o topo
+document.getElementById('backToTop').onclick = function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// Configura a funcionalidade do botão "Voltar ao Topo" na inicialização da página
+
+
+
+
 
 
 function salvarClientes(clientes) {
@@ -597,13 +617,13 @@ function excluirClientesSelecionados() {
 
 
 
-// Verificação inicial ao carregar a página
 window.onload = function() {
     carregarPagina();
     carregarDarkMode();
     verificarAcesso();
     verificarBackupDiario();
     verificarLogoComemorativa();
-    
-   
+
+    // Chama a função de scroll para garantir que o botão seja configurado corretamente
+    window.onscroll();
 };
