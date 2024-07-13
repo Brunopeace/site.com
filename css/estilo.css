@@ -167,6 +167,7 @@
         color: #00f518; /* Cor do link no modo claro ao passar o mouse */
     }
         
+
         h1, button {
             opacity: 0;
             animation: slideIn 0.5s ease forwards;
@@ -226,7 +227,9 @@
         
         .logo {
             display: block;
-            margin: 0 auto 10px;
+            /* Centraliza e adiciona margem inferior */
+            margin: 0 auto 10px; 
+            /* Limita a largura da logomarca */
             max-width: 300px; 
         }
         
@@ -235,7 +238,7 @@
             color: #4CAF50;
         }
         
-        
+       
         table {
             width: 100%;
             border-collapse: collapse;
@@ -296,7 +299,13 @@
         color: #ffffff;
     }
     
-    
+    .meio {
+    background: linear-gradient(to right, #A9A9A9 50%, #000000 50%);
+    color: #ffffff;
+  
+}
+   
+   
     #btnExcluirSelecionados {
     background-color: #FF0000;
     color: #ffffff;
@@ -338,15 +347,16 @@
         
         button:hover {
             background-color: #faff38;
-            color: #00b921;
             transform: scale(1.1);
         }
+        
+        
         .table-container {
             overflow-x: auto;
             max-width: 100%;
         }
 
-                         /* Estilos para o modo escuro */
+         /* Estilos para o modo escuro */
         
         body.dark-mode {
             background-color: #000000;
@@ -372,7 +382,7 @@
         }
         body.dark-mode button:hover {
             background-color: #000000;
-            color: #00f56c;
+            color: #ffffff;
         }
         
         /* Estilos para dispositivos com largura de tela até 414px (Galaxy S23) */
