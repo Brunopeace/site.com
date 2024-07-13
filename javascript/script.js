@@ -561,17 +561,19 @@ function excluirClientesSelecionados() {
 
     if (confirm(`Tem certeza de que deseja excluir ${checkboxes.length} clientes?`)) {
         let clientes = carregarClientes();
+        const clientesParaExcluir = [];
 
         checkboxes.forEach(checkbox => {
             const linha = checkbox.closest('tr');
             const nome = linha.cells[1].innerText;
-            clientes = clientes.filter(cliente => cliente.nome.toLowerCase() !== nome.toLowerCase());
+            clientesParaExcluir.push(nome.toLowerCase());
             linha.remove();
         });
 
+        clientes = clientes.filter(cliente => !clientesParaExcluir.includes(cliente.nome.toLowerCase()));
+
         salvarClientes(clientes);
         atualizarInfoClientes();
-        window.location.reload();
     }
 }
 
