@@ -99,7 +99,10 @@ async function createBackup() {
     ];
 
     const imgFolder = 'img/';
-    const imgFiles = ['logo.png', 'background.jpg']; // Adicione todos os arquivos de imagem aqui
+    const imgFiles = ['logo-ano-novo.png', 'logo-halloween.png',
+    'logo-natal.png',
+    'logo-padrao.png',
+    'logo-sao-joao.png']; // Adicione todos os arquivos de imagem aqui
     for (const imgFile of imgFiles) {
         files.push({ name: imgFolder + imgFile, url: imgFolder + imgFile });
     }
