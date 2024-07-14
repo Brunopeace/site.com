@@ -151,8 +151,6 @@ document.getElementById('backToTop').onclick = function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// Configura a funcionalidade do botão "Voltar ao Topo" na inicialização da página
-
 
 
 
