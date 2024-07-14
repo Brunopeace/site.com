@@ -1,20 +1,48 @@
+
 #backToTop {
-    background-color: #007bff;
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: linear-gradient(45deg, #00FF00, #228B22); 
     color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
+    border: 1px solid #ffffff;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
     cursor: pointer;
-    z-index: 1000; /* Certifique-se de que o botão esteja acima de outros elementos */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#backToTop::after {
+    content: '';
+    border: solid white;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 8px;
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
 }
 
 #backToTop:hover {
-    background-color: #0056b3;
+    background: linear-gradient(45deg, #228B22, #00FF00); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+    opacity: 1;
 }
 
-#backToTop:hover {
-    background-color: #0056b3;
+#backToTop:active {
+    transform: scale(0.95); /* Efeito de clique */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduz a sombra ao clicar */
 }
+
+
 
 
 
