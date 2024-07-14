@@ -67,25 +67,44 @@ function gerarUUID() {
 
 async function fetchFile(url) {
     const response = await fetch(url);
-    return await response.text();
+    if (response.ok) {
+        return await response.text();
+    }
+    throw new Error(`Failed to fetch ${url}`);
+}
+
+async function fetchFiles(fileList) {
+    const zip = new JSZip();
+
+    for (const file of fileList) {
+        try {
+            const content = await fetchFile(file.url);
+            zip.file(file.name, content);
+        } catch (error) {
+            console.error(`Error fetching ${file.url}:`, error);
+        }
+    }
+
+    return zip;
 }
 
 async function createBackup() {
-    const zip = new JSZip();
-
     const files = [
         { name: 'index.html', url: 'index.html' },
-        { name: 'style.css', url: 'style.css' },
-        { name: 'script.js', url: 'script.js' },
+        { name: 'style.css', url: 'css/style.css' },
+        { name: 'script.js', url: 'javascript/script.js' },
         { name: 'service-worker.js', url: 'service-worker.js' },
-        { name: 'manifest.json', url: 'manifest.json' }
-        // Adicione mais arquivos aqui conforme necessário
+        { name: 'manifest.json', url: 'manifest.json' },
+        { name: 'acessonegado.html', url: 'acessonegado.html' }
     ];
 
-    for (const file of files) {
-        const content = await fetchFile(file.url);
-        zip.file(file.name, content);
+    const imgFolder = 'img/';
+    const imgFiles = ['logo.png', 'background.jpg']; // Adicione todos os arquivos de imagem aqui
+    for (const imgFile of imgFiles) {
+        files.push({ name: imgFolder + imgFile, url: imgFolder + imgFile });
     }
+
+    const zip = await fetchFiles(files);
 
     zip.generateAsync({ type: 'blob' }).then(function(content) {
         saveAs(content, 'backup.zip');
