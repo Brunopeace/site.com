@@ -65,6 +65,36 @@ function gerarUUID() {
 
 
 
+async function fetchFile(url) {
+    const response = await fetch(url);
+    return await response.text();
+}
+
+async function createBackup() {
+    const zip = new JSZip();
+
+    const files = [
+        { name: 'index.html', url: 'index.html' },
+        { name: 'style.css', url: 'style.css' },
+        { name: 'script.js', url: 'script.js' },
+        { name: 'service-worker.js', url: 'service-worker.js' },
+        { name: 'manifest.json', url: 'manifest.json' }
+        // Adicione mais arquivos aqui conforme necessário
+    ];
+
+    for (const file of files) {
+        const content = await fetchFile(file.url);
+        zip.file(file.name, content);
+    }
+
+    zip.generateAsync({ type: 'blob' }).then(function(content) {
+        saveAs(content, 'backup.zip');
+    });
+}
+
+
+
+
 
 function verificarLogoComemorativa() {
     const logo = document.getElementById('logo');
