@@ -41,7 +41,7 @@ if ('serviceWorker' in navigator) {
 
 function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
- '7cb88e0b-ec00-4011-a7ee-117ae5721828'];
+ 'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
