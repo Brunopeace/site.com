@@ -50,7 +50,7 @@ function verificarAcesso() {
     }
 
     if (!uuidEsperado.includes(uuidArmazenado)) {
-        alert("Acesso Negado. Você não tem permissão para acessar esta página..");
+        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
         window.location.href = "acessonegado.html";
     }
 }
