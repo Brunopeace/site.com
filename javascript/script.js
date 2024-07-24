@@ -41,7 +41,8 @@ if ('serviceWorker' in navigator) {
 
 function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
- 'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a'];
+ 'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a',
+ 'fc30c781-e382-406b-b65a-4e850382e014'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -54,6 +55,10 @@ function verificarAcesso() {
         window.location.href = "acessonegado.html";
     }
 }
+
+
+
+
 
 function gerarUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -222,6 +227,8 @@ function calcularDataVencimento(data) {
 
 
 
+
+
 function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
@@ -266,6 +273,7 @@ function adicionarLinhaTabela(nome, telefone, data) {
                         clientes[clienteIndex].data = novaDataVencimento;
                         salvarClientes(clientes);
                         atualizarCorCelulaData(celulaData, novaDataVencimento);
+                        atualizarClientesAlterados(novoNome);
                         window.location.reload();
                     }
                 } else {
@@ -278,8 +286,6 @@ function adicionarLinhaTabela(nome, telefone, data) {
             alert("Por favor, preencha todos os campos corretamente.");
         }
     }));
-
-
 
     celulaAcoes.appendChild(criarBotao("Excluir", function() {
         if (confirm("Tem certeza de que deseja excluir este cliente?")) {
@@ -301,8 +307,6 @@ function adicionarLinhaTabela(nome, telefone, data) {
         }
     }));
 
-
-
     celulaAcoes.appendChild(criarBotao("WhatsApp", function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
         const mensagem = encodeURIComponent(
@@ -316,6 +320,82 @@ function adicionarLinhaTabela(nome, telefone, data) {
 
     tabela.appendChild(novaLinha);
 }
+
+
+
+
+
+
+function renovarCliente(nomeCliente) {
+            const clientesHoje = JSON.parse(localStorage.getItem('clientesHoje')) || { nomes: [] };
+            if (!clientesHoje.nomes.includes(nomeCliente)) {
+                clientesHoje.nomes.push(nomeCliente);
+                localStorage.setItem('clientesHoje', JSON.stringify(clientesHoje));
+                exibirClientesAlterados();
+            }
+        }
+
+
+
+
+function atualizarClientesAlterados(nome) {
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    let clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
+    let clientesHoje = clientesAlterados.find(c => c.data === hoje);
+
+    if (!clientesHoje) {
+        clientesHoje = { data: hoje, nomes: [] };
+        clientesAlterados.push(clientesHoje);
+    }
+
+    if (!clientesHoje.nomes.includes(nome)) {
+        clientesHoje.nomes.push(nome);
+    }
+
+    localStorage.setItem('clientesAlterados', JSON.stringify(clientesAlterados));
+    exibirClientesAlterados();
+}
+
+
+
+
+function exibirClientesAlterados() {
+    const clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    const clientesHoje = clientesAlterados.find(c => c.data === hoje);
+    const campoClientesAlterados = document.getElementById('infoClientes');
+
+    if (clientesHoje && clientesHoje.nomes.length > 0) {
+        campoClientesAlterados.innerHTML = '<span class="titulo-clientes-renovados">Renovados hoje: </span><br><br>' + clientesHoje.nomes.join(', ');
+    } else {
+        campoClientesAlterados.innerText = 'Nenhum cliente renovado hoje';
+    }
+}
+
+window.addEventListener('load', exibirClientesAlterados);
+
+
+
+
+
+function alterarDataCliente(nomeCliente, novaData) {
+    const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+
+    // Encontra o cliente e altera a data de vencimento
+    const cliente = clientes.find(cliente => cliente.nome === nomeCliente);
+    if (cliente) {
+        cliente.dataVencimento = novaData;
+        localStorage.setItem('clientes', JSON.stringify(clientes));
+        
+        // Adiciona o cliente à lista de clientes renovados hoje
+        renovarCliente(nomeCliente);
+        atualizarClientesAlterados(nomeCliente);  // Adiciona esta linha
+    } else {
+        console.log('Cliente não encontrado');
+    }
+}
+
+
 
 
 
@@ -368,14 +448,16 @@ function pesquisarCliente() {
 
 
 
+
 function atualizarInfoClientes() {
     const totalVencidos = calcularTotalClientesVencidos();
     const totalNaoVencidos = calcularTotalClientesNaoVencidos();
-    document.getElementById('infoClientes').innerHTML = `
+    document.getElementById('infoClientes2').innerHTML = `
         <span class="clientes-vencidos">Clientes vencidos: ${totalVencidos}</span><br>
         <span class="clientes-ativos">Clientes ativos: ${totalNaoVencidos}</span>
     `;
 }
+
 
 
 
@@ -394,6 +476,7 @@ function calcularTotalClientesVencidos() {
 
 
 
+
 function calcularTotalClientesNaoVencidos() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -407,6 +490,8 @@ function calcularTotalClientesNaoVencidos() {
     });
     return totalNaoVencidos;
 }
+
+
 
 
 
@@ -462,6 +547,8 @@ function carregarPagina() {
 
 
 
+
+
 function toggleDarkMode() {
     const body = document.body;
     body.classList.toggle('dark-mode');
@@ -472,6 +559,9 @@ function toggleDarkMode() {
     const isDarkMode = body.classList.contains('dark-mode');
     localStorage.setItem('dark-mode', isDarkMode);
 }
+
+
+
 
 function carregarDarkMode() {
     const isDarkMode = localStorage.getItem('dark-mode') === 'true';
@@ -488,6 +578,8 @@ function carregarDarkMode() {
 
 
 
+
+
 function exportarClientes() {
     const clientes = carregarClientes();
     const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
@@ -501,6 +593,8 @@ function exportarClientes() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+
 
 
 
@@ -542,6 +636,8 @@ function importarClientes(event) {
 
 
 
+
+
 function backupClientes() {
     const clientes = carregarClientes();
     const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
@@ -555,6 +651,9 @@ function backupClientes() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+
+
 
 
 
@@ -585,6 +684,10 @@ document.getElementById('select-all').addEventListener('change', function() {
         checkbox.checked = this.checked;
     });
 });
+
+
+
+
 
 function excluirClientesSelecionados() {
     const checkboxes = document.querySelectorAll('.cliente-checkbox:checked');
@@ -621,7 +724,7 @@ window.onload = function() {
     verificarAcesso();
     verificarBackupDiario();
     verificarLogoComemorativa();
-
+    exibirClientesAlterados();
     // Chama a função de scroll para garantir que o botão seja configurado corretamente
     window.onscroll();
 };
