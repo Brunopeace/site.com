@@ -1,3 +1,58 @@
+#infoClientes {
+    color: #008000;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    background: #e6ffe6;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    text-align: center;
+}
+
+
+
+
+#infoClientes.slide-in {
+  animation: slide-in 0.5s forwards; /* Animação de slide-in */
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%); /* Começa fora da tela à esquerda */
+    opacity: 0; /* Transparente */
+  }
+  to {
+    transform: translateX(0); /* Move-se para a posição original */
+    opacity: 1; /* Opacidade completa */
+  }
+}
+
+
+
+
+.titulo-clientes-renovados {
+            color: red; /* Escolha a cor que preferir */
+            font-weight: bold;
+            
+        }
+        .slide-in {
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+
+
 
 #backToTop {
     display: none;
