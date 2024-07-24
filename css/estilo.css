@@ -1,3 +1,9 @@
+
+#infoClientes span {
+    color: red;
+}
+
+
 #infoClientes {
     color: #008000;
     font-size: 18px;
