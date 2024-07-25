@@ -335,12 +335,11 @@ function exibirClientesAlterados() {
     if (clientesHoje && clientesHoje.nomes.length > 0) {
         campoClientesAlterados.innerHTML = '<span class="titulo-clientes-renovados">Renovados hoje: </span><br><br>' + clientesHoje.nomes.join(', ');
     } else {
-        campoClientesAlterados.innerText = 'Nenhum cliente renovado hoje';
+        campoClientesAlterados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
     }
 }
 
 window.addEventListener('load', exibirClientesAlterados);
-
 
 
 function atualizarDataVencimento(nomeCliente, novaData) {
