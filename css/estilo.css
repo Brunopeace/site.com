@@ -393,6 +393,9 @@
         tr:hover {
             background-color: #a3ffcc;
         }
+
+
+
         .orange {
             background-color: orange;
             color: white;
@@ -424,14 +427,23 @@
                 transform: translateX(-50%) translateY(-100%);
             }
         }
+
+
+
         .yellow {
             background-color: yellow;
             color: black;
         }
+
+
+
         .red {
             background-color: red;
             color: white;
         }
+
+
+
         .input-container {
         margin-bottom: 15px;
         text-align: center;
