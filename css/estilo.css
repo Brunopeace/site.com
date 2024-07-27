@@ -396,6 +396,33 @@
         .orange {
             background-color: orange;
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .orange::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%);
+            transform: translateX(-50%) translateY(-100%);
+            animation: shine 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-50%) translateY(-100%);
+            }
+            50% {
+                transform: translateX(-50%) translateY(100%);
+            }
+            100% {
+                transform: translateX(-50%) translateY(-100%);
+            }
         }
         .yellow {
             background-color: yellow;
