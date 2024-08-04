@@ -146,14 +146,189 @@ document.getElementById('backToTop').onclick = function() {
 
 
 
+
+
+
+function esvaziarLixeira() {
+    if (confirm("Tem certeza de que deseja esvaziar a lixeira? Isso removerá permanentemente todos os clientes nela.")) {
+        localStorage.removeItem('lixeira');
+        carregarLixeiraPagina();
+    }
+}
+
+function carregarLixeiraPagina() {
+    const lixeira = carregarLixeira();
+    const tbody = document.querySelector('#tabelaLixeira tbody');
+    tbody.innerHTML = '';
+
+    lixeira.forEach(cliente => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="checkbox" class="checkboxCliente" data-nome="${cliente.nome}"></td>
+            <td>${cliente.nome}</td>
+            <td>
+                <button onclick="restaurarCliente('${cliente.nome}')">Restaurar</button>
+                <button onclick="removerPermanentemente('${cliente.nome}')">Excluir</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    // Atualiza o botão de esvaziar lixeira
+    const esvaziarLixeiraButton = document.getElementById('esvaziarLixeira');
+    if (lixeira.length === 0) {
+        esvaziarLixeiraButton.style.display = 'none';
+    } else {
+        esvaziarLixeiraButton.style.display = 'block';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    carregarLixeiraPagina();
+});
+
+
+
+
+function removerPermanentemente(nome) {
+    const lixeira = carregarLixeira();
+    const clienteIndex = lixeira.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
+
+    if (clienteIndex !== -1) {
+        lixeira.splice(clienteIndex, 1);
+        salvarLixeira(lixeira);
+
+        window.location.reload();
+    }
+}
+
+function carregarLixeira() {
+    return JSON.parse(localStorage.getItem('lixeira')) || [];
+}
+
+function salvarLixeira(lixeira) {
+    localStorage.setItem('lixeira', JSON.stringify(lixeira));
+}
+
+window.addEventListener('load', carregarLixeiraPagina);
+
+
+function restaurarCliente(nome) {
+    const lixeira = carregarLixeira();
+    const clientes = carregarClientes();
+    const clienteIndex = lixeira.findIndex(c => c.nome === nome);
+
+    if (clienteIndex !== -1) {
+        const cliente = lixeira.splice(clienteIndex, 1)[0];
+        clientes.push(cliente);
+
+        salvarClientes(clientes);
+        salvarLixeira(lixeira);
+        carregarLixeiraPagina();
+        atualizarInfoClientes();
+    }
+}
+
+function carregarClientes() {
+    return JSON.parse(localStorage.getItem('clientes')) || [];
+}
+
 function salvarClientes(clientes) {
     localStorage.setItem('clientes', JSON.stringify(clientes));
 }
 
 
 
-function carregarClientes() {
-    return JSON.parse(localStorage.getItem('clientes')) || [];
+
+function alternarLixeira() {
+    const containerLixeira = document.getElementById('containerLixeira');
+    const toggleButton = document.getElementById('toggleLixeira');
+
+    if (containerLixeira.style.display === 'none') {
+        containerLixeira.style.display = 'block';
+        toggleButton.textContent = 'Fechar Lixeira';
+    } else {
+        containerLixeira.style.display = 'none';
+        toggleButton.textContent = 'Abrir Lixeira';
+    }
+}
+
+
+
+
+function excluirCliente(nome) {
+    const clientes = carregarClientes();
+    const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
+
+    if (clienteIndex !== -1) {
+        const cliente = clientes.splice(clienteIndex, 1)[0];
+        salvarClientes(clientes);
+
+        const lixeira = carregarLixeira();
+        lixeira.push(cliente);
+        salvarLixeira(lixeira);
+
+        // Adiciona a classe de animação de desintegração
+        const linhaCliente = document.querySelector(`tr[data-nome="${nome}"]`);
+        if (linhaCliente) {
+            linhaCliente.classList.add('desintegrate');
+            setTimeout(() => {
+                linhaCliente.remove();
+                atualizarInfoClientes();
+                carregarLixeiraPagina(); // Atualiza a lixeira após a exclusão
+            }, 500); // Tempo da animação em milissegundos
+        }
+    }
+}
+
+
+
+function pesquisarClientesLixeira() {
+    const input = document.getElementById('pesquisarLixeira');
+    const filter = input.value.toLowerCase();
+    const trs = document.querySelectorAll('#tabelaLixeira tbody tr');
+
+    trs.forEach(tr => {
+        const td = tr.querySelector('td:nth-child(2)');
+        if (td) {
+            const textValue = td.textContent || td.innerText;
+            if (textValue.toLowerCase().indexOf(filter) > -1) {
+                tr.style.display = '';
+            } else {
+                tr.style.display = 'none';
+            }
+        }
+    });
+}
+
+
+function toggleSelecionarTodos(source) {
+    const checkboxes = document.querySelectorAll('.checkboxCliente');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = source.checked;
+    });
+}
+
+
+
+function restaurarSelecionados() {
+    const checkboxes = document.querySelectorAll('.checkboxCliente:checked');
+    const lixeira = carregarLixeira();
+    const clientes = carregarClientes();
+
+    checkboxes.forEach(checkbox => {
+        const nome = checkbox.getAttribute('data-nome');
+        const clienteIndex = lixeira.findIndex(c => c.nome === nome);
+        if (clienteIndex !== -1) {
+            const cliente = lixeira.splice(clienteIndex, 1)[0];
+            clientes.push(cliente);
+        }
+    });
+
+    salvarClientes(clientes);
+    salvarLixeira(lixeira);
+    carregarLixeiraPagina();
+    atualizarInfoClientes();
 }
 
 
@@ -211,12 +386,11 @@ function calcularDataVencimento(data) {
 }
 
 
-
 function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
-
-    // Adiciona a caixa de seleção
+    novaLinha.setAttribute('data-nome', nome);
+    
     const celulaSelecionar = novaLinha.insertCell(0);
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -260,25 +434,13 @@ function adicionarLinhaTabela(nome, telefone, data) {
         }
     }));
 
-    celulaAcoes.appendChild(criarBotao("Excluir", function() {
-        if (confirm("Tem certeza de que deseja excluir este cliente?")) {
-            const clientes = carregarClientes();
-            const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
-            if (clienteIndex !== -1) {
-                clientes.splice(clienteIndex, 1);
-                salvarClientes(clientes);
 
-                // Adiciona a classe de animação de desintegração
-                novaLinha.classList.add('desintegrate');
+celulaAcoes.appendChild(criarBotao("Excluir", function() {
+    if (confirm("Tem certeza de que deseja excluir este cliente?")) {
+        excluirCliente(nome); // Chama a função de exclusão que move o cliente para a lixeira
+    }
+}));
 
-                // Remove a linha da tabela após a animação
-                setTimeout(() => {
-                    tabela.deleteRow(novaLinha.rowIndex - 1);
-                    atualizarInfoClientes();
-                }, 500); // Tempo da animação em milissegundos
-            }
-        }
-    }));
 
     celulaAcoes.appendChild(criarBotao("WhatsApp", function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
@@ -679,6 +841,7 @@ function excluirClientesSelecionados() {
 
 
 window.onload = function() {
+
     carregarPagina();
     carregarDarkMode();
     verificarAcesso();
