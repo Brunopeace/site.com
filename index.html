@@ -61,6 +61,34 @@
 <div id="infoClientes2" class="slide-in"></div><br>
     <div id="infoClientes" class="slide-in"></div>
     <div class="table-container slide-in">
+           
+           
+<br>
+<button id="toggleLixeira" onclick="alternarLixeira()">Abrir Lixeira</button>
+<div id="containerLixeira" style="display: none;">
+<div id="lixeira"><button id="restaurarSelecionados" onclick="restaurarSelecionados()">Restaurar /Sel</button>
+
+
+
+<button id="esvaziarLixeira" onclick="esvaziarLixeira()">Esvaziar Lixeira</button>
+<input type="text" id="pesquisarLixeira" placeholder="Pesquisar na lixeira" oninput="pesquisarClientesLixeira()">
+<table id="tabelaLixeira">
+<thead>
+<tr>
+<th>
+<input type="checkbox" id="selecionarTodos" onclick="toggleSelecionarTodos(this)">
+</th>
+
+</tr>
+        </thead>
+        <tbody>
+            <!-- Clientes da lixeira serão carregados aqui -->
+        </tbody>
+    </table>
+</div>
+        
+    </table>
+</div>
         <table>
     <thead>
         <tr>
@@ -72,16 +100,13 @@
         </tr>
     </thead>
     <tbody id="corpoTabela">
-        <!-- Linhas de clientes adicionadas dinamicamente -->
+<!-- Linhas de clientes adicionadas dinamicamente -->
     </tbody>
 </table>
     </div>
     <script src="javascript/script.js"></script>
-    
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    
 <footer>
         © 2024 Produzido por <a href="https://wa.me/5581982258462?text=%2AOl%C3%A1%2C+fiquei+interessado+nesse+seu+aplicativo+web%2C+quanto+custa+%3F%2A"><strong>BRUNO-PEACE</strong></a>
 </footer>
