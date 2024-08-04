@@ -1,3 +1,51 @@
+#containerLixeira {
+    border: 1px solid #ffffff;
+}
+
+#lixeira {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+
+#lixeira button:hover {
+    background: radial-gradient(circle, rgb(189, 46, 26), rgb(161, 184, 29));
+}
+
+#lixeira input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#lixeira table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#lixeira th, #lixeira td {
+    padding: 10px;
+    
+    text-align: left;
+}
+
+#selecionarTodos {
+    margin-left: 10px;
+}
+
+
+
+#esvaziarLixeira{
+    background: linear-gradient(45deg, rgb(10, 33, 25), rgb(218, 11, 51));
+}
+
+
+
 .nenhum-cliente-renovado {
     color: red;
 }
