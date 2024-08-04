@@ -146,9 +146,6 @@ document.getElementById('backToTop').onclick = function() {
 
 
 
-
-
-
 function esvaziarLixeira() {
     if (confirm("Tem certeza de que deseja esvaziar a lixeira? Isso removerá permanentemente todos os clientes nela.")) {
         localStorage.removeItem('lixeira');
@@ -226,8 +223,23 @@ function restaurarCliente(nome) {
         salvarLixeira(lixeira);
         carregarLixeiraPagina();
         atualizarInfoClientes();
+        atualizarTabelaClientes();
     }
 }
+
+
+
+function atualizarTabelaClientes() {
+    const clientes = carregarClientes();
+    const tabela = document.getElementById('corpoTabela');
+    tabela.innerHTML = '';
+
+    clientes.forEach(cliente => {
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data);
+    });
+}
+
+
 
 function carregarClientes() {
     return JSON.parse(localStorage.getItem('clientes')) || [];
@@ -236,7 +248,6 @@ function carregarClientes() {
 function salvarClientes(clientes) {
     localStorage.setItem('clientes', JSON.stringify(clientes));
 }
-
 
 
 
@@ -252,7 +263,6 @@ function alternarLixeira() {
         toggleButton.textContent = 'Abrir Lixeira';
     }
 }
-
 
 
 
@@ -329,6 +339,7 @@ function restaurarSelecionados() {
     salvarLixeira(lixeira);
     carregarLixeiraPagina();
     atualizarInfoClientes();
+    atualizarTabelaClientes();
 }
 
 
