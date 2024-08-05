@@ -200,7 +200,8 @@ function removerPermanentemente(nome) {
 }
 
 function carregarLixeira() {
-    return JSON.parse(localStorage.getItem('lixeira')) || [];
+    const lixeira = localStorage.getItem('lixeira');
+    return lixeira ? JSON.parse(lixeira) : [];
 }
 
 function salvarLixeira(lixeira) {
@@ -841,19 +842,24 @@ function excluirClientesSelecionados() {
 
     if (confirm(`Tem certeza de que deseja excluir ${checkboxes.length} clientes?`)) {
         let clientes = carregarClientes();
+        let lixeira = carregarLixeira();
         const clientesParaExcluir = [];
 
         checkboxes.forEach(checkbox => {
             const linha = checkbox.closest('tr');
             const nome = linha.cells[1].innerText;
             clientesParaExcluir.push(nome.toLowerCase());
+            const clienteExcluido = clientes.find(cliente => cliente.nome.toLowerCase() === nome.toLowerCase());
+            lixeira.push(clienteExcluido); // Adiciona o cliente à lixeira
             linha.remove();
         });
 
         clientes = clientes.filter(cliente => !clientesParaExcluir.includes(cliente.nome.toLowerCase()));
 
         salvarClientes(clientes);
+        salvarLixeira(lixeira); // Salva a lixeira atualizada
         atualizarInfoClientes();
+        carregarLixeiraPagina();
     }
 }
 
