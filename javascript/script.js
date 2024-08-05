@@ -224,6 +224,14 @@ function restaurarCliente(nome) {
         carregarLixeiraPagina();
         atualizarInfoClientes();
         atualizarTabelaClientes();
+
+        // Obter a célula de data da linha do cliente restaurado
+        const linhaCliente = document.querySelector(`tr[data-nome='${nome}']`);
+        const celulaData = linhaCliente ? linhaCliente.querySelector('.celula-data') : null;
+
+        if (celulaData) {
+            atualizarCorCelulaData(celulaData, new Date(cliente.data));
+        }
     }
 }
 
@@ -400,7 +408,7 @@ function calcularDataVencimento(data) {
 function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
-    novaLinha.setAttribute('data-nome', nome);
+    novaLinha.setAttribute('data-nome', nome); // Adiciona o atributo data-nome
     
     const celulaSelecionar = novaLinha.insertCell(0);
     const checkbox = document.createElement('input');
@@ -416,6 +424,7 @@ function adicionarLinhaTabela(nome, telefone, data) {
 
     const celulaData = novaLinha.insertCell(3);
     celulaData.innerText = new Date(data).toLocaleDateString('pt-BR');
+    celulaData.classList.add('celula-data');
 
     const celulaAcoes = novaLinha.insertCell(4);
 
@@ -445,13 +454,11 @@ function adicionarLinhaTabela(nome, telefone, data) {
         }
     }));
 
-
-celulaAcoes.appendChild(criarBotao("Excluir", function() {
-    if (confirm("Tem certeza de que deseja excluir este cliente?")) {
-        excluirCliente(nome); // Chama a função de exclusão que move o cliente para a lixeira
-    }
-}));
-
+    celulaAcoes.appendChild(criarBotao("Excluir", function() {
+        if (confirm("Tem certeza de que deseja excluir este cliente?")) {
+            excluirCliente(nome); // Chama a função de exclusão que move o cliente para a lixeira
+        }
+    }));
 
     celulaAcoes.appendChild(criarBotao("WhatsApp", function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
@@ -462,9 +469,10 @@ celulaAcoes.appendChild(criarBotao("Excluir", function() {
         abrirWhatsApp(telefoneCliente, mensagem);
     }));
 
-    atualizarCorCelulaData(celulaData, data);
+    atualizarCorCelulaData(celulaData, new Date(data)); // Atualiza a cor da célula de data
 
     tabela.appendChild(novaLinha);
+    return novaLinha; // Retorna a linha completa
 }
 
 
