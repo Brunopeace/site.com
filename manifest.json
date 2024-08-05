@@ -9,22 +9,22 @@
     {
       "src": "/assets/icon-96x96.png",
       "sizes": "96x96",
-      "type": "image/png"
+      "type": "img/icon.png"
     },
     {
       "src": "/assets/icon-144x144.png",
       "sizes": "144x144",
-      "type": "image/png"
+      "type": "img/icon.png"
     },
     {
       "src": "/assets/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "img/icon.png"
     },
     {
       "src": "/assets/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "img/icon.png"
     }
   ],
   "screenshots": [
