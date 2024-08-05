@@ -36,6 +36,26 @@ if ('serviceWorker' in navigator) {
 
 
 
+        
+        
+
+// Mostra o botão quando o usuário rola 20px para baixo
+window.onscroll = function() {
+    const backToTopButton = document.getElementById('backToTop');
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
+};
+
+// Função para rolar para o topo
+document.getElementById('backToTop').onclick = function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+
+
 function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
  'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a',
@@ -126,23 +146,6 @@ function verificarLogoComemorativa() {
         logo.src = 'img/logo-padrao.png'; // logo padrao
     }
 }
-        
-        
-
-// Mostra o botão quando o usuário rola 20px para baixo
-window.onscroll = function() {
-    const backToTopButton = document.getElementById('backToTop');
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        backToTopButton.style.display = 'block';
-    } else {
-        backToTopButton.style.display = 'none';
-    }
-};
-
-// Função para rolar para o topo
-document.getElementById('backToTop').onclick = function() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
 
 
 
@@ -835,32 +838,25 @@ document.getElementById('select-all').addEventListener('change', function() {
 
 function excluirClientesSelecionados() {
     const checkboxes = document.querySelectorAll('.cliente-checkbox:checked');
-    if (checkboxes.length === 0) {
-        alert('Selecione pelo menos um cliente para excluir.');
-        return;
-    }
+    const clientes = carregarClientes();
+    const lixeira = carregarLixeira();
 
-    if (confirm(`Tem certeza de que deseja excluir ${checkboxes.length} clientes?`)) {
-        let clientes = carregarClientes();
-        let lixeira = carregarLixeira();
-        const clientesParaExcluir = [];
+    checkboxes.forEach(checkbox => {
+        const nome = checkbox.closest('tr').getAttribute('data-nome');
+        const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
 
-        checkboxes.forEach(checkbox => {
-            const linha = checkbox.closest('tr');
-            const nome = linha.cells[1].innerText;
-            clientesParaExcluir.push(nome.toLowerCase());
-            const clienteExcluido = clientes.find(cliente => cliente.nome.toLowerCase() === nome.toLowerCase());
-            lixeira.push(clienteExcluido); // Adiciona o cliente à lixeira
-            linha.remove();
-        });
+        if (clienteIndex !== -1) {
+            const cliente = clientes.splice(clienteIndex, 1)[0];
+            lixeira.push(cliente);
+        }
+    });
 
-        clientes = clientes.filter(cliente => !clientesParaExcluir.includes(cliente.nome.toLowerCase()));
+    salvarClientes(clientes);
+    salvarLixeira(lixeira);
 
-        salvarClientes(clientes);
-        salvarLixeira(lixeira); // Salva a lixeira atualizada
-        atualizarInfoClientes();
-        carregarLixeiraPagina();
-    }
+    // Atualiza a tabela de clientes e a lixeira
+    atualizarTabelaClientes();
+    carregarLixeiraPagina();
 }
 
 
@@ -870,8 +866,8 @@ window.onload = function() {
     carregarPagina();
     carregarDarkMode();
     verificarAcesso();
-    verificarBackupDiario();
     verificarLogoComemorativa();
+    verificarBackupDiario();
     exibirClientesAlterados();
     // Chama a função de scroll para garantir que o botão seja configurado corretamente
     window.onscroll();
