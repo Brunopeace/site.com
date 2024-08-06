@@ -36,25 +36,6 @@ if ('serviceWorker' in navigator) {
 
 
 
-        
-        
-
-// Mostra o botão quando o usuário rola 20px para baixo
-window.onscroll = function() {
-    const backToTopButton = document.getElementById('backToTop');
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        backToTopButton.style.display = 'block';
-    } else {
-        backToTopButton.style.display = 'none';
-    }
-};
-
-// Função para rolar para o topo
-document.getElementById('backToTop').onclick = function() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-
 
 function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
@@ -72,15 +53,6 @@ function verificarAcesso() {
         alert("Acesso Negado. Você não tem permissão para acessar esta página.");
         window.location.href = "acessonegado.html";
     }
-}
-
-
-
-function gerarUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
 }
 
 
@@ -147,6 +119,25 @@ function verificarLogoComemorativa() {
         logo.src = 'img/logo-padrao.png'; // logo padrao
     }
 }
+
+        
+        
+
+// Mostra o botão quando o usuário rola 20px para baixo
+window.onscroll = function() {
+    const backToTopButton = document.getElementById('backToTop');
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
+};
+
+// Função para rolar para o topo
+document.getElementById('backToTop').onclick = function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 
 
 
@@ -268,7 +259,10 @@ function salvarClientes(clientes) {
     localStorage.setItem('clientes', JSON.stringify(clientes));
 }
 
-
+window.addEventListener('load', function() {
+    const clientes = carregarClientes();
+    clientes.forEach(cliente => adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data));
+});
 
 function alternarLixeira() {
     const containerLixeira = document.getElementById('containerLixeira');
@@ -442,30 +436,30 @@ function adicionarLinhaTabela(nome, telefone, data) {
     const celulaAcoes = novaLinha.insertCell(4);
 
     celulaAcoes.appendChild(criarBotao("Editar", function() {
-        const novoNome = prompt("Digite o novo nome do cliente:", nome);
-        const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
-        const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", celulaData.innerText);
+    const novoNome = prompt("Digite o novo nome do cliente:", nome);
+    const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
+    const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", celulaData.innerText);
 
-        if (novoNome && validarTelefone(novoTelefone) && novaData) {
-            const partesData = novaData.split('/');
-            if (partesData.length === 3) {
-                const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
-                if (!isNaN(novaDataVencimento.getTime())) {
-                    celulaNome.innerText = novoNome;
-                    celulaTelefone.innerText = novoTelefone;
-                    celulaData.innerText = novaDataVencimento.toLocaleDateString('pt-BR');
+    if (novoNome && validarTelefone(novoTelefone) && novaData) {
+        const partesData = novaData.split('/');
+        if (partesData.length === 3) {
+            const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
+            if (!isNaN(novaDataVencimento.getTime())) {
+                celulaNome.innerText = novoNome;
+                celulaTelefone.innerText = novoTelefone;
+                celulaData.innerText = novaDataVencimento.toLocaleDateString('pt-BR');
 
-                    editarCliente(nome, novoNome, novoTelefone, novaDataVencimento);
-                } else {
-                    alert("Data inválida. Use o formato DD/MM/AAAA.");
-                }
+                editarCliente(nome, novoNome, novoTelefone, novaDataVencimento);
             } else {
-                alert("Formato de data inválido. Use DD/MM/AAAA.");
+                alert("Data inválida. Use o formato DD/MM/AAAA.");
             }
         } else {
-            alert("Por favor, preencha todos os campos corretamente.");
+            alert("Formato de data inválido. Use DD/MM/AAAA.");
         }
-    }));
+    } else {
+        alert("Por favor, preencha todos os campos corretamente.");
+    }
+}));
 
     celulaAcoes.appendChild(criarBotao("Excluir", function() {
         if (confirm("Tem certeza de que deseja excluir este cliente?")) {
@@ -476,7 +470,7 @@ function adicionarLinhaTabela(nome, telefone, data) {
     celulaAcoes.appendChild(criarBotao("WhatsApp", function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
         const mensagem = encodeURIComponent(
-            `*Olá bom dia, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX EMAIL* \n \n brunopeaceandlove60@gmail.com`
+            `*Olá bom dia, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX EMAIL* \n \n brunopeaceandlove60@gmail.com `
         );
         const telefoneCliente = telefone.replace(/\D/g, '');
         abrirWhatsApp(telefoneCliente, mensagem);
@@ -523,18 +517,17 @@ function atualizarClientesAlterados(nome) {
 function exibirClientesAlterados() {
     const clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
     const hoje = new Date().toLocaleDateString('pt-BR');
-    const clientesHoje = clientesAlterados.find(c => c.data === hoje);
+    const clienteHoje = clientesAlterados.find(c => c.data === hoje);
     const campoClientesAlterados = document.getElementById('infoClientes');
 
-    if (clientesHoje && clientesHoje.nomes.length > 0) {
-        campoClientesAlterados.innerHTML = '<span class="titulo-clientes-renovados">Renovados hoje: </span><br><br>' + clientesHoje.nomes.join(', ');
+    if (clienteHoje && clienteHoje.nomes.length > 0) {
+        campoClientesAlterados.innerHTML = '<span class="titulo-clientes-renovados">Renovados hoje: </span><br><br>' + clienteHoje.nomes.join(', ');
     } else {
         campoClientesAlterados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
     }
 }
 
 window.addEventListener('load', exibirClientesAlterados);
-
 
 function atualizarDataVencimento(nomeCliente, novaData) {
     let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
@@ -554,6 +547,28 @@ function atualizarDataVencimento(nomeCliente, novaData) {
 
 
 
+
+function registrarClienteAlterado(nome, novaDataVencimento) {
+    const clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
+    const hoje = new Date().toLocaleDateString('pt-BR');
+
+    let clienteHoje = clientesAlterados.find(c => c.data === hoje);
+
+    if (!clienteHoje) {
+        clienteHoje = { data: hoje, nomes: [] };
+        clientesAlterados.push(clienteHoje);
+    }
+
+    if (!clienteHoje.nomes.includes(nome)) {
+        clienteHoje.nomes.push(nome);
+    }
+
+    localStorage.setItem('clientesAlterados', JSON.stringify(clientesAlterados));
+}
+
+
+
+
 function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
     let clientes = carregarClientes();
     let clienteExistente = clientes.find(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
@@ -564,12 +579,15 @@ function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
         clienteExistente.data = novaDataVencimento;
 
         salvarClientes(clientes);
+
+        registrarClienteAlterado(clienteExistente.nome, novaDataVencimento); // Registrar alteração
+
         atualizarInfoClientes();
         exibirClientesAlterados();
         atualizarTabelaClientes();
-        carregarPagina();
     }
 }
+
 
 
 
@@ -712,7 +730,6 @@ function carregarPagina() {
     });
 
     atualizarInfoClientes();
-    
 }
 
 
@@ -921,7 +938,7 @@ function excluirClientesSelecionados() {
     carregarLixeiraPagina();
     atualizarTabelaClientes();
     atualizarInfoClientes();
-    carregarPagina();
+    
 }
 
 
@@ -930,10 +947,10 @@ window.onload = function() {
 
     carregarPagina();
     carregarDarkMode();
-    verificarAcesso();
-    verificarLogoComemorativa();
     verificarBackupDiario();
     exibirClientesAlterados();
+    verificarAcesso();
+    verificarLogoComemorativa();
     
     // Chama a função de scroll para garantir que o botão seja configurado corretamente
     window.onscroll();
