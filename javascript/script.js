@@ -927,7 +927,6 @@ window.onload = function() {
     verificarLogoComemorativa();
     verificarBackupDiario();
     exibirClientesAlterados();
-    atualizarTabelaClientes();
     // Chama a função de scroll para garantir que o botão seja configurado corretamente
     window.onscroll();
 };
