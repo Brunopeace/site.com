@@ -760,11 +760,7 @@ function exportarClientes() {
 
 
 
-
-
-
-
-
+/* function importar clientes */
 let clients = JSON.parse(localStorage.getItem('clients')) || [];
         let trash = JSON.parse(localStorage.getItem('trash')) || [];
 
@@ -857,21 +853,6 @@ let clients = JSON.parse(localStorage.getItem('clients')) || [];
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function backupClientes() {
     const clientes = carregarClientes();
     const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
@@ -930,10 +911,10 @@ function excluirClientesSelecionados() {
 
     salvarClientes(clientes);
     salvarLixeira(lixeira);
-
-    // Atualiza a tabela de clientes e a lixeira
-    atualizarTabelaClientes();
     carregarLixeiraPagina();
+    atualizarTabelaClientes();
+    carregarPagina();
+    
 }
 
 
