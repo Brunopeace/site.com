@@ -711,7 +711,7 @@ function carregarPagina() {
         adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
     });
 
-    atualizarTabelaClientes();
+    atualizarInfoClientes();
     
 }
 
