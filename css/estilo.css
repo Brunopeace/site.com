@@ -1,3 +1,25 @@
+#quantidadeClientesLixeira {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 20px 0;
+    margin-left: 18.5%;
+    background-color: #007BFF; /* Cor de fundo azul */
+    color: white; /* Cor do texto branco */
+    font-size: 18px; /* Tamanho da fonte */
+    font-weight: bold; /* Texto em negrito */
+    border-radius: 8px; /* Cantos arredondados */
+    border: 1px solid #ffffff;    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+#quantidadeClientesLixeira span {
+    font-size: 20px; /* Tamanho da fonte do número */
+    font-weight: bold; /* Negrito no número */
+}
+
+
+
+
+
 #containerLixeira {
     border: 1px solid #ffffff;
 }
