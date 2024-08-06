@@ -59,7 +59,8 @@ document.getElementById('backToTop').onclick = function() {
 function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
  'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a',
- 'fc30c781-e382-406b-b65a-4e850382e014'];
+ 'fc30c781-e382-406b-b65a-4e850382e014',
+ 'eb538250-87c4-44c4-8668-4ebd9cf0faed'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -336,12 +337,14 @@ function toggleSelecionarTodos(source) {
 function restaurarSelecionados() {
     const checkboxes = document.querySelectorAll('.checkboxCliente:checked');
     const lixeira = carregarLixeira();
-    const clientes = carregarClientes();
+    let clientes = carregarClientes();
 
     checkboxes.forEach(checkbox => {
         const nome = checkbox.getAttribute('data-nome');
         const clienteIndex = lixeira.findIndex(c => c.nome === nome);
-        if (clienteIndex !== -1) {
+        const clienteExistente = clientes.some(cliente => cliente.nome === nome);
+
+        if (clienteIndex !== -1 && !clienteExistente) {
             const cliente = lixeira.splice(clienteIndex, 1)[0];
             clientes.push(cliente);
         }
@@ -757,41 +760,115 @@ function exportarClientes() {
 
 
 
-function importarClientes(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const clientesImportados = JSON.parse(e.target.result);
-            const clientesAtuais = carregarClientes();
-            
-            // Mapa para rastrear clientes já existentes pelo nome
-            const mapaClientes = new Map();
-            clientesAtuais.forEach(cliente => {
-                mapaClientes.set(cliente.nome.toLowerCase(), cliente);
-            });
 
-            // Atualizar clientes existentes e adicionar novos clientes do backup
-            clientesImportados.forEach(clienteImportado => {
-                const nomeClienteImportado = clienteImportado.nome.toLowerCase();
-                if (mapaClientes.has(nomeClienteImportado)) {
-                    // Cliente já existe, atualizar com informações do backup
-                    const clienteExistente = mapaClientes.get(nomeClienteImportado);
-                    clienteExistente.telefone = clienteImportado.telefone;
-                    clienteExistente.data = clienteImportado.data;
-                } else {
-                    // Novo cliente do backup, adicionar à lista
-                    clientesAtuais.push(clienteImportado);
-                }
-            });
 
-            // Salvar a lista atualizada de clientes
-            salvarClientes(clientesAtuais);
-            window.location.reload();
-        };
-        reader.readAsText(file);
-    }
-}
+
+
+
+let clients = JSON.parse(localStorage.getItem('clients')) || [];
+        let trash = JSON.parse(localStorage.getItem('trash')) || [];
+
+        function saveClients() {
+            localStorage.setItem('clients', JSON.stringify(clients));
+        }
+
+        function saveTrash() {
+            localStorage.setItem('trash', JSON.stringify(trash));
+        }
+
+        function displayClients() {
+            const clientList = document.getElementById('clientList');
+            clientList.innerHTML = '';
+            clients.forEach((client, index) => {
+                const clientDiv = document.createElement('div');
+                clientDiv.className = 'client';
+                clientDiv.innerHTML = `
+                    <span>${client.nome} - ${client.telefone} - ${new Date(client.data).toLocaleDateString()}</span>
+                    <button onclick="deleteClient(${index})">Excluir</button>
+                `;
+                clientList.appendChild(clientDiv);
+            });
+        }
+
+        function addClient() {
+            const nome = prompt('Nome do cliente:');
+            const telefone = prompt('Telefone do cliente:');
+            const data = prompt('Data (aaaa-mm-dd):');
+            clients.push({ nome, telefone, data: new Date(data).toISOString() });
+            saveClients();
+            displayClients();
+        }
+
+        function deleteClient(index) {
+            const client = clients.splice(index, 1)[0];
+            trash.push(client); // Move o cliente para a lixeira
+            saveClients();
+            saveTrash();
+            displayClients();
+        }
+
+        function carregarClientes() {
+            return JSON.parse(localStorage.getItem('clients')) || [];
+        }
+
+        function salvarClientes(clientes) {
+            localStorage.setItem('clients', JSON.stringify(clientes));
+        }
+
+        function importarClientes(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const clientesImportados = JSON.parse(e.target.result);
+                    const clientesAtuais = carregarClientes();
+                    
+                    // Mapa para rastrear clientes já existentes pelo nome
+                    const mapaClientes = new Map();
+                    clientesAtuais.forEach(cliente => {
+                        mapaClientes.set(cliente.nome.toLowerCase(), cliente);
+                    });
+
+                    // Atualizar clientes existentes e adicionar novos clientes do backup
+                    clientesImportados.forEach(clienteImportado => {
+                        const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+                        if (mapaClientes.has(nomeClienteImportado)) {
+                            // Cliente já existe, atualizar com informações do backup
+                            const clienteExistente = mapaClientes.get(nomeClienteImportado);
+                            clienteExistente.telefone = clienteImportado.telefone;
+                            clienteExistente.data = clienteImportado.data;
+                        } else {
+                            // Novo cliente do backup, adicionar à lista
+                            clientesAtuais.push(clienteImportado);
+                        }
+                    });
+
+                    // Salvar a lista atualizada de clientes
+                    salvarClientes(clientesAtuais);
+                    window.location.reload();
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('importarClientes').addEventListener('change', importarClientes);
+            displayClients();
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -869,6 +946,7 @@ window.onload = function() {
     verificarLogoComemorativa();
     verificarBackupDiario();
     exibirClientesAlterados();
+    atualizarTabelaClientes();
     // Chama a função de scroll para garantir que o botão seja configurado corretamente
     window.onscroll();
 };
