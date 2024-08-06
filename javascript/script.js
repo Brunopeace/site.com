@@ -913,7 +913,7 @@ function excluirClientesSelecionados() {
     salvarLixeira(lixeira);
     carregarLixeiraPagina();
     atualizarTabelaClientes();
-    
+    carregarPagina();
     
 }
 
