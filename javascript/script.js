@@ -566,6 +566,7 @@ function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
         salvarClientes(clientes);
         atualizarInfoClientes();
         exibirClientesAlterados();
+        atualizarTabelaClientes();
     }
 }
 
