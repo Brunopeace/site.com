@@ -41,7 +41,7 @@ function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
  'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a',
  'fc30c781-e382-406b-b65a-4e850382e014',
- 'eb538250-87c4-44c4-8668-4ebd9cf0faed'];
+ '58967ac2-aed3-4f22-b2a2-05f7e9345d22'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -517,17 +517,17 @@ function atualizarClientesAlterados(nome) {
 function exibirClientesAlterados() {
     const clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
     const hoje = new Date().toLocaleDateString('pt-BR');
-    const clienteHoje = clientesAlterados.find(c => c.data === hoje);
+    const clientesHoje = clientesAlterados.find(c => c.data === hoje);
     const campoClientesAlterados = document.getElementById('infoClientes');
 
-    if (clienteHoje && clienteHoje.nomes.length > 0) {
-        campoClientesAlterados.innerHTML = '<span class="titulo-clientes-renovados">Renovados hoje: </span><br><br>' + clienteHoje.nomes.join(', ');
+    if (clientesHoje && clientesHoje.nomes.length > 0) {
+        const listaClientes = clientesHoje.nomes.map(nome => `<li>${nome}</li>`).join('');
+        campoClientesAlterados.innerHTML = `<span class="titulo-clientes-renovados">Clientes renovados hoje:</span><ul>${listaClientes}</ul>`;
     } else {
         campoClientesAlterados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
     }
 }
 
-window.addEventListener('load', exibirClientesAlterados);
 
 function atualizarDataVencimento(nomeCliente, novaData) {
     let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
@@ -548,7 +548,7 @@ function atualizarDataVencimento(nomeCliente, novaData) {
 
 
 
-function registrarClienteAlterado(nome, novaDataVencimento) {
+function registrarClienteAlterado(nome) {
     const clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
     const hoje = new Date().toLocaleDateString('pt-BR');
 
@@ -568,25 +568,29 @@ function registrarClienteAlterado(nome, novaDataVencimento) {
 
 
 
-
 function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
     let clientes = carregarClientes();
     let clienteExistente = clientes.find(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
 
     if (clienteExistente) {
-        clienteExistente.nome = novoNome;
-        clienteExistente.telefone = novoTelefone;
-        clienteExistente.data = novaDataVencimento;
+        let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
+        let novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
 
-        salvarClientes(clientes);
+        // Atualizar apenas se a data de vencimento foi alterada
+        if (dataAnterior !== novaDataFormatada) {
+            clienteExistente.nome = novoNome;
+            clienteExistente.telefone = novoTelefone;
+            clienteExistente.data = novaDataVencimento;
 
-        registrarClienteAlterado(clienteExistente.nome, novaDataVencimento); // Registrar alteração
-
-        atualizarInfoClientes();
-        exibirClientesAlterados();
-        atualizarTabelaClientes();
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            atualizarClientesAlterados(novoNome); // Registrar cliente alterado
+        }
     }
 }
+
+
+
+
 
 
 
@@ -821,13 +825,6 @@ let clients = JSON.parse(localStorage.getItem('clients')) || [];
             displayClients();
         }
 
-        function carregarClientes() {
-            return JSON.parse(localStorage.getItem('clients')) || [];
-        }
-
-        function salvarClientes(clientes) {
-            localStorage.setItem('clients', JSON.stringify(clientes));
-        }
 
         function importarClientes(event) {
             const file = event.target.files[0];
