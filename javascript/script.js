@@ -554,27 +554,19 @@ function atualizarDataVencimento(nomeCliente, novaData) {
 
 
 
-function editarCliente(nomeCliente, novoNome, novoTelefone, novaDataVencimento) {
-    let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-    let clienteExistente = clientes.find(c => c.nome === nomeCliente);
+function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
+    let clientes = carregarClientes();
+    let clienteExistente = clientes.find(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
 
     if (clienteExistente) {
-        let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
-        let novaDataFormatada = new Date(novaDataVencimento).toLocaleDateString('pt-BR');
-        
-        // Atualiza o nome e telefone se necessário
         clienteExistente.nome = novoNome;
         clienteExistente.telefone = novoTelefone;
+        clienteExistente.data = novaDataVencimento;
 
-        // Atualiza a data de vencimento e exibe alteração se necessário
-        if (dataAnterior !== novaDataFormatada) {
-            clienteExistente.data = novaDataVencimento;
-            atualizarClientesAlterados(nomeCliente);
-        }
+        salvarClientes(clientes);
+        atualizarInfoClientes();
+        exibirClientesAlterados();
     }
-
-    localStorage.setItem('clientes', JSON.stringify(clientes));
-    window.location.reload(); // Recarrega a página para atualizar a exibição
 }
 
 
