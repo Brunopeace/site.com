@@ -567,6 +567,7 @@ function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
         atualizarInfoClientes();
         exibirClientesAlterados();
         atualizarTabelaClientes();
+        carregarPagina();
     }
 }
 
@@ -711,6 +712,8 @@ function carregarPagina() {
     });
 
     atualizarInfoClientes();
+    atualizarTabelaClientes();
+    carregarPagina();
 }
 
 
