@@ -157,6 +157,8 @@ function esvaziarLixeira() {
     }
 }
 
+
+
 function carregarLixeiraPagina() {
     const lixeira = carregarLixeira();
     const tbody = document.querySelector('#tabelaLixeira tbody');
@@ -182,6 +184,10 @@ function carregarLixeiraPagina() {
     } else {
         esvaziarLixeiraButton.style.display = 'block';
     }
+
+    // Exibir quantidade de clientes na lixeira
+    const quantidadeClientes = contarClientesLixeira();
+    document.getElementById('quantidadeClientesLixeira').textContent = `Clientes na lixeira: ${quantidadeClientes}`;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -894,6 +900,12 @@ document.getElementById('select-all').addEventListener('change', function() {
 
 
 
+function contarClientesLixeira() {
+    const lixeira = carregarLixeira();
+    return lixeira.length;
+}
+
+
 function excluirClientesSelecionados() {
     const checkboxes = document.querySelectorAll('.cliente-checkbox:checked');
     const clientes = carregarClientes();
@@ -915,7 +927,6 @@ function excluirClientesSelecionados() {
     atualizarTabelaClientes();
     atualizarInfoClientes();
     carregarPagina();
-    
 }
 
 
@@ -928,6 +939,7 @@ window.onload = function() {
     verificarLogoComemorativa();
     verificarBackupDiario();
     exibirClientesAlterados();
+    
     // Chama a função de scroll para garantir que o botão seja configurado corretamente
     window.onscroll();
 };
