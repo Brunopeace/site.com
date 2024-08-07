@@ -67,30 +67,28 @@
 <button id="toggleLixeira" onclick="alternarLixeira()">Abrir Lixeira</button>
 <br><br>
 <div id="containerLixeira" style="display: none;">
-<div id="quantidadeClientesLixeira"></div>
-<div id="lixeira"><button id="restaurarSelecionados" onclick="restaurarSelecionados()">Restaurar /Sel</button>
-
-
-
-<button id="esvaziarLixeira" onclick="esvaziarLixeira()">Esvaziar Lixeira</button>
-<input type="text" id="pesquisarLixeira" placeholder="Pesquisar na lixeira" oninput="pesquisarClientesLixeira()">
-<table id="tabelaLixeira">
-<thead>
-<tr>
-<th>
+    <div id="quantidadeClientesLixeira"></div>
+    <div id="lixeira">
+        <button id="restaurarSelecionados" onclick="restaurarSelecionados()">Restaurar /Sel</button>
+        <button id="esvaziarLixeira" onclick="esvaziarLixeira()">Esvaziar Lixeira</button>
+        <input type="text" id="pesquisarLixeira" placeholder="Pesquisar na lixeira" oninput="pesquisarClientesLixeira()">
+        <table id="tabelaLixeira">
+            <thead>
+                <tr>
+                    <th>
 <input type="checkbox" id="selecionarTodos" onclick="toggleSelecionarTodos(this)">
-</th>
+                    </th>
+                    
+                </tr>
+            </thead>
+            <tbody id="clientList">
+                <!-- Clientes da lixeira serão carregados aqui -->
+            </tbody>
+        </table>
+    </div>
+</div>
 
-</tr>
-        </thead>
-        <tbody id="clientList">
-            <!-- Clientes da lixeira serão carregados aqui -->
-        </tbody>
-    </table>
-</div>
-        
-    </table>
-</div>
+
         <table>
     <thead>
         <tr>
