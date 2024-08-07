@@ -36,6 +36,26 @@ if ('serviceWorker' in navigator) {
 
 
 
+// Mostra o botão quando o usuário rola 20px para baixo
+window.onscroll = function() {
+    const backToTopButton = document.getElementById('backToTop');
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
+};
+
+// Função para rolar para o topo
+document.getElementById('backToTop').onclick = function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+
+
+
+
+
 
 function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
@@ -120,24 +140,6 @@ function verificarLogoComemorativa() {
     }
 }
 
-        
-        
-
-// Mostra o botão quando o usuário rola 20px para baixo
-window.onscroll = function() {
-    const backToTopButton = document.getElementById('backToTop');
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        backToTopButton.style.display = 'block';
-    } else {
-        backToTopButton.style.display = 'none';
-    }
-};
-
-// Função para rolar para o topo
-document.getElementById('backToTop').onclick = function() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
 
 
 
@@ -168,15 +170,9 @@ function carregarLixeiraPagina() {
         tbody.appendChild(tr);
     });
 
-    // Atualiza o botão de esvaziar lixeira
     const esvaziarLixeiraButton = document.getElementById('esvaziarLixeira');
-    if (lixeira.length === 0) {
-        esvaziarLixeiraButton.style.display = 'none';
-    } else {
-        esvaziarLixeiraButton.style.display = 'block';
-    }
+    esvaziarLixeiraButton.style.display = lixeira.length === 0 ? 'none' : 'block';
 
-    // Exibir quantidade de clientes na lixeira
     const quantidadeClientes = contarClientesLixeira();
     document.getElementById('quantidadeClientesLixeira').textContent = `Clientes na lixeira: ${quantidadeClientes}`;
 }
@@ -184,6 +180,17 @@ function carregarLixeiraPagina() {
 document.addEventListener('DOMContentLoaded', function() {
     carregarLixeiraPagina();
 });
+
+function removerPermanentemente(nome) {
+    const lixeira = carregarLixeira();
+    const clienteIndex = lixeira.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
+
+    if (clienteIndex !== -1) {
+        lixeira.splice(clienteIndex, 1);
+        salvarLixeira(lixeira);
+        carregarLixeiraPagina();
+    }
+}
 
 
 
@@ -226,14 +233,6 @@ function restaurarCliente(nome) {
         carregarLixeiraPagina();
         atualizarInfoClientes();
         atualizarTabelaClientes();
-
-        // Obter a célula de data da linha do cliente restaurado
-        const linhaCliente = document.querySelector(`tr[data-nome='${nome}']`);
-        const celulaData = linhaCliente ? linhaCliente.querySelector('.celula-data') : null;
-
-        if (celulaData) {
-            atualizarCorCelulaData(celulaData, new Date(cliente.data));
-        }
     }
 }
 
@@ -264,17 +263,18 @@ window.addEventListener('load', function() {
     clientes.forEach(cliente => adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data));
 });
 
+// Função para alternar a exibição da lixeira
 function alternarLixeira() {
-    const containerLixeira = document.getElementById('containerLixeira');
-    const toggleButton = document.getElementById('toggleLixeira');
+const containerLixeira = document.getElementById('containerLixeira');
+const toggleButton = document.getElementById('toggleLixeira');
 
-    if (containerLixeira.style.display === 'none') {
-        containerLixeira.style.display = 'block';
-        toggleButton.textContent = 'Fechar Lixeira';
-    } else {
-        containerLixeira.style.display = 'none';
-        toggleButton.textContent = 'Abrir Lixeira';
-    }
+if (containerLixeira.style.display === 'none') {
+containerLixeira.style.display = 'block';
+toggleButton.textContent = 'Fechar Lixeira';
+} else {
+containerLixeira.style.display = 'none';
+toggleButton.textContent = 'Abrir Lixeira';
+}
 }
 
 
@@ -291,15 +291,14 @@ function excluirCliente(nome) {
         lixeira.push(cliente);
         salvarLixeira(lixeira);
 
-        // Adiciona a classe de animação de desintegração
         const linhaCliente = document.querySelector(`tr[data-nome="${nome}"]`);
         if (linhaCliente) {
             linhaCliente.classList.add('desintegrate');
             setTimeout(() => {
                 linhaCliente.remove();
                 atualizarInfoClientes();
-                carregarLixeiraPagina(); // Atualiza a lixeira após a exclusão
-            }, 500); // Tempo da animação em milissegundos
+                carregarLixeiraPagina();
+            }, 500);
         }
     }
 }
@@ -315,11 +314,7 @@ function pesquisarClientesLixeira() {
         const td = tr.querySelector('td:nth-child(2)');
         if (td) {
             const textValue = td.textContent || td.innerText;
-            if (textValue.toLowerCase().indexOf(filter) > -1) {
-                tr.style.display = '';
-            } else {
-                tr.style.display = 'none';
-            }
+            tr.style.display = textValue.toLowerCase().includes(filter) ? '' : 'none';
         }
     });
 }
@@ -393,7 +388,7 @@ function validarTelefone(telefone) {
 
 function calcularDataVencimento(data) {
     let dia = data.getDate() + 1;
-    let mes = data.getMonth() + 1; // Próximo mês
+    let mes = data.getMonth() + 1;
     let ano = data.getFullYear();
 
     if (mes > 11) {
@@ -403,9 +398,8 @@ function calcularDataVencimento(data) {
 
     let dataVencimento = new Date(ano, mes, dia);
 
-    // Verifica se o dia caiu no mês seguinte (ex. dia 31 em meses com menos de 31 dias)
     if (dataVencimento.getMonth() !== mes) {
-        dataVencimento = new Date(ano, mes + 1, 0); // Último dia do mês anterior
+        dataVencimento = new Date(ano, mes + 1, 0);
     }
 
     return dataVencimento;
@@ -415,6 +409,7 @@ function calcularDataVencimento(data) {
 function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
+    novaLinha.setAttribute('data-nome', nome); // Adiciona atributo de nome à linha
 
     // Adiciona a caixa de seleção
     const celulaSelecionar = novaLinha.insertCell(0);
@@ -444,55 +439,41 @@ function adicionarLinhaTabela(nome, telefone, data) {
             if (partesData.length === 3) {
                 const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
                 if (!isNaN(novaDataVencimento.getTime())) {
+                    const dataAnterior = new Date(data).toLocaleDateString('pt-BR');
+                    const novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
+
+                    if (dataAnterior !== novaDataFormatada) {
+                        atualizarClientesAlterados(nome, dataAnterior, novaDataFormatada);
+                    }
+
                     celulaNome.innerText = novoNome;
                     celulaTelefone.innerText = novoTelefone;
-                    celulaData.innerText = novaDataVencimento.toLocaleDateString('pt-BR');
+                    celulaData.innerText = novaDataFormatada;
 
                     const clientes = carregarClientes();
-                    const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase() && c.telefone === telefone);
+                    const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
                     if (clienteIndex !== -1) {
                         clientes[clienteIndex].nome = novoNome;
                         clientes[clienteIndex].telefone = novoTelefone;
                         clientes[clienteIndex].data = novaDataVencimento;
                         salvarClientes(clientes);
                         atualizarCorCelulaData(celulaData, novaDataVencimento);
-                        window.location.reload();
                     }
-                } else {
-                    alert("Data inválida. Use o formato DD/MM/AAAA.");
                 }
-            } else {
-                alert("Formato de data inválido. Use DD/MM/AAAA.");
             }
-        } else {
-            alert("Por favor, preencha todos os campos corretamente.");
         }
     }));
 
     celulaAcoes.appendChild(criarBotao("Excluir", function() {
         if (confirm("Tem certeza de que deseja excluir este cliente?")) {
-            const clientes = carregarClientes();
-            const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase() && c.telefone === telefone);
-            if (clienteIndex !== -1) {
-                clientes.splice(clienteIndex, 1);
-                salvarClientes(clientes);
-
-                // Adiciona a classe de animação de desintegração
-                novaLinha.classList.add('desintegrate');
-
-                // Remove a linha da tabela após a animação
-                setTimeout(() => {
-                    tabela.deleteRow(novaLinha.rowIndex - 1);
-                    atualizarInfoClientes();
-                }, 500); // Tempo da animação em milissegundos
-            }
+            excluirCliente(nome);
         }
     }));
 
     celulaAcoes.appendChild(criarBotao("WhatsApp", function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
         const mensagem = encodeURIComponent(
-            `*Olá bom dia, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX CELULAR* \n \n 81997921351`
+            `*Olá bom dia, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX EMAIL* \n \n brunopeaceandlove60@gmail.com `
         );
         const telefoneCliente = telefone.replace(/\D/g, '');
         abrirWhatsApp(telefoneCliente, mensagem);
@@ -503,38 +484,107 @@ function adicionarLinhaTabela(nome, telefone, data) {
     tabela.appendChild(novaLinha);
 }
 
+function criarBotao(texto, acao) {
+    const botao = document.createElement('button');
+    botao.innerText = texto;
+    botao.addEventListener('click', acao);
+    return botao;
+}
 
+function atualizarCorCelulaData(celulaData, dataVencimento) {
+    const hoje = new Date();
+    const vencimento = new Date(dataVencimento);
+    const diferencaDias = Math.ceil((vencimento - hoje) / (1000 * 60 * 60 * 24));
 
-function renovarCliente(nomeCliente) {
-            const clientesHoje = JSON.parse(localStorage.getItem('clientesHoje')) || { nomes: [] };
-            if (!clientesHoje.nomes.includes(nomeCliente)) {
-                clientesHoje.nomes.push(nomeCliente);
-                localStorage.setItem('clientesHoje', JSON.stringify(clientesHoje));
-                exibirClientesAlterados();
-            }
-        }
+    celulaData.className = ''; // Limpa classes antigas
 
-
-
-function atualizarClientesAlterados(nome) {
-    const hoje = new Date().toLocaleDateString('pt-BR');
-    let clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
-    let clientesHoje = clientesAlterados.find(c => c.data === hoje);
-
-    if (!clientesHoje) {
-        clientesHoje = { data: hoje, nomes: [] };
-        clientesAlterados.push(clientesHoje);
-    }
-
-    if (!clientesHoje.nomes.includes(nome)) {
-        clientesHoje.nomes.push(nome);
-        localStorage.setItem('clientesAlterados', JSON.stringify(clientesAlterados));
-        exibirClientesAlterados();
+    if (diferencaDias < 0) {
+        celulaData.classList.add('red'); // Data vencida
+    } else if (diferencaDias === 0) {
+        celulaData.classList.add('yellow'); // Data de vencimento é hoje
+    } else if (diferencaDias <= 7) {
+        celulaData.classList.add('orange'); // Data de vencimento dentro de uma semana
     }
 }
 
 
 
+function renovarCliente(nomeCliente) {
+    const clientes = carregarClientes();
+    const clienteExistente = clientes.find(c => c.nome === nomeCliente);
+
+    if (clienteExistente) {
+        let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
+        let novaData = new Date(); // Aqui você pode definir a nova data como desejar
+
+        // Atualiza a data de vencimento do cliente
+        clienteExistente.data = novaData;
+        localStorage.setItem('clientes', JSON.stringify(clientes));
+
+        // Registra a renovação de hoje
+        registrarClienteRenovadoHoje(nomeCliente);
+
+        // Atualiza a exibição dos clientes alterados
+        exibirClientesRenovadosHoje();
+    }
+}
+
+
+
+function registrarClienteRenovadoHoje(nomeCliente) {
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    let clientesHoje = JSON.parse(localStorage.getItem('clientesRenovadosHoje')) || { data: hoje, nomes: [] };
+
+    if (clientesHoje.data === hoje && !clientesHoje.nomes.includes(nomeCliente)) {
+        clientesHoje.nomes.push(nomeCliente);
+    } else if (clientesHoje.data !== hoje) {
+        clientesHoje = { data: hoje, nomes: [nomeCliente] };
+    }
+
+    localStorage.setItem('clientesRenovadosHoje', JSON.stringify(clientesHoje));
+}
+
+function exibirClientesRenovadosHoje() {
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    const clientesHoje = JSON.parse(localStorage.getItem('clientesRenovadosHoje')) || { data: hoje, nomes: [] };
+    const campoClientesRenovados = document.getElementById('infoClientes');
+
+    if (clientesHoje.nomes.length > 0) {
+        const listaClientes = clientesHoje.nomes.map(nome => `<li>${nome}</li>`).join('');
+        campoClientesRenovados.innerHTML = `<span class="titulo-clientes-renovados">Clientes renovados hoje:</span><ul>${listaClientes}</ul>`;
+    } else {
+        campoClientesRenovados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
+    }
+}
+
+// Chama a função para exibir os clientes renovados ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    exibirClientesRenovadosHoje();
+});
+
+
+
+
+
+// Função para atualizar a lista de clientes alterados no localStorage
+function atualizarClientesAlterados(nome, dataAnterior, novaData) {
+const hoje = new Date().toLocaleDateString('pt-BR');
+let clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
+let clientesHoje = clientesAlterados.find(c => c.data === hoje);
+
+if (!clientesHoje) {
+clientesHoje = { data: hoje, nomes: [] };
+clientesAlterados.push(clientesHoje);
+}
+
+clientesHoje.nomes.push({ nome: nome, dataAnterior: dataAnterior, novaData: novaData });
+localStorage.setItem('clientesAlterados', JSON.stringify(clientesAlterados));
+exibirClientesAlterados();
+}
+
+
+
+// Função para exibir a lista de clientes alterados na interface
 function exibirClientesAlterados() {
     const clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
     const hoje = new Date().toLocaleDateString('pt-BR');
@@ -542,12 +592,17 @@ function exibirClientesAlterados() {
     const campoClientesAlterados = document.getElementById('infoClientes');
 
     if (clientesHoje && clientesHoje.nomes.length > 0) {
-        const listaClientes = clientesHoje.nomes.map(nome => `<li>${nome}</li>`).join('');
+        const listaClientes = clientesHoje.nomes.map(cliente => `<li>${cliente.nome}</li>`).join('');
         campoClientesAlterados.innerHTML = `<span class="titulo-clientes-renovados">Clientes renovados hoje:</span><ul>${listaClientes}</ul>`;
     } else {
         campoClientesAlterados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    exibirClientesAlterados();
+});
+
 
 
 function atualizarDataVencimento(nomeCliente, novaData) {
@@ -561,11 +616,10 @@ function atualizarDataVencimento(nomeCliente, novaData) {
         if (dataAnterior !== novaDataFormatada) {
             clienteExistente.data = novaData;
             localStorage.setItem('clientes', JSON.stringify(clientes));
-            atualizarClientesAlterados(nomeCliente);
+            atualizarClientesAlterados(nomeCliente, dataAnterior, novaDataFormatada);
         }
     }
 }
-
 
 
 
@@ -590,29 +644,27 @@ function registrarClienteAlterado(nome) {
 
 
 function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
-    let clientes = carregarClientes();
-    let clienteExistente = clientes.find(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
+            let clientes = carregarClientes();
+            let clienteExistente = clientes.find(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
 
-    if (clienteExistente) {
-        let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
-        let novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
+            if (clienteExistente) {
+                let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
+                let novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
 
-        // Atualizar apenas se a data de vencimento foi alterada
-        if (dataAnterior !== novaDataFormatada) {
-            clienteExistente.nome = novoNome;
-            clienteExistente.telefone = novoTelefone;
-            clienteExistente.data = novaDataVencimento;
+                if (dataAnterior !== novaDataFormatada) {
+                    clienteExistente.nome = novoNome;
+                    clienteExistente.telefone = novoTelefone;
+                    clienteExistente.data = novaDataVencimento;
 
-            localStorage.setItem('clientes', JSON.stringify(clientes));
-            atualizarClientesAlterados(novoNome); // Registrar cliente alterado
+                    salvarClientes(clientes);
+                    atualizarClientesAlterados(novoNome, dataAnterior, novaDataFormatada);
+                }
+            }
         }
-    }
-}
 
-
-
-
-
+        document.addEventListener('DOMContentLoaded', () => {
+            exibirClientesAlterados();
+        });
 
 
 
@@ -630,22 +682,6 @@ function abrirWhatsApp(telefoneCliente, mensagem) {
 }
 
 
-
-function atualizarCorCelulaData(celulaData, dataVencimento) {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
-
-    celulaData.classList.remove('red', 'yellow', 'orange');
-    if (diferencaDias < 0) {
-        celulaData.classList.add('red');
-    } else if (diferencaDias === 0) {
-        celulaData.classList.add('yellow');
-    } else if (diferencaDias === 2) {
-        celulaData.classList.add('orange');
-    }
-}
 
 
 
@@ -931,8 +967,8 @@ document.getElementById('select-all').addEventListener('change', function() {
 
 
 function contarClientesLixeira() {
-    const lixeira = carregarLixeira();
-    return lixeira.length;
+const lixeira = carregarLixeira();
+return lixeira.length;
 }
 
 
@@ -969,6 +1005,7 @@ window.onload = function() {
     exibirClientesAlterados();
     verificarAcesso();
     verificarLogoComemorativa();
+    
     
     // Chama a função de scroll para garantir que o botão seja configurado corretamente
     window.onscroll();
