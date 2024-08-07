@@ -61,7 +61,7 @@ function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
  'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a',
  'fc30c781-e382-406b-b65a-4e850382e014',
- '58967ac2-aed3-4f22-b2a2-05f7e9345d22'];
+ '35457026-f492-42d9-8ef6-129a9851f4e0'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -73,6 +73,14 @@ function verificarAcesso() {
         alert("Acesso Negado. Você não tem permissão para acessar esta página.");
         window.location.href = "acessonegado.html";
     }
+}
+
+
+function gerarUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }
 
 
@@ -493,17 +501,17 @@ function criarBotao(texto, acao) {
 
 function atualizarCorCelulaData(celulaData, dataVencimento) {
     const hoje = new Date();
-    const vencimento = new Date(dataVencimento);
-    const diferencaDias = Math.ceil((vencimento - hoje) / (1000 * 60 * 60 * 24));
+    hoje.setHours(0, 0, 0, 0);
 
-    celulaData.className = ''; // Limpa classes antigas
+    const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
 
+    celulaData.classList.remove('red', 'yellow', 'orange');
     if (diferencaDias < 0) {
-        celulaData.classList.add('red'); // Data vencida
+        celulaData.classList.add('red');
     } else if (diferencaDias === 0) {
-        celulaData.classList.add('yellow'); // Data de vencimento é hoje
-    } else if (diferencaDias <= 7) {
-        celulaData.classList.add('orange'); // Data de vencimento dentro de uma semana
+        celulaData.classList.add('yellow');
+    } else if (diferencaDias === 2) {
+        celulaData.classList.add('orange');
     }
 }
 
@@ -696,24 +704,6 @@ function pesquisarCliente() {
         } else {
             linhas[i].style.display = 'none';
         }
-    }
-}
-
-
-
-function atualizarCorCelulaData(celulaData, dataVencimento) {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
-
-    celulaData.classList.remove('red', 'yellow', 'orange');
-    if (diferencaDias < 0) {
-        celulaData.classList.add('red');
-    } else if (diferencaDias === 0) {
-        celulaData.classList.add('yellow');
-    } else if (diferencaDias === 2) {
-        celulaData.classList.add('orange');
     }
 }
 
