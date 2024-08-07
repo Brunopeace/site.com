@@ -1000,7 +1000,7 @@ function excluirClientesSelecionados() {
     carregarLixeiraPagina();
     atualizarTabelaClientes();
     atualizarInfoClientes();
-    
+    carregarPagina();
 }
 
 
