@@ -415,8 +415,8 @@ function calcularDataVencimento(data) {
 function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
-    novaLinha.setAttribute('data-nome', nome); // Adiciona o atributo data-nome
-    
+
+    // Adiciona a caixa de seleção
     const celulaSelecionar = novaLinha.insertCell(0);
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -431,55 +431,76 @@ function adicionarLinhaTabela(nome, telefone, data) {
 
     const celulaData = novaLinha.insertCell(3);
     celulaData.innerText = new Date(data).toLocaleDateString('pt-BR');
-    celulaData.classList.add('celula-data');
 
     const celulaAcoes = novaLinha.insertCell(4);
 
     celulaAcoes.appendChild(criarBotao("Editar", function() {
-    const novoNome = prompt("Digite o novo nome do cliente:", nome);
-    const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
-    const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", celulaData.innerText);
+        const novoNome = prompt("Digite o novo nome do cliente:", nome);
+        const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
+        const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", new Date(data).toLocaleDateString('pt-BR'));
 
-    if (novoNome && validarTelefone(novoTelefone) && novaData) {
-        const partesData = novaData.split('/');
-        if (partesData.length === 3) {
-            const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
-            if (!isNaN(novaDataVencimento.getTime())) {
-                celulaNome.innerText = novoNome;
-                celulaTelefone.innerText = novoTelefone;
-                celulaData.innerText = novaDataVencimento.toLocaleDateString('pt-BR');
+        if (novoNome && validarTelefone(novoTelefone) && novaData) {
+            const partesData = novaData.split('/');
+            if (partesData.length === 3) {
+                const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
+                if (!isNaN(novaDataVencimento.getTime())) {
+                    celulaNome.innerText = novoNome;
+                    celulaTelefone.innerText = novoTelefone;
+                    celulaData.innerText = novaDataVencimento.toLocaleDateString('pt-BR');
 
-                editarCliente(nome, novoNome, novoTelefone, novaDataVencimento);
+                    const clientes = carregarClientes();
+                    const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase() && c.telefone === telefone);
+                    if (clienteIndex !== -1) {
+                        clientes[clienteIndex].nome = novoNome;
+                        clientes[clienteIndex].telefone = novoTelefone;
+                        clientes[clienteIndex].data = novaDataVencimento;
+                        salvarClientes(clientes);
+                        atualizarCorCelulaData(celulaData, novaDataVencimento);
+                        window.location.reload();
+                    }
+                } else {
+                    alert("Data inválida. Use o formato DD/MM/AAAA.");
+                }
             } else {
-                alert("Data inválida. Use o formato DD/MM/AAAA.");
+                alert("Formato de data inválido. Use DD/MM/AAAA.");
             }
         } else {
-            alert("Formato de data inválido. Use DD/MM/AAAA.");
+            alert("Por favor, preencha todos os campos corretamente.");
         }
-    } else {
-        alert("Por favor, preencha todos os campos corretamente.");
-    }
-}));
+    }));
 
     celulaAcoes.appendChild(criarBotao("Excluir", function() {
         if (confirm("Tem certeza de que deseja excluir este cliente?")) {
-            excluirCliente(nome); // Chama a função de exclusão que move o cliente para a lixeira
+            const clientes = carregarClientes();
+            const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase() && c.telefone === telefone);
+            if (clienteIndex !== -1) {
+                clientes.splice(clienteIndex, 1);
+                salvarClientes(clientes);
+
+                // Adiciona a classe de animação de desintegração
+                novaLinha.classList.add('desintegrate');
+
+                // Remove a linha da tabela após a animação
+                setTimeout(() => {
+                    tabela.deleteRow(novaLinha.rowIndex - 1);
+                    atualizarInfoClientes();
+                }, 500); // Tempo da animação em milissegundos
+            }
         }
     }));
 
     celulaAcoes.appendChild(criarBotao("WhatsApp", function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
         const mensagem = encodeURIComponent(
-            `*Olá bom dia, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX EMAIL* \n \n brunopeaceandlove60@gmail.com `
+            `*Olá bom dia, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX CELULAR* \n \n 81997921351`
         );
         const telefoneCliente = telefone.replace(/\D/g, '');
         abrirWhatsApp(telefoneCliente, mensagem);
     }));
 
-    atualizarCorCelulaData(celulaData, new Date(data)); // Atualiza a cor da célula de data
+    atualizarCorCelulaData(celulaData, data);
 
     tabela.appendChild(novaLinha);
-    return novaLinha; // Retorna a linha completa
 }
 
 
