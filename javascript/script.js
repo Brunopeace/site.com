@@ -53,10 +53,6 @@ document.getElementById('backToTop').onclick = function() {
 
 
 
-
-
-
-
 function verificarAcesso() {
     const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
  'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a',
@@ -358,6 +354,7 @@ function restaurarSelecionados() {
     carregarLixeiraPagina();
     atualizarInfoClientes();
     atualizarTabelaClientes();
+    carregarPagina();
 }
 
 
