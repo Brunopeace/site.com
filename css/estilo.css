@@ -67,65 +67,54 @@
 }
 
 
-
-.nenhum-cliente-renovado {
-    color: red;
-}
-
-
+/* infoClientes */
 #infoClientes {
-    color: #008000;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px;
-    background: #e6ffe6;
-    border: 2px solid #ffffff;
-    border-radius: 5px;
+    padding: 20px;
+    background: linear-gradient(45deg, rgb(0, 64, 122), rgb(99, 223, 134));
+    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    align-items: center;
-    text-align: center;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
 }
-
-
-
-
-#infoClientes.slide-in {
-  animation: slide-in 0.5s forwards; /* Animação de slide-in */
-}
-
-@keyframes slide-in {
-  from {
-    transform: translateX(-100%); /* Começa fora da tela à esquerda */
-    opacity: 0; /* Transparente */
-  }
-  to {
-    transform: translateX(0); /* Move-se para a posição original */
-    opacity: 1; /* Opacidade completa */
-  }
-}
-
-
-
 
 .titulo-clientes-renovados {
-            color: red; /* Escolha a cor que preferir */
-            font-weight: bold;
-            
-        }
-        .slide-in {
-            animation: slideIn 0.5s forwards;
-        }
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-100%);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #ffffff;
+}
 
+.nenhum-cliente-renovado {
+    font-size: 1em;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    font-weight: bold;
+    color: #ffffff;
+    background: radial-gradient(circle, rgb(17, 39, 239), rgb(23, 200, 248));
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+ul li:hover {
+    font-weight: bold;
+    color: #ffffff;
+    background: linear-gradient(45deg, rgb(35, 74, 82), rgb(39, 214, 74));
+}
+
+/* infoClientes */
 
 
 
