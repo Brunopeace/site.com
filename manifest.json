@@ -6,7 +6,7 @@
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": img/icon.png,
+      "src": "img/icon.png",  // Corrigido: Coloquei aspas no caminho do arquivo
       "sizes": "192x192",
       "type": "image/png"
     },
