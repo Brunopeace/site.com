@@ -54,10 +54,9 @@ document.getElementById('backToTop').onclick = function() {
 
 
 function verificarAcesso() {
-    const uuidEsperado = ['bebd18af-b85d-48f5-a651-e73c084da800',
- 'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a',
- 'fc30c781-e382-406b-b65a-4e850382e014',
- '35457026-f492-42d9-8ef6-129a9851f4e0'];
+    const uuidEsperado = ['d0709af9-0c05-4f56-8808-30f18efa7f86',
+ 'bebd18af-b85d-48f5-a651-e73c084da800',
+ '897cfa52-6839-4f03-9d7b-353caff240ff'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -435,40 +434,42 @@ function adicionarLinhaTabela(nome, telefone, data) {
     const celulaAcoes = novaLinha.insertCell(4);
 
     celulaAcoes.appendChild(criarBotao("Editar", function() {
-        const novoNome = prompt("Digite o novo nome do cliente:", nome);
-        const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
-        const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", new Date(data).toLocaleDateString('pt-BR'));
+    const novoNome = prompt("Digite o novo nome do cliente:", nome);
+    const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
+    const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", new Date(data).toLocaleDateString('pt-BR'));
 
-        if (novoNome && validarTelefone(novoTelefone) && novaData) {
-            const partesData = novaData.split('/');
-            if (partesData.length === 3) {
-                const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
-                if (!isNaN(novaDataVencimento.getTime())) {
-                    const dataAnterior = new Date(data).toLocaleDateString('pt-BR');
-                    const novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
+    // Verifica se o usuário não cancelou algum dos prompts
+    if (novoNome !== null && novoTelefone !== null && novaData !== null && novoNome && validarTelefone(novoTelefone)) {
+        const partesData = novaData.split('/');
+        if (partesData.length === 3) {
+            const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
+            if (!isNaN(novaDataVencimento.getTime())) {
+                const dataAnterior = new Date(data).toLocaleDateString('pt-BR');
+                const novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
 
-                    if (dataAnterior !== novaDataFormatada) {
-                        atualizarClientesAlterados(nome, dataAnterior, novaDataFormatada);
-                    }
+                if (dataAnterior !== novaDataFormatada) {
+                    atualizarClientesAlterados(nome, dataAnterior, novaDataFormatada);
+                }
 
-                    celulaNome.innerText = novoNome;
-                    celulaTelefone.innerText = novoTelefone;
-                    celulaData.innerText = novaDataFormatada;
+                celulaNome.innerText = novoNome;
+                celulaTelefone.innerText = novoTelefone;
+                celulaData.innerText = novaDataFormatada;
 
-                    const clientes = carregarClientes();
-                    const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
-                    if (clienteIndex !== -1) {
-                        clientes[clienteIndex].nome = novoNome;
-                        clientes[clienteIndex].telefone = novoTelefone;
-                        clientes[clienteIndex].data = novaDataVencimento;
-                        salvarClientes(clientes);
-                        atualizarCorCelulaData(celulaData, novaDataVencimento);
-      location.reload();
-                    }
+                const clientes = carregarClientes();
+                const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
+                if (clienteIndex !== -1) {
+                    clientes[clienteIndex].nome = novoNome;
+                    clientes[clienteIndex].telefone = novoTelefone;
+                    clientes[clienteIndex].data = novaDataVencimento;
+                    salvarClientes(clientes);
+                    atualizarCorCelulaData(celulaData, novaDataVencimento);
+                    location.reload();
                 }
             }
         }
-    }));
+    }
+}));
+    
 
     celulaAcoes.appendChild(criarBotao("Excluir", function() {
         if (confirm("Tem certeza de que deseja excluir este cliente?")) {
@@ -623,6 +624,7 @@ function atualizarDataVencimento(nomeCliente, novaData) {
             clienteExistente.data = novaData;
             localStorage.setItem('clientes', JSON.stringify(clientes));
             atualizarClientesAlterados(nomeCliente, dataAnterior, novaDataFormatada);
+    
         }
     }
 }
@@ -645,6 +647,7 @@ function registrarClienteAlterado(nome) {
     }
 
     localStorage.setItem('clientesAlterados', JSON.stringify(clientesAlterados));
+    
 }
 
 
@@ -1000,7 +1003,6 @@ function excluirClientesSelecionados() {
     atualizarInfoClientes();
     carregarPagina();
 }
-
 
 
 window.onload = function() {
