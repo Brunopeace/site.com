@@ -336,6 +336,7 @@ function restaurarSelecionados() {
     const checkboxes = document.querySelectorAll('.checkboxCliente:checked');
     const lixeira = carregarLixeira();
     let clientes = carregarClientes();
+    let clientesRestaurados = false;
 
     checkboxes.forEach(checkbox => {
         const nome = checkbox.getAttribute('data-nome');
@@ -345,6 +346,7 @@ function restaurarSelecionados() {
         if (clienteIndex !== -1 && !clienteExistente) {
             const cliente = lixeira.splice(clienteIndex, 1)[0];
             clientes.push(cliente);
+            clientesRestaurados = true;
         }
     });
 
@@ -354,7 +356,26 @@ function restaurarSelecionados() {
     atualizarInfoClientes();
     atualizarTabelaClientes();
     carregarPagina();
+
+    if (clientesRestaurados) {
+        exibirFeedback("Clientes restaurados com sucesso");
+    }
 }
+
+function exibirFeedback(mensagem) {
+    let feedbackElement = document.getElementById('feedbackR');
+    if (!feedbackElement) {
+        feedbackElement = document.createElement('div');
+        feedbackElement.id = 'feedbackR';
+        document.body.appendChild(feedbackElement);
+    }
+    feedbackElement.innerText = mensagem;
+    feedbackElement.style.display = "block";  // Exibe a mensagem
+    setTimeout(() => {
+        feedbackElement.style.display = "none";  // Oculta a mensagem após 4 segundos
+    }, 4000);
+}
+
 
 
 
@@ -985,6 +1006,7 @@ function excluirClientesSelecionados() {
     const checkboxes = document.querySelectorAll('.cliente-checkbox:checked');
     const clientes = carregarClientes();
     const lixeira = carregarLixeira();
+    let clientesExcluidos = false;
 
     checkboxes.forEach(checkbox => {
         const nome = checkbox.closest('tr').getAttribute('data-nome');
@@ -993,6 +1015,7 @@ function excluirClientesSelecionados() {
         if (clienteIndex !== -1) {
             const cliente = clientes.splice(clienteIndex, 1)[0];
             lixeira.push(cliente);
+            clientesExcluidos = true;  // Marca que ao menos um cliente foi excluído
         }
     });
 
@@ -1002,6 +1025,15 @@ function excluirClientesSelecionados() {
     atualizarTabelaClientes();
     atualizarInfoClientes();
     carregarPagina();
+
+    if (clientesExcluidos) {
+        const feedbackElement = document.getElementById('feedback');
+        feedbackElement.innerText = "Clientes excluídos com sucesso";
+        feedbackElement.style.display = "block";  // Exibe a mensagem
+        setTimeout(() => {
+            feedbackElement.style.display = "none";  // Oculta a mensagem após 3 segundos
+        }, 4000);
+    }
 }
 
 
