@@ -118,6 +118,36 @@ ul li:hover {
 
 
 
+#feedback {
+    color: #ffffff;
+    display: none;
+    padding: 10px 20px;
+    margin: 20px auto;
+    width: fit-content;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+}
+
+
+#feedbackR {
+    color: #ffffff;
+    display: none;
+    padding: 10px 20px;
+    margin: 20px auto;
+    width: fit-content;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+}
+
+
 #backToTop {
     display: none;
     position: fixed;
