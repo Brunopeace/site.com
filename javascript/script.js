@@ -13,25 +13,39 @@ if ('serviceWorker' in navigator) {
   let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); // Impede que o prompt padrão apareça
-    deferredPrompt = e; // Salva o evento para uso posterior
+    e.preventDefault();
+    deferredPrompt = e;
 
-    // Espera um tempo, ou algum outro evento de usuário para iniciar a instalação
-    setTimeout(() => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt(); // Exibe o prompt de instalação
+    // Criar um botão ou outro elemento na interface para o usuário instalar
+    const installButton = document.createElement('button');
+    installButton.innerText = 'Instalar App';
+    installButton.style.position = 'fixed';
+    installButton.style.bottom = '10px';
+    installButton.style.right = '10px';
+    document.body.appendChild(installButton);
 
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('Usuário aceitou instalar o app');
-                } else {
-                    console.log('Usuário rejeitou instalar o app');
-                }
-                deferredPrompt = null; // Limpa o prompt armazenado
-            });
-        }
-    }, 3000); // Aguarda 3 segundos antes de exibir o prompt
+    installButton.addEventListener('click', () => {
+        deferredPrompt.prompt(); // Mostra o prompt de instalação
+
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('Usuário aceitou instalar o app');
+            } else {
+                console.log('Usuário rejeitou instalar o app');
+            }
+            deferredPrompt = null; // Limpa o prompt armazenado
+            installButton.remove(); // Remove o botão da interface
+        });
+    });
 });
+
+// Opcional: Remover o botão após um tempo se o usuário não interagir
+setTimeout(() => {
+    if (deferredPrompt && installButton) {
+        installButton.remove();
+        console.log('Botão de instalação removido por inatividade.');
+    }
+}, 15000); // Remove o botão após 15 segundos
 
 
 
