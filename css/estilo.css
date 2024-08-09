@@ -1,3 +1,37 @@
+
+.calendario {
+  width: 20px;
+  height: auto;
+  margin-left: 40px;
+}
+
+
+.cell {
+  width: 20px;
+  height: auto;
+  margin-left: 40px;
+}
+
+.face {
+  width: 20px;
+  height: auto;
+  margin-left: 33px;
+}
+
+.lupa {
+  width: 20px;
+  height: auto;
+  margin-left: 50px;
+}
+
+
+.diskette {
+  width: 20px;
+  height: auto;
+  margin-left: 50px;
+}
+
+
 #quantidadeClientesLixeira {
     display: inline-block;
     padding: 10px 20px;
