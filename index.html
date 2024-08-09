@@ -35,31 +35,30 @@
 
     <div class="input-container slide-in">
 <input type="file" id="importarClientes" style="display: none;"/>
-<label for="importarClientes" class="button">Importar Backup 💾</label><br>
-        <label for="inputPesquisar">Pesquisar Cliente 🔎</label>
+<label for="importarClientes" class="button">Importar Backup <img src="img/diskette.png" class="diskette"></label><br>
+        <label for="inputPesquisar">Pesquisar Cliente <img src="img/lupa.png" class="lupa"></label>
         <input type="text" id="inputPesquisar" oninput="pesquisarCliente()" placeholder="Pesquisar cliente">
     </div>
 
     <div class="input-container slide-in">
-        <label for="inputNome">Adicionar cliente aqui 👱</label>
+        <label for="inputNome">Adicionar cliente aqui<img src="img/face.png" class="face"></label>
         <input type="text" id="inputNome" required placeholder="Nome do cliente">
     </div>
     
     <div class="input-container slide-in">
-        <label for="inputTelefone">Telefone do cliente 📞</label>
+        <label for="inputTelefone">Telefone do cliente <img src="img/cell.png" class="cell"></label>
         <input type="tel" id="inputTelefone" required placeholder="Telefone do cliente">
     </div>
     
     <div class="input-container slide-in">
-        <label for="inputData">Data de vencimento 🗓️</label>
+        <label for="inputData">Data de vencimento <img src="img/calendario.png" class="calendario"></label>
         <input type="date" id="inputData" required>
     </div>
     
     <button id="btnExcluirSelecionados" onclick="excluirClientesSelecionados()">Excluir Seleção</button><button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button><br><br>
     
-    
+  <div id="feedback" style="display: none;"></div>
 <div id="infoClientes2" class="slide-in"></div><br>
-<div id="feedback" style="display: none;"></div>
     <div id="infoClientes" class="slide-in"></div>
     <div class="table-container slide-in">
            
@@ -78,9 +77,10 @@
             <thead>
                 <tr>
                     <th>
+    
 <input type="checkbox" id="selecionarTodos" onclick="toggleSelecionarTodos(this)">
+
                     </th>
-                    
                 </tr>
             </thead>
             
