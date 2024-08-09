@@ -69,7 +69,7 @@ document.getElementById('backToTop').onclick = function() {
 function verificarAcesso() {
     const uuidEsperado = ['d0709af9-0c05-4f56-8808-30f18efa7f86',
  'bebd18af-b85d-48f5-a651-e73c084da800',
- '897cfa52-6839-4f03-9d7b-353caff240ff'];
+ 'd2dfa30b-6bfb-4d9b-aba5-d81b28ad6a3a'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
