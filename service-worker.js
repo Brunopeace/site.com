@@ -1,8 +1,14 @@
+
+
+iconpadrao.png
+
 const CACHE_NAME = 'clientes-cache-v1';
 const urlsToCache = [
   '/',
   '/css/estilo.css',
   '/manifest.json',
+  '/js/script.js',
+  '/img/iconpadrao.png',
   // adicione outros recursos que deseja armazenar em cache
 ];
 
