@@ -927,9 +927,40 @@ function importarClientes(event) {
         });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function backupClientes() {
     const clientes = carregarClientes();
-    const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
+    const clientesLixeira = carregarClientesLixeira();
+
+    const backupData = {
+        clientes: clientes,
+        clientesLixeira: clientesLixeira
+    };
+    
+    const blob = new Blob([JSON.stringify(backupData)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement('a');
@@ -940,6 +971,27 @@ function backupClientes() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Função para verificar e realizar o backup diário
