@@ -885,106 +885,51 @@ function exportarClientes() {
     URL.revokeObjectURL(url);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Função para carregar os clientes da lixeira
-function carregarClientesLixeira() {
-    return JSON.parse(localStorage.getItem('clientesLixeira')) || [];
-}
-
-// Função para salvar os clientes na lixeira
-function salvarClientesLixeira(clientesLixeira) {
-    localStorage.setItem('clientesLixeira', JSON.stringify(clientesLixeira));
-}
-
 function importarClientes(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const dadosImportados = JSON.parse(e.target.result);
-            const clientesImportados = dadosImportados.clientes || [];
-            const clientesLixeiraImportados = dadosImportados.clientesLixeira || [];
-            
-            const clientesAtuais = carregarClientes();
-            const clientesLixeiraAtuais = carregarClientesLixeira();
-            
-            // Mapa para rastrear clientes já existentes pelo nome
-            const mapaClientes = new Map();
-            clientesAtuais.forEach(cliente => {
-                mapaClientes.set(cliente.nome.toLowerCase(), cliente);
-            });
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const clientesImportados = JSON.parse(e.target.result);
+                    const clientesAtuais = carregarClientes();
+                    
+                    // Mapa para rastrear clientes já existentes pelo nome
+                    const mapaClientes = new Map();
+                    clientesAtuais.forEach(cliente => {
+                        mapaClientes.set(cliente.nome.toLowerCase(), cliente);
+                    });
 
-            // Atualizar clientes existentes e adicionar novos clientes do backup
-            clientesImportados.forEach(clienteImportado => {
-                const nomeClienteImportado = clienteImportado.nome.toLowerCase();
-                if (mapaClientes.has(nomeClienteImportado)) {
-                    // Cliente já existe, atualizar com informações do backup
-                    const clienteExistente = mapaClientes.get(nomeClienteImportado);
-                    clienteExistente.telefone = clienteImportado.telefone;
-                    clienteExistente.data = clienteImportado.data;
-                } else {
-                    // Novo cliente do backup, adicionar à lista
-                    clientesAtuais.push(clienteImportado);
-                }
-            });
+                    // Atualizar clientes existentes e adicionar novos clientes do backup
+                    clientesImportados.forEach(clienteImportado => {
+                        const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+                        if (mapaClientes.has(nomeClienteImportado)) {
+                            // Cliente já existe, atualizar com informações do backup
+                            const clienteExistente = mapaClientes.get(nomeClienteImportado);
+                            clienteExistente.telefone = clienteImportado.telefone;
+                            clienteExistente.data = clienteImportado.data;
+                        } else {
+                            // Novo cliente do backup, adicionar à lista
+                            clientesAtuais.push(clienteImportado);
+                        }
+                    });
 
-            // Adicionar clientes da lixeira do backup à lixeira atual
-            clientesLixeiraImportados.forEach(clienteLixeira => {
-                const nomeClienteLixeira = clienteLixeira.nome.toLowerCase();
-                if (!clientesLixeiraAtuais.some(c => c.nome.toLowerCase() === nomeClienteLixeira)) {
-                    clientesLixeiraAtuais.push(clienteLixeira);
-                }
-            });
+                    // Salvar a lista atualizada de clientes
+                    salvarClientes(clientesAtuais);
+                    window.location.reload();
+                };
+                reader.readAsText(file);
+            }
+        }
 
-            // Salvar a lista atualizada de clientes e lixeira
-            salvarClientes(clientesAtuais);
-            salvarClientesLixeira(clientesLixeiraAtuais);
-            window.location.reload();
-        };
-        reader.readAsText(file);
-    }
-}
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('importarClientes').addEventListener('change', importarClientes);
+            displayClients();
+        });
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('importarClientes').addEventListener('change', importarClientes);
-    displayClients();
-});
 
 function backupClientes() {
     const clientes = carregarClientes();
-    const clientesLixeira = carregarClientesLixeira();
-    
-    const backupData = {
-        clientes: clientes,
-        clientesLixeira: clientesLixeira
-    };
-    
-    const blob = new Blob([JSON.stringify(backupData)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement('a');
@@ -995,6 +940,7 @@ function backupClientes() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
 
 // Função para verificar e realizar o backup diário
 function verificarBackupDiario() {
@@ -1009,6 +955,7 @@ function verificarBackupDiario() {
     }
 }
 
+
 // Agendar a verificação de backup diário
 setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
 
@@ -1018,29 +965,6 @@ document.getElementById('select-all').addEventListener('change', function() {
         checkbox.checked = this.checked;
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function contarClientesLixeira() {
 const lixeira = carregarLixeira();
