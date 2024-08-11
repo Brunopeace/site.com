@@ -921,12 +921,24 @@ function salvarClientesLixeira(clientesLixeira) {
     localStorage.setItem('clientesLixeira', JSON.stringify(clientesLixeira));
 }
 
+// Função para carregar clientes ativos
+function carregarClientes() {
+    return JSON.parse(localStorage.getItem('clientes')) || [];
+}
+
+// Função para salvar clientes ativos
+function salvarClientes(clientes) {
+    localStorage.setItem('clientes', JSON.stringify(clientes));
+}
+
 function importarClientes(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
             const dadosImportados = JSON.parse(e.target.result);
+            
+            // Verifica se o arquivo importado possui clientes e lixeira
             const clientesImportados = dadosImportados.clientes || [];
             const clientesLixeiraImportados = dadosImportados.clientesLixeira || [];
             
@@ -964,7 +976,9 @@ function importarClientes(event) {
             // Salvar a lista atualizada de clientes e lixeira
             salvarClientes(clientesAtuais);
             salvarClientesLixeira(clientesLixeiraAtuais);
-            window.location.reload();
+            
+            // Atualiza a exibição dos clientes na tabela
+            displayClients();
         };
         reader.readAsText(file);
     }
