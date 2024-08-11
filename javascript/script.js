@@ -901,26 +901,43 @@ function backupClientes() {
 
 // Função para verificar e realizar o backup diário
 function verificarBackupDiario() {
-    const hoje = new Date();
-    const ultimaBackupStr = localStorage.getItem('ultimaBackup');
-    const ultimaBackup = ultimaBackupStr ? new Date(ultimaBackupStr) : null;
+    const ultimoBackup = localStorage.getItem('ultimoBackup');
+    const hoje = new Date().toLocaleDateString('pt-BR');
 
-    // Se não houve backup antes ou se um dia passou desde o último backup
-    if (!ultimaBackup || (hoje.getTime() - ultimaBackup.getTime()) >= 24 * 60 * 60 * 1000) {
+    if (ultimoBackup !== hoje) {
+        // Chama a função de backup que agora inclui a lixeira
         backupClientes();
-        localStorage.setItem('ultimaBackup', hoje.toISOString());
+        localStorage.setItem('ultimoBackup', hoje);
+        console.log('Backup diário realizado com sucesso.');
+    } else {
+        console.log('O backup diário já foi realizado hoje.');
     }
 }
 
-// Agendar a verificação de backup diário
-setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
+function backupClientes() {
+    // Carrega os clientes do localStorage
+    const clientes = carregarClientes();
+    // Carrega a lixeira do localStorage
+    const lixeira = carregarLixeira();
 
-document.getElementById('select-all').addEventListener('change', function() {
-    const checkboxes = document.querySelectorAll('.cliente-checkbox');
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = this.checked;
-    });
-});
+    // Cria um objeto para armazenar o backup
+    const backup = {
+        clientes: clientes,
+        lixeira: lixeira
+    };
+
+    // Converte o objeto de backup para uma string JSON
+    const backupJSON = JSON.stringify(backup);
+
+    // Cria um blob a partir da string JSON
+    const blob = new Blob([backupJSON], { type: 'application/json' });
+
+    // Cria um link temporário para fazer o download do backup
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `backup_clientes_${new Date().toLocaleDateString('pt-BR')}.json`;
+    link.click();
+}
 
 function contarClientesLixeira() {
 const lixeira = carregarLixeira();
