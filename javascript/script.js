@@ -874,25 +874,28 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function backupClientes() {
+    // Carrega os clientes do localStorage
     const clientes = carregarClientes();
+    // Carrega a lixeira do localStorage
     const lixeira = carregarLixeira();
 
+    // Cria um objeto para armazenar o backup
     const backup = {
-        data: new Date().toISOString(),
         clientes: clientes,
         lixeira: lixeira
     };
 
-    const backupStr = JSON.stringify(backup);
-    const backupBlob = new Blob([backupStr], { type: 'application/json' });
-    const backupUrl = URL.createObjectURL(backupBlob);
-    const backupLink = document.createElement('a');
+    // Converte o objeto de backup para uma string JSON
+    const backupJSON = JSON.stringify(backup);
 
-    backupLink.href = backupUrl;
-    backupLink.download = `backup-clientes-${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.json`;
-    backupLink.click();
+    // Cria um blob a partir da string JSON
+    const blob = new Blob([backupJSON], { type: 'application/json' });
 
-    URL.revokeObjectURL(backupUrl); // Limpa o objeto de URL após o download
+    // Cria um link temporário para fazer o download do backup
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `backup_clientes_${new Date().toLocaleDateString('pt-BR')}.json`;
+    link.click();
 }
 
 
