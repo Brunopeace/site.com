@@ -8,7 +8,8 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  /* código para instalar o aplicativo */
+
+/* código para instalar o aplicativo */
 
   let deferredPrompt;
 
@@ -18,10 +19,8 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
     // Criar um botão ou outro elemento na interface para o usuário instalar
     const installButton = document.createElement('button');
+    installButton.id = 'installButton'; // Adiciona a ID para aplicar o estilo
     installButton.innerText = 'Instalar App';
-    installButton.style.position = 'fixed';
-    installButton.style.bottom = '10px';
-    installButton.style.right = '10px';
     document.body.appendChild(installButton);
 
     installButton.addEventListener('click', () => {
@@ -41,11 +40,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 // Opcional: Remover o botão após um tempo se o usuário não interagir
 setTimeout(() => {
-    if (deferredPrompt && installButton) {
-        installButton.remove();
+    if (deferredPrompt && document.getElementById('installButton')) {
+        document.getElementById('installButton').remove();
         console.log('Botão de instalação removido por inatividade.');
     }
 }, 15000); // Remove o botão após 15 segundos
+
 
 
 
