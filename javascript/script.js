@@ -875,16 +875,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function backupClientes() {
     const clientes = carregarClientes();
-    const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
+    const lixeira = carregarLixeira();
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'clientes_backup.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const backup = {
+        data: new Date().toISOString(),
+        clientes: clientes,
+        lixeira: lixeira
+    };
+
+    const backupStr = JSON.stringify(backup);
+    const backupBlob = new Blob([backupStr], { type: 'application/json' });
+    const backupUrl = URL.createObjectURL(backupBlob);
+    const backupLink = document.createElement('a');
+
+    backupLink.href = backupUrl;
+    backupLink.download = `backup-clientes-${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.json`;
+    backupLink.click();
+
+    URL.revokeObjectURL(backupUrl); // Limpa o objeto de URL após o download
 }
 
 
