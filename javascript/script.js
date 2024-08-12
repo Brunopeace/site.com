@@ -66,7 +66,7 @@ document.getElementById('backToTop').onclick = function() {
 };
 
 function verificarAcesso() {
-    const uuidEsperado = ['f0718d20-4f4b-4879-ab96-d72912af13a5',
+    const uuidEsperado = ['d0709af9-0c05-4f56-8808-30f18efa7f86',
  'bebd18af-b85d-48f5-a651-e73c084da800',
  '897cfa52-6839-4f03-9d7b-353caff240ff'];
     let uuidArmazenado = localStorage.getItem('uuid');
@@ -237,7 +237,6 @@ function restaurarCliente(nome) {
         atualizarInfoClientes();
         atualizarTabelaClientes();
         window.location.reload();
-        
     }
 }
 
@@ -902,6 +901,20 @@ function backupClientes() {
 
 
 // Função para verificar e realizar o backup diário
+function verificarBackupDiario() {
+    const ultimoBackup = localStorage.getItem('ultimoBackup');
+    const hoje = new Date().toLocaleDateString('pt-BR');
+
+    if (ultimoBackup !== hoje) {
+        // Chama a função de backup que agora inclui a lixeira
+        backupClientes();
+        localStorage.setItem('ultimoBackup', hoje);
+        console.log('Backup diário realizado com sucesso.');
+    } else {
+        console.log('O backup diário já foi realizado hoje.');
+    }
+}
+
 function verificarBackupDiario() {
     const hoje = new Date();
     const ultimaBackupStr = localStorage.getItem('ultimaBackup');
