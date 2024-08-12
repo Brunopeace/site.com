@@ -236,7 +236,7 @@ function restaurarCliente(nome) {
         carregarLixeiraPagina();
         atualizarInfoClientes();
         atualizarTabelaClientes();
-        window.location.reload();
+        
     }
 }
 
