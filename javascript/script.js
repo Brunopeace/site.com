@@ -330,9 +330,9 @@ function restaurarSelecionados() {
     checkboxes.forEach(checkbox => {
         const nome = checkbox.getAttribute('data-nome');
         const clienteIndex = lixeira.findIndex(c => c.nome === nome);
-        const clienteExistente = clientes.some(cliente => cliente.nome === nome);
 
-        if (clienteIndex !== -1 && !clienteExistente) {
+        // Verifica se o cliente existe na lista de clientes e se ele está na lixeira
+        if (clienteIndex !== -1 && !clientes.some(cliente => cliente.nome === nome)) {
             const cliente = lixeira.splice(clienteIndex, 1)[0];
             clientes.push(cliente);
             clientesRestaurados = true;
@@ -348,6 +348,8 @@ function restaurarSelecionados() {
 
     if (clientesRestaurados) {
         exibirFeedback("Clientes restaurados com sucesso");
+    } else {
+        exibirFeedback("Nenhum cliente foi restaurado. Clientes com o mesmo nome já existem.");
     }
 }
 
