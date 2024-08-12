@@ -67,7 +67,6 @@ document.getElementById('backToTop').onclick = function() {
 
 function verificarAcesso() {
     const uuidEsperado = ['d0709af9-0c05-4f56-8808-30f18efa7f86',
- 'bebd18af-b85d-48f5-a651-e73c084da800',
  'f0718d20-4f4b-4879-ab96-d72912af13a5'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
