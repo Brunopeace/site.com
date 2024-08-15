@@ -88,68 +88,7 @@ function gerarUUID() {
     });
 }
 
-function verificarLogoComemorativa() {
-    const logo = document.getElementById('logo');
-    const hoje = new Date();
-    const mes = hoje.getMonth() + 1; // Meses são indexados a partir de 0
-    const dia = hoje.getDate();
 
-            
-           // Datas comemorativas
-           
-    if (mes === 12 && dia === 25) { // Natal
-        logo.src = 'img/logo-natal.png';
-        
-        
-    } else if (mes === 1 && dia === 1) { // Ano Novo
-        logo.src = 'img/logo-ano-novo.png';
-        
-        
-    } else if (mes === 7 && dia === 4) { // Independência dos EUA (exemplo)
-        logo.src = 'img/logo-independencia.png';
-        
-        
-    } else if (mes === 10 && dia === 31) {
-        logo.src = 'img/logo-halloween.png';
-        
-        
-    } else if (mes === 2 && dia === 14) { // Dia dos Namorados
-    
-    
-        logo.src = 'img/logo-dia-namorados.png';
-    } else if (mes === 11 && dia === 24) { // Ação de Graças (data variável, exemplo 24 de novembro)
-    
-    
-        logo.src = 'img/logo-acao-gracas.png';
-    } else if (mes === 4 && dia === 1) { // Dia da Mentira
-    
-    
-        logo.src = 'img/logo-dia-mentira.png';
-    } else if (mes === 5 && dia === 1) { // Dia do Trabalhador
-    
-    
-        logo.src = 'img/logo-dia-trabalhador.png';
-    } else if (mes === 6 && dia === 12) { // Dia dos Namorados (Brasil)
-    
-    
-        logo.src = 'img/logo-dia-namorados-br.png';
-    } else if (mes === 8 && dia === 15) { // Dia dos Pais (Brasil, data variável, exemplo 15 de agosto)
-    
-    
-        logo.src = 'img/logo-dia-pais.png';
-    } else if (mes === 10 && dia === 12) { // Dia das Crianças (Brasil)
-    
-    
-    logo.src = 'img/logo-dia-criancas.png'; 
-    } else if (mes === 6 && dia === 24) { // São João
-        logo.src = 'img/logo-sao-joao.png';
-        
-        
-        
-    } else {
-        logo.src = 'img/logo-padrao.png'; // logo padrao
-    }
-}
 
 function esvaziarLixeira() {
     if (confirm("Tem certeza de que deseja esvaziar a lixeira? Isso removerá permanentemente todos os clientes nela.")) {
@@ -986,7 +925,6 @@ window.onload = function() {
     verificarBackupDiario();
     exibirClientesAlterados();
     verificarAcesso();
-    verificarLogoComemorativa();
     
     
     // Chama a função de scroll para garantir que o botão seja configurado corretamente
