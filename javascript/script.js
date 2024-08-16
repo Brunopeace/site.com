@@ -66,8 +66,8 @@ document.getElementById('backToTop').onclick = function() {
 };
 
 function verificarAcesso() {
-    const uuidEsperado = ['c60ee885-fc33-4abb-9df1-5d3e26cb0f9f',
- 'b0c43ada-a239-4479-873d-5b3fed399625'];
+    const uuidEsperado = ['c3e43422-1275-4c8b-84c1-eec682fadf1f',
+ 'c60ee885-fc33-4abb-9df1-5d3e26cb0f9f'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -870,7 +870,31 @@ function verificarBackupDiario() {
     // Se não houve backup antes ou se um dia passou desde o último backup
     if (!ultimaBackup || (hoje.getTime() - ultimaBackup.getTime()) >= 24 * 60 * 60 * 1000) {
         backupClientes();
+        backupLixeira();
         localStorage.setItem('ultimaBackup', hoje.toISOString());
+        enviarNotificacaoBackup();
+    }
+}
+
+function backupLixeira() {
+    const lixeira = JSON.parse(localStorage.getItem('lixeira')) || [];
+    const backupLixeira = JSON.stringify(lixeira);
+    localStorage.setItem('backupLixeira', backupLixeira);
+}
+
+function enviarNotificacaoBackup() {
+    if (Notification.permission === 'granted') {
+        new Notification('Backup Diário', {
+            body: 'O backup diário e o backup da lixeira foram realizados com sucesso.',
+        });
+    } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                new Notification('Backup Diário', {
+                    body: 'O backup diário e o backup da lixeira foram realizados com sucesso.',
+                });
+            }
+        });
     }
 }
 
@@ -880,8 +904,6 @@ document.getElementById('select-all').addEventListener('change', function() {
         checkbox.checked = this.checked;
     });
 });
-
-
 
 function contarClientesLixeira() {
 const lixeira = carregarLixeira();
