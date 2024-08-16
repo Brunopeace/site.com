@@ -220,6 +220,10 @@ function excluirCliente(nome) {
     const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
 
     if (clienteIndex !== -1) {
+        // Tocar o som de exclusão
+        const somExclusao = new Audio('sounds/exclusao.mp3');
+        somExclusao.play();
+
         const cliente = clientes.splice(clienteIndex, 1)[0];
         salvarClientes(clientes);
 
@@ -900,6 +904,12 @@ function excluirClientesSelecionados() {
             clientesExcluidos = true;  // Marca que ao menos um cliente foi excluído
         }
     });
+
+    if (clientesExcluidos) {
+        // Tocar o som de exclusão
+        const somExclusao = new Audio('sounds/exclusao.mp3');
+        somExclusao.play();
+    }
 
     salvarClientes(clientes);
     salvarLixeira(lixeira);
