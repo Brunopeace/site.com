@@ -66,7 +66,7 @@ document.getElementById('backToTop').onclick = function() {
 };
 
 function verificarAcesso() {
-    const uuidEsperado = ['b0c43ada-a239-4479-873d-5b3fed399625'];
+    const uuidEsperado = ['9e20816e-3c57-4ad5-b3f3-37925812850d'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
