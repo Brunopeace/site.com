@@ -781,7 +781,10 @@ function importarClientes(event) {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            const clientesImportados = JSON.parse(e.target.result);
+            const backup = JSON.parse(e.target.result);
+
+            // Verifique se os dados estão encapsulados dentro de um objeto maior
+            const clientesImportados = Array.isArray(backup) ? backup : backup.clientes || [];
             const clientesAtuais = carregarClientes();
             
             // Mapa para rastrear clientes já existentes pelo nome
