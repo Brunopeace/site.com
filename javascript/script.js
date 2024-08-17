@@ -865,47 +865,28 @@ document.getElementById('select-all').addEventListener('change', function() {
 // Função para verificar e realizar o backup diário
 
 function verificarBackupDiario() {
-    const hoje = new Date();
-    const ultimaBackupStr = localStorage.getItem('ultimaBackup');
-    const ultimaBackup = ultimaBackupStr ? new Date(ultimaBackupStr) : null;
+    const hoje = new Date().toLocaleDateString();
+    const ultimoBackup = localStorage.getItem('ultimoBackup');
 
-    // Se não houve backup antes ou se um dia passou desde o último backup
-    if (!ultimaBackup || (hoje.getTime() - ultimaBackup.getTime()) >= 24 * 60 * 60 * 1000) {
-        backupClientes();
-        backupLixeira();
-        localStorage.setItem('ultimaBackup', hoje.toISOString());
-        enviarNotificacaoBackup();
+    if (ultimoBackup !== hoje) {
+        // Realizar backup dos clientes ativos
+        const clientes = carregarClientes();
+        localStorage.setItem('backupClientes', JSON.stringify(clientes));
+
+        // Realizar backup da lixeira
+        const lixeira = carregarLixeira();
+        localStorage.setItem('backupLixeira', JSON.stringify(lixeira));
+
+        // Notificar o usuário sobre o backup
+        alert("Backup diário realizado com sucesso!");
+
+        // Atualizar a data do último backup
+        localStorage.setItem('ultimoBackup', hoje);
     }
 }
 
-function backupLixeira() {
-    const lixeira = JSON.parse(localStorage.getItem('lixeira')) || [];
-    const backupLixeira = JSON.stringify(lixeira);
-    localStorage.setItem('backupLixeira', backupLixeira);
-}
-
-function enviarNotificacaoBackup() {
-    if (Notification.permission === 'granted') {
-        new Notification('Backup Diário', {
-            body: 'O backup diário e o backup da lixeira foram realizados com sucesso.',
-        });
-    } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                new Notification('Backup Diário', {
-                    body: 'O backup diário e o backup da lixeira foram realizados com sucesso.',
-                });
-            }
-        });
-    }
-}
-
-document.getElementById('select-all').addEventListener('change', function() {
-    const checkboxes = document.querySelectorAll('.cliente-checkbox');
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = this.checked;
-    });
-});
+// Chame esta função ao carregar a página ou em algum momento do ciclo de vida do aplicativo
+window.addEventListener('load', verificarBackupDiario);
 
 function contarClientesLixeira() {
 const lixeira = carregarLixeira();
