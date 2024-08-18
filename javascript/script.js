@@ -868,20 +868,35 @@ function verificarBackupDiario() {
     const hoje = new Date().toLocaleDateString();
     const ultimoBackup = localStorage.getItem('ultimoBackup');
 
+    // Verifica se o backup já foi realizado hoje
     if (ultimoBackup !== hoje) {
         // Realizar backup dos clientes ativos
         const clientes = carregarClientes();
         localStorage.setItem('backupClientes', JSON.stringify(clientes));
 
+        // Verificar se o backup de clientes foi salvo corretamente
+        const backupClientesVerificado = localStorage.getItem('backupClientes');
+        if (!backupClientesVerificado) {
+            alert("Erro ao salvar o backup dos clientes.");
+            return;
+        }
+
         // Realizar backup da lixeira
         const lixeira = carregarLixeira();
         localStorage.setItem('backupLixeira', JSON.stringify(lixeira));
 
-        // Notificar o usuário sobre o backup
-        alert("Backup diário realizado com sucesso!");
+        // Verificar se o backup da lixeira foi salvo corretamente
+        const backupLixeiraVerificado = localStorage.getItem('backupLixeira');
+        if (!backupLixeiraVerificado) {
+            alert("Erro ao salvar o backup da lixeira.");
+            return;
+        }
 
         // Atualizar a data do último backup
         localStorage.setItem('ultimoBackup', hoje);
+
+        // Notificar o usuário sobre o backup
+        alert("Backup diário realizado com sucesso!");
     }
 }
 
