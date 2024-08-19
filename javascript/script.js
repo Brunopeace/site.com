@@ -870,29 +870,32 @@ function verificarBackupDiario() {
 
     // Verifica se o backup já foi realizado hoje
     if (ultimoBackup !== hoje) {
-        // Realizar backup dos clientes ativos
+        // Carregar os clientes e a lixeira
         const clientes = carregarClientes();
-        localStorage.setItem('backupClientes', JSON.stringify(clientes));
-
-        // Verificar se o backup de clientes foi salvo corretamente
-        const backupClientesVerificado = localStorage.getItem('backupClientes');
-        if (!backupClientesVerificado) {
-            alert("Erro ao salvar o backup dos clientes.");
-            return;
-        }
-
-        // Realizar backup da lixeira
         const lixeira = carregarLixeira();
-        localStorage.setItem('backupLixeira', JSON.stringify(lixeira));
 
-        // Verificar se o backup da lixeira foi salvo corretamente
-        const backupLixeiraVerificado = localStorage.getItem('backupLixeira');
-        if (!backupLixeiraVerificado) {
-            alert("Erro ao salvar o backup da lixeira.");
-            return;
-        }
+        // Gerar o conteúdo do arquivo de backup
+        const backupData = {
+            data: hoje,
+            clientes: clientes,
+            lixeira: lixeira
+        };
+        const backupJson = JSON.stringify(backupData, null, 2);
 
-        // Atualizar a data do último backup
+        // Criar um blob para o arquivo JSON
+        const blob = new Blob([backupJson], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        // Criar um link para download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `backup-${hoje}.json`;
+        a.click();
+
+        // Liberar o URL após o download
+        URL.revokeObjectURL(url);
+
+        // Atualizar a data do último backup no localStorage
         localStorage.setItem('ultimoBackup', hoje);
 
         // Notificar o usuário sobre o backup
