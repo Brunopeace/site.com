@@ -865,45 +865,47 @@ document.getElementById('select-all').addEventListener('change', function() {
 // Função para verificar e realizar o backup diário
 
 function verificarBackupDiario() {
-    const hoje = new Date().toLocaleDateString();
-    const ultimoBackup = localStorage.getItem('ultimoBackup');
+    const hoje = new Date().toLocaleDateString(); // Obtém a data de hoje
+    const ultimoBackup = localStorage.getItem('ultimoBackup'); // Verifica a data do último backup
 
     // Verifica se o backup já foi realizado hoje
     if (ultimoBackup !== hoje) {
-        // Carregar os clientes e a lixeira
-        const clientes = carregarClientes();
-        const lixeira = carregarLixeira();
+        // Carrega os clientes ativos e os clientes na lixeira
+        const clientes = carregarClientes();  
+        const lixeira = carregarLixeira(); 
 
-        // Gerar o conteúdo do arquivo de backup
+        // Cria um objeto com os dados a serem salvos
         const backupData = {
             data: hoje,
-            clientes: clientes,
+            clientesAtivos: clientes,
             lixeira: lixeira
         };
+
+        // Converte o objeto em uma string JSON
         const backupJson = JSON.stringify(backupData, null, 2);
 
-        // Criar um blob para o arquivo JSON
+        // Cria um arquivo JSON para download
         const blob = new Blob([backupJson], { type: "application/json" });
         const url = URL.createObjectURL(blob);
 
-        // Criar um link para download
+        // Cria um link de download
         const a = document.createElement('a');
         a.href = url;
-        a.download = `backup-${hoje}.json`;
+        a.download = `backup-${hoje}.json`;  // Nome do arquivo com a data
         a.click();
 
-        // Liberar o URL após o download
+        // Libera a URL após o download
         URL.revokeObjectURL(url);
 
-        // Atualizar a data do último backup no localStorage
+        // Atualiza a data do último backup no localStorage
         localStorage.setItem('ultimoBackup', hoje);
 
-        // Notificar o usuário sobre o backup
+        // Notifica o usuário sobre o backup
         alert("Backup diário realizado com sucesso!");
     }
 }
 
-// Chame esta função ao carregar a página ou em algum momento do ciclo de vida do aplicativo
+// Chama a função ao carregar a página ou em algum momento do ciclo de vida do aplicativo
 window.addEventListener('load', verificarBackupDiario);
 
 function contarClientesLixeira() {
