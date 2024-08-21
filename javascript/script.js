@@ -854,21 +854,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function backupClientes() {
-    // Carrega os clientes do localStorage
-    const clientes = carregarClientes();
-    // Carrega a lixeira do localStorage
-    const lixeira = carregarLixeira();
+    // Carrega os clientes ativos do localStorage
+    const clientes = carregarClientes() || []; // Garantir que clientes seja um array
+    // Carrega os clientes da lixeira do localStorage
+    const lixeira = carregarLixeira() || []; // Garantir que lixeira seja um array
 
     // Cria um objeto para armazenar o backup
     const backup = {
+        data: new Date().toLocaleDateString('pt-BR'), // Data do backup
         clientes: clientes,
         lixeira: lixeira
     };
 
-    // Converte o objeto de backup para uma string JSON
-    const backupJSON = JSON.stringify(backup);
+    // Converte o objeto de backup para uma string JSON com formatação
+    const backupJSON = JSON.stringify(backup, null, 2);
 
-    // Salva o JSON no localStorage
+    // Salva o JSON no localStorage (opcional)
     localStorage.setItem('backupDiario', backupJSON);
 
     // Cria um blob a partir da string JSON
@@ -879,9 +880,15 @@ function backupClientes() {
     link.href = URL.createObjectURL(blob);
     link.download = `backup_clientes_${new Date().toLocaleDateString('pt-BR')}.json`;
     link.click();
+
+    // Liberar o URL após o download
+    URL.revokeObjectURL(link.href);
+
+    // Notifica o usuário que o backup foi realizado
+    alert("Backup diário realizado com sucesso!");
 }
 
-// Agendar a verificação de backup diário
+// Agendar a verificação de backup diário a cada hora
 setInterval(verificarBackupDiario, 60 * 60 * 1000); // Verifica a cada hora
 
 document.getElementById('select-all').addEventListener('change', function() {
