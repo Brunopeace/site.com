@@ -784,31 +784,61 @@ function importarClientes(event) {
             const backup = JSON.parse(e.target.result);
 
             // Verifique se os dados estão encapsulados dentro de um objeto maior
-            const clientesImportados = Array.isArray(backup) ? backup : backup.clientes || [];
+            const clientesImportados = backup.clientes || [];
+            const lixeiraImportada = backup.lixeira || [];
+
+            // Carregar os clientes atuais e a lixeira atual do localStorage
             const clientesAtuais = carregarClientes();
-            
-            // Mapa para rastrear clientes já existentes pelo nome
+            const lixeiraAtual = carregarLixeira();
+
+            // Mapa para rastrear clientes já existentes pelo nome (clientes ativos)
             const mapaClientes = new Map();
             clientesAtuais.forEach(cliente => {
                 mapaClientes.set(cliente.nome.toLowerCase(), cliente);
             });
 
-            // Atualizar clientes existentes e adicionar novos clientes do backup
+            // Atualizar clientes existentes e adicionar novos clientes do backup na lista de clientes ativos
             clientesImportados.forEach(clienteImportado => {
                 const nomeClienteImportado = clienteImportado.nome.toLowerCase();
                 if (mapaClientes.has(nomeClienteImportado)) {
-                    // Cliente já existe, atualizar com informações do backup
+                    // Cliente já existe nos clientes ativos, atualizar com informações do backup
                     const clienteExistente = mapaClientes.get(nomeClienteImportado);
                     clienteExistente.telefone = clienteImportado.telefone;
                     clienteExistente.data = clienteImportado.data;
                 } else {
-                    // Novo cliente do backup, adicionar à lista
+                    // Novo cliente do backup, adicionar à lista de clientes ativos
                     clientesAtuais.push(clienteImportado);
                 }
             });
 
-            // Salvar a lista atualizada de clientes
+            // Mapa para rastrear clientes já existentes pelo nome (lixeira)
+            const mapaLixeira = new Map();
+            lixeiraAtual.forEach(cliente => {
+                mapaLixeira.set(cliente.nome.toLowerCase(), cliente);
+            });
+
+            // Adicionar ou atualizar os clientes na lixeira
+            lixeiraImportada.forEach(clienteImportado => {
+                const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+                if (mapaLixeira.has(nomeClienteImportado)) {
+                    // Cliente já existe na lixeira, atualizar com informações do backup
+                    const clienteExistente = mapaLixeira.get(nomeClienteImportado);
+                    clienteExistente.telefone = clienteImportado.telefone;
+                    clienteExistente.data = clienteImportado.data;
+                } else {
+                    // Novo cliente do backup, adicionar à lixeira
+                    lixeiraAtual.push(clienteImportado);
+                }
+            });
+
+            // Salvar as listas atualizadas de clientes ativos e da lixeira
             salvarClientes(clientesAtuais);
+            salvarLixeira(lixeiraAtual);
+
+            // Notificar o usuário que a importação foi realizada com sucesso
+            alert("Importação realizada com sucesso!");
+
+            // Recarregar a página para refletir as atualizações
             window.location.reload();
         };
         reader.readAsText(file);
@@ -865,47 +895,51 @@ document.getElementById('select-all').addEventListener('change', function() {
 // Função para verificar e realizar o backup diário
 
 function verificarBackupDiario() {
-    const hoje = new Date().toLocaleDateString(); // Obtém a data de hoje
-    const ultimoBackup = localStorage.getItem('ultimoBackup'); // Verifica a data do último backup
+    const hoje = new Date().toLocaleDateString();
+    const ultimoBackup = localStorage.getItem('ultimoBackup');
 
     // Verifica se o backup já foi realizado hoje
     if (ultimoBackup !== hoje) {
-        // Carrega os clientes ativos e os clientes na lixeira
-        const clientes = carregarClientes();  
-        const lixeira = carregarLixeira(); 
+        // Carregar os clientes e a lixeira
+        const clientes = carregarClientes();
+        const lixeira = carregarLixeira();
 
-        // Cria um objeto com os dados a serem salvos
+        // Gerar o conteúdo do arquivo de backup
         const backupData = {
             data: hoje,
-            clientesAtivos: clientes,
-            lixeira: lixeira
+            clientes: clientes || [],  // Garante que 'clientes' seja um array
+            lixeira: lixeira || []      // Garante que 'lixeira' seja um array
         };
 
-        // Converte o objeto em uma string JSON
-        const backupJson = JSON.stringify(backupData, null, 2);
+        try {
+            const backupJson = JSON.stringify(backupData, null, 2);
 
-        // Cria um arquivo JSON para download
-        const blob = new Blob([backupJson], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
+            // Criar um blob para o arquivo JSON
+            const blob = new Blob([backupJson], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
 
-        // Cria um link de download
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `backup-${hoje}.json`;  // Nome do arquivo com a data
-        a.click();
+            // Criar um link para download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup-${hoje}.json`;
+            a.click();
 
-        // Libera a URL após o download
-        URL.revokeObjectURL(url);
+            // Liberar o URL após o download
+            URL.revokeObjectURL(url);
 
-        // Atualiza a data do último backup no localStorage
-        localStorage.setItem('ultimoBackup', hoje);
+            // Atualizar a data do último backup no localStorage
+            localStorage.setItem('ultimoBackup', hoje);
 
-        // Notifica o usuário sobre o backup
-        alert("Backup diário realizado com sucesso!");
+            // Notificar o usuário sobre o backup
+            alert("Backup diário realizado com sucesso!");
+        } catch (error) {
+            console.error("Erro ao gerar o backup diário:", error);
+            alert("Houve um erro ao gerar o backup diário. Tente novamente.");
+        }
     }
 }
 
-// Chama a função ao carregar a página ou em algum momento do ciclo de vida do aplicativo
+// Chame esta função ao carregar a página ou em algum momento do ciclo de vida do aplicativo
 window.addEventListener('load', verificarBackupDiario);
 
 function contarClientesLixeira() {
