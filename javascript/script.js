@@ -781,65 +781,70 @@ function importarClientes(event) {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            const backup = JSON.parse(e.target.result);
+            try {
+                const backup = JSON.parse(e.target.result);
 
-            // Verifique se os dados estão encapsulados dentro de um objeto maior
-            const clientesImportados = backup.clientes || [];
-            const lixeiraImportada = backup.lixeira || [];
+                // Verificar se os dados estão encapsulados dentro de um objeto maior
+                const clientesImportados = Array.isArray(backup) ? backup : (backup.clientes || []);
+                const lixeiraImportada = Array.isArray(backup) ? [] : (backup.lixeira || []);
 
-            // Carregar os clientes atuais e a lixeira atual do localStorage
-            const clientesAtuais = carregarClientes();
-            const lixeiraAtual = carregarLixeira();
+                // Carregar os clientes atuais e a lixeira atual do localStorage
+                const clientesAtuais = carregarClientes();
+                const lixeiraAtual = carregarLixeira();
 
-            // Mapa para rastrear clientes já existentes pelo nome (clientes ativos)
-            const mapaClientes = new Map();
-            clientesAtuais.forEach(cliente => {
-                mapaClientes.set(cliente.nome.toLowerCase(), cliente);
-            });
+                // Mapa para rastrear clientes já existentes pelo nome (clientes ativos)
+                const mapaClientes = new Map();
+                clientesAtuais.forEach(cliente => {
+                    mapaClientes.set(cliente.nome.toLowerCase(), cliente);
+                });
 
-            // Atualizar clientes existentes e adicionar novos clientes do backup na lista de clientes ativos
-            clientesImportados.forEach(clienteImportado => {
-                const nomeClienteImportado = clienteImportado.nome.toLowerCase();
-                if (mapaClientes.has(nomeClienteImportado)) {
-                    // Cliente já existe nos clientes ativos, atualizar com informações do backup
-                    const clienteExistente = mapaClientes.get(nomeClienteImportado);
-                    clienteExistente.telefone = clienteImportado.telefone;
-                    clienteExistente.data = clienteImportado.data;
-                } else {
-                    // Novo cliente do backup, adicionar à lista de clientes ativos
-                    clientesAtuais.push(clienteImportado);
-                }
-            });
+                // Atualizar clientes existentes e adicionar novos clientes do backup na lista de clientes ativos
+                clientesImportados.forEach(clienteImportado => {
+                    const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+                    if (mapaClientes.has(nomeClienteImportado)) {
+                        // Cliente já existe nos clientes ativos, atualizar com informações do backup
+                        const clienteExistente = mapaClientes.get(nomeClienteImportado);
+                        clienteExistente.telefone = clienteImportado.telefone;
+                        clienteExistente.data = clienteImportado.data;
+                    } else {
+                        // Novo cliente do backup, adicionar à lista de clientes ativos
+                        clientesAtuais.push(clienteImportado);
+                    }
+                });
 
-            // Mapa para rastrear clientes já existentes pelo nome (lixeira)
-            const mapaLixeira = new Map();
-            lixeiraAtual.forEach(cliente => {
-                mapaLixeira.set(cliente.nome.toLowerCase(), cliente);
-            });
+                // Mapa para rastrear clientes já existentes pelo nome (lixeira)
+                const mapaLixeira = new Map();
+                lixeiraAtual.forEach(cliente => {
+                    mapaLixeira.set(cliente.nome.toLowerCase(), cliente);
+                });
 
-            // Adicionar ou atualizar os clientes na lixeira
-            lixeiraImportada.forEach(clienteImportado => {
-                const nomeClienteImportado = clienteImportado.nome.toLowerCase();
-                if (mapaLixeira.has(nomeClienteImportado)) {
-                    // Cliente já existe na lixeira, atualizar com informações do backup
-                    const clienteExistente = mapaLixeira.get(nomeClienteImportado);
-                    clienteExistente.telefone = clienteImportado.telefone;
-                    clienteExistente.data = clienteImportado.data;
-                } else {
-                    // Novo cliente do backup, adicionar à lixeira
-                    lixeiraAtual.push(clienteImportado);
-                }
-            });
+                // Adicionar ou atualizar os clientes na lixeira
+                lixeiraImportada.forEach(clienteImportado => {
+                    const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+                    if (mapaLixeira.has(nomeClienteImportado)) {
+                        // Cliente já existe na lixeira, atualizar com informações do backup
+                        const clienteExistente = mapaLixeira.get(nomeClienteImportado);
+                        clienteExistente.telefone = clienteImportado.telefone;
+                        clienteExistente.data = clienteImportado.data;
+                    } else {
+                        // Novo cliente do backup, adicionar à lixeira
+                        lixeiraAtual.push(clienteImportado);
+                    }
+                });
 
-            // Salvar as listas atualizadas de clientes ativos e da lixeira
-            salvarClientes(clientesAtuais);
-            salvarLixeira(lixeiraAtual);
+                // Salvar as listas atualizadas de clientes ativos e da lixeira
+                salvarClientes(clientesAtuais);
+                salvarLixeira(lixeiraAtual);
 
-            // Notificar o usuário que a importação foi realizada com sucesso
-            alert("Importação realizada com sucesso!");
+                // Notificar o usuário que a importação foi realizada com sucesso
+                alert("Importação realizada com sucesso!");
 
-            // Recarregar a página para refletir as atualizações
-            window.location.reload();
+                // Recarregar a página para refletir as atualizações
+                window.location.reload();
+            } catch (error) {
+                // Tratar erro na leitura do arquivo JSON
+                alert("Erro ao importar o arquivo: " + error.message);
+            }
         };
         reader.readAsText(file);
     }
@@ -847,7 +852,7 @@ function importarClientes(event) {
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('importarClientes').addEventListener('change', importarClientes);
-    
+
     if (typeof displayClients === 'function') {
         displayClients(); // Verifica se a função displayClients existe antes de chamá-la
     }
