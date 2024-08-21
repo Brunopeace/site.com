@@ -784,13 +784,13 @@ function importarClientes(event) {
             try {
                 const backup = JSON.parse(e.target.result);
 
-                // Verificar se os dados estão encapsulados dentro de um objeto maior
-                const clientesImportados = Array.isArray(backup) ? backup : (backup.clientes || []);
-                const lixeiraImportada = Array.isArray(backup) ? [] : (backup.lixeira || []);
+                // Verifique se os dados estão encapsulados dentro de um objeto maior
+                const clientesImportados = backup.clientes || [];
+                const lixeiraImportada = backup.lixeira || [];
 
                 // Carregar os clientes atuais e a lixeira atual do localStorage
-                const clientesAtuais = carregarClientes();
-                const lixeiraAtual = carregarLixeira();
+                const clientesAtuais = carregarClientes() || [];
+                const lixeiraAtual = carregarLixeira() || [];
 
                 // Mapa para rastrear clientes já existentes pelo nome (clientes ativos)
                 const mapaClientes = new Map();
@@ -842,8 +842,8 @@ function importarClientes(event) {
                 // Recarregar a página para refletir as atualizações
                 window.location.reload();
             } catch (error) {
-                // Tratar erro na leitura do arquivo JSON
-                alert("Erro ao importar o arquivo: " + error.message);
+                alert("Erro ao importar clientes. Verifique se o arquivo está no formato correto.");
+                console.error(error);
             }
         };
         reader.readAsText(file);
@@ -852,7 +852,7 @@ function importarClientes(event) {
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('importarClientes').addEventListener('change', importarClientes);
-
+    
     if (typeof displayClients === 'function') {
         displayClients(); // Verifica se a função displayClients existe antes de chamá-la
     }
