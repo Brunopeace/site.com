@@ -861,6 +861,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function backupClientes() {
     // Carrega os clientes ativos do localStorage
     const clientes = carregarClientes() || []; // Garantir que clientes seja um array
+
     // Carrega os clientes da lixeira do localStorage
     const lixeira = carregarLixeira() || []; // Garantir que lixeira seja um array
 
@@ -874,20 +875,20 @@ function backupClientes() {
     // Converte o objeto de backup para uma string JSON com formatação
     const backupJSON = JSON.stringify(backup, null, 2);
 
-    // Salva o JSON no localStorage (opcional)
-    localStorage.setItem('backupDiario', backupJSON);
-
     // Cria um blob a partir da string JSON
     const blob = new Blob([backupJSON], { type: 'application/json' });
 
     // Cria um link temporário para fazer o download do backup
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `backup_clientes_${new Date().toLocaleDateString('pt-BR')}.json`;
+    link.download = `backup_clientes_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.json`;
     link.click();
 
     // Liberar o URL após o download
     URL.revokeObjectURL(link.href);
+
+    // Salva o JSON no localStorage (opcional)
+    localStorage.setItem('backupDiario', backupJSON);
 
     // Notifica o usuário que o backup foi realizado
     alert("Backup diário realizado com sucesso!");
