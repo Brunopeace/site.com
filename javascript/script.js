@@ -880,10 +880,9 @@ function backupClientes() {
     const clientes = carregarClientes() || []; // Garantir que clientes seja um array
 
     // Carrega os clientes da lixeira do localStorage
-    const lixeira = carregarLixeira() || [];
+    const lixeira = carregarLixeira() || []; // Garantir que lixeira seja um array
 
-
-    // Cria um objeto para armazenar o backup
+    // Cria um objeto para armazenar o backup, contendo tanto os clientes ativos quanto os excluídos
     const backup = {
         data: new Date().toLocaleDateString('pt-BR'), // Data do backup
         clientes: clientes,
@@ -904,14 +903,14 @@ function backupClientes() {
     link.click();
     document.body.removeChild(link); // Remove o link do DOM após o clique
 
-    // Liberar o URL após o download
+    // Libera o URL após o download
     URL.revokeObjectURL(link.href);
 
     // Salva o JSON no localStorage (opcional)
     localStorage.setItem('backupDiario', backupJSON);
 
     // Notifica o usuário que o backup foi realizado
-    alert("Backup diário realizado com sucesso!");
+    alert("Backup realizado com sucesso!");
 }
 
 // Agendar a verificação de backup diário a cada hora
