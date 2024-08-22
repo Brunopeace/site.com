@@ -880,7 +880,8 @@ function backupClientes() {
     const clientes = carregarClientes() || []; // Garantir que clientes seja um array
 
     // Carrega os clientes da lixeira do localStorage
-    const lixeira = carregarLixeira() || []; // Garantir que lixeira seja um array
+    const lixeira = carregarLixeira() || [];
+
 
     // Cria um objeto para armazenar o backup
     const backup = {
@@ -899,7 +900,9 @@ function backupClientes() {
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `backup_clientes_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.json`;
+    document.body.appendChild(link); // Adiciona o link ao DOM para garantir que funcione em alguns navegadores
     link.click();
+    document.body.removeChild(link); // Remove o link do DOM após o clique
 
     // Liberar o URL após o download
     URL.revokeObjectURL(link.href);
