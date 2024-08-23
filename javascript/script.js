@@ -674,15 +674,17 @@ function carregarDarkMode() {
 
 function exportarClientes() {
     const clientes = carregarClientes();
-    const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
+    const lixeira = carregarLixeira();
+    const todosClientes = [...clientes, ...lixeira];
+    const jsonClientes = JSON.stringify(todosClientes, null, 2);
+
+    const blob = new Blob([jsonClientes], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'clientes.json';
-    document.body.appendChild(a);
+    a.download = 'clientes_exportados.json';
     a.click();
-    document.body.removeChild(a);
+
     URL.revokeObjectURL(url);
 }
 
