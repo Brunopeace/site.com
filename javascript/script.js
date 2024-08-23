@@ -673,15 +673,24 @@ function carregarDarkMode() {
 }
 
 function exportarClientes() {
-    const clientes = carregarClientes();
-    const blob = new Blob([JSON.stringify(clientes)], { type: "application/json" });
+    const clientesAtivos = carregarClientes(); // Carrega clientes ativos
+    const clientesLixeira = carregarClientesLixeira(); // Carrega clientes da lixeira
+
+    // Combina os clientes ativos e da lixeira em um único array
+    const todosClientes = [...clientesAtivos, ...clientesLixeira];
+
+    // Cria o arquivo JSON com todos os clientes
+    const blob = new Blob([JSON.stringify(todosClientes)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    
+
+    // Cria um link temporário para download
     const a = document.createElement('a');
     a.href = url;
     a.download = 'clientes.json';
     document.body.appendChild(a);
     a.click();
+
+    // Remove o link e revoga o URL temporário
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
