@@ -759,25 +759,21 @@ document.addEventListener('DOMContentLoaded', function() { document.getElementBy
 });
 
 function backupClientes() {
-    const clientes = carregarClientes() || [];
-    const lixeira = carregarLixeira() || [];
+    const clientes = carregarClientes(); // Carrega os clientes do localStorage
+    const lixeira = carregarLixeira(); // Carrega os clientes da lixeira do localStorage
+
+    // Estrutura do backup
     const backup = {
-        data: new Date().toLocaleDateString('pt-BR'),
         clientes: clientes,
-        lixeira: lixeira
+        lixeira: lixeira,
+        dataBackup: new Date().toLocaleString()
     };
 
-    const backupJSON = JSON.stringify(backup, null, 2);
-    const blob = new Blob([backupJSON], { type: 'application/json' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `backup_clientes_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
-    localStorage.setItem('backupDiario', backupJSON);
-    alert("Backup realizado com sucesso!");
+    // Salva o backup no localStorage
+    localStorage.setItem('backupClientes', JSON.stringify(backup));
+
+    // Notificação de sucesso
+    exibirFeedback("Backup realizado com sucesso!");
 }
 
 function verificarBackupDiario() {
