@@ -782,7 +782,7 @@ function verificarBackupDiario() {
             a.click();
             URL.revokeObjectURL(url);
             localStorage.setItem('ultimoBackup', hoje);
-            alert("Backup diário realizado com sucesso!");
+ 
         } catch (error) {
             console.error("Erro ao gerar o backup diário:", error);
             alert("Houve um erro ao gerar o backup diário. Tente novamente.");
