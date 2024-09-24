@@ -1,10 +1,8 @@
-/* Estilos do menu dropdown */
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
-/* Esconde as opções inicialmente */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -14,31 +12,76 @@
     z-index: 1;
     border-radius: 5px;
     margin-left: -47px;
-    
 }
 
-/* Mostra o dropdown ao clicar no botão */
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-/* Estilo geral para os botões do dropdown */
 .dropdown-content button.telegram {
     color: #000000;
-    padding: 12px 16px;
+    padding: 5px 3px;
     text-decoration: none;
     display: block;
     background: linear-gradient(45deg, #1e90ff, #00bfff);
     color: white;
     text-align: center;
     width: 92%;
-    height: 36px;
+    height: 30px;
     cursor: pointer;
     margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.dropdown-content button.WhatsApp {
+    color: #000000;
+    padding: 5px 3px;
+    text-decoration: none;
+    display: block;
+    color: white;
+    text-align: center;
+    width: 92%;
+    height: 30px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-weight: bold;
 }
 
 .dropdown-content button.telegram:hover {
     background-color: #006699;
+}
+
+@media (max-width: 768px) {
+    .dropdown-content {
+        min-width: 140px;
+        
+    }
+
+    .dropdown-content button.telegram {
+        width: 92%;
+        height: 47px;
+        font-weight: bold;
+    }
+}
+
+.dropdown-content button.WhatsApp {
+        width: 92%;
+        height: 47px;
+        font-weight: bold;
+    }
+}
+
+@media (max-width: 480px) {
+    .dropdown-content {
+        min-width: 120px;
+        margin-left: -20px;
+    }
+
+    .dropdown-content button.telegram {
+        width: 92%;
+        height: 36px;
+        font-weight: bold;
+    }
 }
 
 .calendario {
@@ -131,7 +174,6 @@
     background: linear-gradient(45deg, rgb(10, 33, 25), rgb(218, 11, 51));
 }
 
-/* infoClientes */
 #infoClientes {
     padding: 20px;
     background: linear-gradient(45deg, rgb(0, 64, 122), rgb(99, 223, 134));
@@ -245,8 +287,8 @@ ul li:hover {
 }
 
 #backToTop:active {
-    transform: scale(0.95); /* Efeito de clique */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduz a sombra ao clicar */
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .loading-coracao {
@@ -311,7 +353,7 @@ ul li:hover {
     transform: scale(0.9);
   }
 }
-    
+     
 .clientes-vencidos {
         color: red;
         font-size: 16px;
@@ -367,7 +409,7 @@ ul li:hover {
                 inset -10px -10px 15px rgba(255,255,255,0.9);
 }
 
-        footer {
+footer {
         text-align: center;
         padding: 1px 0;
         background-color: #000000;
@@ -453,7 +495,7 @@ ul li:hover {
     animation: desintegrate 0.6s forwards;
 }
         
-        body {
+     body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             color: #333;
@@ -476,17 +518,12 @@ ul li:hover {
             /* Limita a largura da logomarca */
             max-width: 300px; 
         }
-        
-
-        
        
        h1 {
             color: #4CAF50;
             text-align: center;
         }
        
-       
-  
         table {
             width: 100%;
             border-collapse: collapse;
@@ -589,9 +626,10 @@ ul li:hover {
     background: linear-gradient(to right, #A9A9A9 50%, #000000 50%);
     color: #ffffff;
     width: 157px;
+  
 }
    
-#btnExcluirSelecionados {
+    #btnExcluirSelecionados {
     background: linear-gradient(45deg, #ff1a1a, #ff6666);
     color: #ffffff;
     cursor: pointer;
@@ -614,7 +652,7 @@ ul li:hover {
     
 }
 
-   button {
+        button {
             background: linear-gradient(45deg, #00ee4e, #008a18);
             color: #ffffff;
             border-color:#ffffff;
