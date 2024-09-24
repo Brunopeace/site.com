@@ -47,7 +47,6 @@
   margin-left: 40px;
 }
 
-
 .cell {
   width: 20px;
   height: auto;
@@ -66,13 +65,11 @@
   margin-left: 50px;
 }
 
-
 .diskette {
   width: 20px;
   height: auto;
   margin-left: 50px;
 }
-
 
 #quantidadeClientesLixeira {
     display: inline-block;
@@ -92,10 +89,6 @@
     font-weight: bold; /* Negrito no número */
 }
 
-
-
-
-
 #containerLixeira {
     border: 1px solid #ffffff;
 }
@@ -105,8 +98,6 @@
     flex-direction: column;
     gap: 10px;
 }
-
-
 
 #lixeira button:hover {
     background: radial-gradient(circle, rgb(189, 46, 26), rgb(161, 184, 29));
@@ -136,12 +127,9 @@
     margin-left: 10px;
 }
 
-
-
 #esvaziarLixeira{
     background: linear-gradient(45deg, rgb(10, 33, 25), rgb(218, 11, 51));
 }
-
 
 /* infoClientes */
 #infoClientes {
@@ -190,11 +178,6 @@ ul li:hover {
     background: linear-gradient(45deg, rgb(35, 74, 82), rgb(39, 214, 74));
 }
 
-/* infoClientes */
-
-
-
-
 #feedback {
     color: #ffffff;
     display: none;
@@ -209,8 +192,6 @@ ul li:hover {
     font-weight: bold;
 }
 
-
-
 #feedbackR {
     color: #ffffff;
     display: none;
@@ -224,8 +205,6 @@ ul li:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-weight: bold;
 }
-
-
 
 #backToTop {
     display: none;
@@ -270,9 +249,6 @@ ul li:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduz a sombra ao clicar */
 }
 
-
-
-
 .loading-coracao {
   display:block;
   position: relative;
@@ -285,7 +261,6 @@ ul li:hover {
   padding-bottom: 45px;
 }
 
-
 .loading-coracao span {
   top: 32px;
   left: 32px;
@@ -295,8 +270,6 @@ ul li:hover {
   background: #fd0000;
   animation: loading-coracao 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
 }
-
-
 
 .loading-coracao span:after,
 .loading-coracao span:before {
@@ -308,21 +281,15 @@ ul li:hover {
   background: #fd0000;
 }
 
-
-
 .loading-coracao span:before {
   left: -24px;
   border-radius: 50% 0 0 50%;
 }
 
-
-
 .loading-coracao span:after {
   top: -24px;
   border-radius: 50% 50% 0 0;
 }
-
-
 
 @keyframes loading-coracao {
   0% {
@@ -345,9 +312,6 @@ ul li:hover {
   }
 }
     
-         
-         
-         
 .clientes-vencidos {
         color: red;
         font-size: 16px;
@@ -362,9 +326,7 @@ ul li:hover {
         padding-left: 110px;
     }
 
-
-
-    .clientes-ativos {
+.clientes-ativos {
         color: green;
         font-size: 18px;
         font-weight: bold;
@@ -378,17 +340,12 @@ ul li:hover {
         padding-left: 110px;
     }
       
-
-
-
 .flex-container {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 10px; /* Ajuste conforme necessário */
 }
-
-
 
 .drop {
 
@@ -410,8 +367,6 @@ ul li:hover {
                 inset -10px -10px 15px rgba(255,255,255,0.9);
 }
 
-
-      
         footer {
         text-align: center;
         padding: 1px 0;
@@ -462,7 +417,6 @@ ul li:hover {
         color: #00f518; /* Cor do link no modo claro ao passar o mouse */
     }
         
-
         h1, button {
             opacity: 0;
             animation: slideIn 0.5s ease forwards;
@@ -484,8 +438,6 @@ ul li:hover {
             }
         }
         
-        
-        
         @keyframes desintegrate {
     0% {
         opacity: 1;
@@ -500,9 +452,6 @@ ul li:hover {
 .desintegrate {
     animation: desintegrate 0.6s forwards;
 }
-        
-        
-        
         
         body {
             font-family: Arial, sans-serif;
@@ -562,8 +511,6 @@ ul li:hover {
             background-color: #a3ffcc;
         }
 
-
-
         .orange {
             background-color: orange;
             color: white;
@@ -596,21 +543,15 @@ ul li:hover {
             }
         }
 
-
-
         .yellow {
             background-color: yellow;
             color: black;
         }
 
-
-
         .red {
             background-color: red;
             color: white;
         }
-
-
 
         .input-container {
         margin-bottom: 15px;
@@ -648,11 +589,9 @@ ul li:hover {
     background: linear-gradient(to right, #A9A9A9 50%, #000000 50%);
     color: #ffffff;
     width: 157px;
-  
 }
    
-   
-    #btnExcluirSelecionados {
+#btnExcluirSelecionados {
     background: linear-gradient(45deg, #ff1a1a, #ff6666);
     color: #ffffff;
     cursor: pointer;
@@ -675,9 +614,7 @@ ul li:hover {
     
 }
 
-   
-   
-        button {
+   button {
             background: linear-gradient(45deg, #00ee4e, #008a18);
             color: #ffffff;
             border-color:#ffffff;
@@ -689,13 +626,10 @@ ul li:hover {
             transition: background-color 0.3s;
         }
         
-        
-        
         button:hover {
             background: #000000;
             transform: scale(1.1);
         }
-        
         
         .table-container {
             overflow-x: auto;
