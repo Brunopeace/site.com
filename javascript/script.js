@@ -428,16 +428,24 @@ botaoTelegram.onclick = function() {
         `Olá ${saudacao}, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato. \n\n PIX EMAIL \n\n brunopeaceandlove60@gmail.com`
     );
 
-    // Usa o username em vez do número de telefone, se disponível
-    const usernameCliente = 'usuario_do_cliente'; // Substitua pelo username do cliente
-    const telegramAppUrl = `tg://resolve?domain=${usernameCliente}&text=${mensagem}`;
-    window.location.href = telegramAppUrl;
+    const numeroTelefone = telefone.replace(/\D/g, ''); // Limpa o número de telefone
+    const usernameCliente = null; // Coloque aqui o username se disponível, ou deixe como null
 
-    // Fallback para o navegador
-    setTimeout(() => {
-        const urlTelegram = `https://t.me/${usernameCliente}?text=${mensagem}`;
-        window.open(urlTelegram, '_blank');
-    }, 500);
+    if (usernameCliente) {
+        // Se houver username, tenta abrir o chat com o username
+        const telegramAppUrlUsername = `tg://resolve?domain=${usernameCliente}&text=${mensagem}`;
+        window.location.href = telegramAppUrlUsername;
+
+        // Fallback para o navegador
+        setTimeout(() => {
+            const urlTelegram = `https://t.me/${usernameCliente}?text=${mensagem}`;
+            window.open(urlTelegram, '_blank');
+        }, 500);
+    } else {
+        // Se não houver username, usa o link de compartilhamento com número de telefone
+        const urlTelegramShare = `https://t.me/share/url?url=tel:+${numeroTelefone}&text=${mensagem}`;
+        window.open(urlTelegramShare, '_blank');
+    }
 };
     conteudoDropdown.appendChild(botaoTelegram);
 
