@@ -389,6 +389,7 @@ function adicionarLinhaTabela(nome, telefone, data) {
     // Botão para WhatsApp
     const botaoWhatsApp = document.createElement('button');
     botaoWhatsApp.innerText = 'Enviar para WhatsApp';
+    botaoWhatsApp.classList.add('WhatsApp');
     botaoWhatsApp.onclick = function() {
         const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
         const horaAtual = new Date().getHours();
