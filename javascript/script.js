@@ -40,7 +40,7 @@ setTimeout(() => {
 }, 15000);
 
 function verificarAcesso() {
-    const uuidEsperado = ['886b2958-4b1a-4665-82a8-267890353726'];
+    const uuidEsperado = ['9e20816e-3c57-4ad5-b3f3-37925812850d'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
