@@ -40,7 +40,8 @@ setTimeout(() => {
 }, 15000);
 
 function verificarAcesso() {
-    const uuidEsperado = ['9e20816e-3c57-4ad5-b3f3-37925812850d'];
+    const uuidEsperado = ['886b2958-4b1a-4665-82a8-267890353726',
+ '9e20816e-3c57-4ad5-b3f3-37925812850d'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -374,7 +375,7 @@ function adicionarLinhaTabela(nome, telefone, data) {
         }
     }));
 
-    // Botão de enviar mensagem (dropdown)
+    // Dropdown para enviar mensagem
     const dropdownDiv = document.createElement('div');
     dropdownDiv.classList.add('dropdown');
 
@@ -409,24 +410,35 @@ function adicionarLinhaTabela(nome, telefone, data) {
 
     // Botão para Telegram
     const botaoTelegram = document.createElement('button');
-    botaoTelegram.innerText = 'Enviar para Telegram';
-    botaoTelegram.onclick = function() {
-        const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
-        const horaAtual = new Date().getHours();
-        let saudacao;
-        if (horaAtual >= 0 && horaAtual < 12) {
-            saudacao = "bom dia";
-        } else if (horaAtual >= 12 && horaAtual < 18) {
-            saudacao = "boa tarde";
-        } else {
-            saudacao = "boa noite";
-        }
-        const mensagem = encodeURIComponent(
-            `*Olá ${saudacao}, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX EMAIL* \n \n brunopeaceandlove60@gmail.com `
-        );
-        const urlTelegram = `https://t.me/share/url?url=&text=${mensagem}`;
+botaoTelegram.innerText = 'Enviar para Telegram';
+botaoTelegram.classList.add('telegram');
+botaoTelegram.onclick = function() {
+    const dataVencimentoDestacada = celulaData.innerText;
+    const horaAtual = new Date().getHours();
+    let saudacao;
+    if (horaAtual >= 0 && horaAtual < 12) {
+        saudacao = "bom dia";
+    } else if (horaAtual >= 12 && horaAtual < 18) {
+        saudacao = "boa tarde";
+    } else {
+        saudacao = "boa noite";
+    }
+
+    const mensagem = encodeURIComponent(
+        `Olá ${saudacao}, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato. \n\n PIX EMAIL \n\n brunopeaceandlove60@gmail.com`
+    );
+
+    // Usa o username em vez do número de telefone, se disponível
+    const usernameCliente = 'usuario_do_cliente'; // Substitua pelo username do cliente
+    const telegramAppUrl = `tg://resolve?domain=${usernameCliente}&text=${mensagem}`;
+    window.location.href = telegramAppUrl;
+
+    // Fallback para o navegador
+    setTimeout(() => {
+        const urlTelegram = `https://t.me/${usernameCliente}?text=${mensagem}`;
         window.open(urlTelegram, '_blank');
-    };
+    }, 500);
+};
     conteudoDropdown.appendChild(botaoTelegram);
 
     dropdownDiv.appendChild(botaoDropdown);
