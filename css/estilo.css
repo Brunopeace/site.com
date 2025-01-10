@@ -528,6 +528,8 @@ footer {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            font-size: 10px;
+            font-weight: bold;
         }
         
         table, th, td {
