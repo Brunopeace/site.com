@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         const loading = document.getElementById("loading");
         loading.style.display = "none";
-    }, 2000);
+    }, 3000);
 });
 
 function verificarAcesso() {
