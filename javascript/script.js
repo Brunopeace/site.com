@@ -41,25 +41,20 @@ setTimeout(() => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const loading = document.getElementById("loading");
-    
-    // Verifica se o aplicativo já foi aberto
-    const hasVisited = localStorage.getItem("hasVisited");
+
+    // Verifica se a sessão já foi iniciada
+    const hasVisited = sessionStorage.getItem("hasVisited");
 
     if (!hasVisited) {
-        // Mostra o loader e define no localStorage que o app foi visitado
-        localStorage.setItem("hasVisited", "true");
+        // Mostra o loader e salva a sessão como visitada
+        sessionStorage.setItem("hasVisited", "true");
         setTimeout(() => {
             loading.style.display = "none";
-        }, 3000); // Tempo de exibição do loader
+        }, 3000); // Tempo de exibição do loader (2 segundos)
     } else {
-        // Esconde o loader imediatamente se já foi visitado
+        // Esconde o loader se a sessão já foi iniciada
         loading.style.display = "none";
     }
-});
-
-// Limpa o estado do localStorage ao fechar o aplicativo
-window.addEventListener("beforeunload", () => {
-    localStorage.removeItem("hasVisited");
 });
 
 function verificarAcesso() {
