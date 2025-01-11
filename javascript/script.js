@@ -40,11 +40,26 @@ setTimeout(() => {
 }, 15000);
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Esconde o loader após 2 segundos
-    setTimeout(() => {
-        const loading = document.getElementById("loading");
+    const loading = document.getElementById("loading");
+    
+    // Verifica se o aplicativo já foi aberto
+    const hasVisited = localStorage.getItem("hasVisited");
+
+    if (!hasVisited) {
+        // Mostra o loader e define no localStorage que o app foi visitado
+        localStorage.setItem("hasVisited", "true");
+        setTimeout(() => {
+            loading.style.display = "none";
+        }, 3000); // Tempo de exibição do loader
+    } else {
+        // Esconde o loader imediatamente se já foi visitado
         loading.style.display = "none";
-    }, 3000);
+    }
+});
+
+// Limpa o estado do localStorage ao fechar o aplicativo
+window.addEventListener("beforeunload", () => {
+    localStorage.removeItem("hasVisited");
 });
 
 function verificarAcesso() {
