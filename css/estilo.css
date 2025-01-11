@@ -719,6 +719,7 @@ footer {
     }
 }
 
+/* Tela de loading */
 #loading {
     position: fixed;
     top: 0;
