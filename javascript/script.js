@@ -57,29 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function verificarAcesso() {
-    const uuidEsperado = ['886b2958-4b1a-4665-82a8-267890353726',
- '9e20816e-3c57-4ad5-b3f3-37925812850d'];
-    let uuidArmazenado = localStorage.getItem('uuid');
-
-    if (!uuidArmazenado) {
-        uuidArmazenado = gerarUUID();
-        localStorage.setItem('uuid', uuidArmazenado);
-    }
-
-    if (!uuidEsperado.includes(uuidArmazenado)) {
-        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
-        window.location.href = "acessonegado.html";
-    }
-}
-
-function gerarUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
-
 window.onscroll = function() {
     const backToTopButton = document.getElementById('backToTop');
     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
@@ -927,12 +904,61 @@ function excluirClientesSelecionados() {
     }
 }
 
+
+/* codigo novo */
+function verificarClientesAVencer() {
+    const clientes = carregarClientes();
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const clientesNotificar = clientes.filter(cliente => {
+        const dataVencimento = new Date(cliente.data);
+        const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
+        return diferencaDias === 2;
+    });
+
+    if (clientesNotificar.length > 0) {
+        const nomesClientes = clientesNotificar.map(c => c.nome).join(', ');
+        enviarNotificacao(`Clientes a vencer em 2 dias: ${nomesClientes}`);
+    }
+}
+
+function enviarNotificacao(mensagem) {
+    if ('serviceWorker' in navigator && 'Notification' in window) {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.showNotification("Aviso de Vencimento", {
+                        body: mensagem,
+                        icon: "img/icon512.png",
+                        vibrate: [200, 100, 200],
+                    });
+                });
+            }
+        });
+    }
+}
+
+// Verificar clientes ao carregar a página
+document.addEventListener('DOMContentLoaded', verificarClientesAVencer);
+
+// Agendar verificação a cada 1 hora mesmo com o app fechado
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(registration => {
+        registration.periodicSync?.register('verificarClientes', {
+            minInterval: 60 * 60 * 1000, // 1 hora
+        }).catch(console.log);
+    });
+}
+
+/* codigo novo  termina aqui */
+
+
 window.onload = function() {
 
     carregarPagina();
     carregarDarkMode();
     verificarBackupDiario();
     exibirClientesAlterados();
-    verificarAcesso();
     window.onscroll();
 };
