@@ -7,15 +7,30 @@
     <title>Gerenciador de clientes</title>
     <link rel="stylesheet" type="text/css" href="css/estilo.css">
     <link rel="manifest" href="manifest.json">
+    
+    
+    
+    
+    
+    
+    <script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('firebase-messaging-sw.js')
+    .then(() => console.log("Service Worker registrado!"))
+    .catch(err => console.log("Erro ao registrar Service Worker:", err));
+}
+</script>
 </head>
-<body>
 
-<div id="loading">
-    <div class="spinner">
-        <span>Carregando...</span>
+<!-- Tela de Loading -->
+    <div id="loading">
+        <div class="spinner">
+            <span>Carregando...</span>
+        </div>
     </div>
-</div>
-
+    
+    
+<body>
     <img src="img/logo-padrao.png" class="logo">
 
     <div class="flex-container">
@@ -118,7 +133,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <footer>
-        © 2024 Produzido por <a href="https://wa.me/5581982258462?text=%2AOl%C3%A1%2C+fiquei+interessado+nesse+seu+aplicativo+web%2C+quanto+custa+%3F%2A"><strong>BRUNO-PEACE</strong></a>
+        © 2025 Desenvolvedor <a href="https://wa.me/5581982258462?text=%2AOl%C3%A1%2C+fiquei+interessado+nesse+seu+aplicativo+web%2C+quanto+custa+%3F%2A"><strong>Bruno-Silva</strong></a>
 </footer>
-</body>
+
+    </body>
 </html>
