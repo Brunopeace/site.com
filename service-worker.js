@@ -1,5 +1,3 @@
-
-
 // Nome do cache
 const CACHE_NAME = 'gerenciador-de-clientes-v1';
 
