@@ -57,6 +57,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+function verificarAcesso() {
+    const uuidEsperado = ['886b2958-4b1a-4665-82a8-267890353726',
+ '9e20816e-3c57-4ad5-b3f3-37925812850d'];
+    let uuidArmazenado = localStorage.getItem('uuid');
+
+    if (!uuidArmazenado) {
+        uuidArmazenado = gerarUUID();
+        localStorage.setItem('uuid', uuidArmazenado);
+    }
+
+    if (!uuidEsperado.includes(uuidArmazenado)) {
+        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
+        window.location.href = "acessonegado.html";
+    }
+}
+
+function gerarUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
 window.onscroll = function() {
     const backToTopButton = document.getElementById('backToTop');
     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
@@ -960,5 +983,6 @@ window.onload = function() {
     carregarDarkMode();
     verificarBackupDiario();
     exibirClientesAlterados();
+    verificarAcesso();
     window.onscroll();
 };
