@@ -934,44 +934,56 @@ function verificarClientesAVencer() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
+    // Filtra clientes com vencimento em 2 dias
     const clientesNotificar = clientes.filter(cliente => {
         const dataVencimento = new Date(cliente.data);
-        const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
-        return diferencaDias === 2;
+        return Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24)) === 2;
     });
 
     if (clientesNotificar.length > 0) {
         const nomesClientes = clientesNotificar.map(c => c.nome).join(', ');
-        enviarNotificacao(`Clientes a vencer em 2 dias: ${nomesClientes}`);
+        enviarNotificacao("Aviso de Vencimento", `Clientes a vencer em 2 dias: ${nomesClientes}`);
     }
 }
 
-function enviarNotificacao(mensagem) {
-    if ('serviceWorker' in navigator && 'Notification' in window) {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                navigator.serviceWorker.ready.then(registration => {
-                    registration.showNotification("Aviso de Vencimento", {
-                        body: mensagem,
-                        icon: "img/icon512.png",
-                        vibrate: [200, 100, 200],
-                    });
-                });
-            }
-        });
+function enviarNotificacao(titulo, mensagem) {
+    if (!("Notification" in window) || !("serviceWorker" in navigator)) {
+        console.warn("Notificações ou Service Workers não são suportados.");
+        return;
     }
+
+    Notification.requestPermission().then(permission => {
+        if (permission !== "granted") {
+            console.warn("Permissão de notificação negada.");
+            return;
+        }
+
+        navigator.serviceWorker.ready.then(registration => {
+            registration.showNotification(titulo, {
+                body: mensagem,
+                icon: "img/icon512.png",
+                vibrate: [200, 100, 200],
+                actions: [{ action: "abrir_app", title: "Abrir Aplicativo" }],
+                requireInteraction: true, // Mantém a notificação na tela até interação
+            });
+        }).catch(err => console.error("Erro ao exibir notificação:", err));
+    });
 }
 
 // Verificar clientes ao carregar a página
 document.addEventListener('DOMContentLoaded', verificarClientesAVencer);
 
-// Agendar verificação a cada 1 hora mesmo com o app fechado
+// Verificação periódica automática (mesmo com o app fechado)
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready.then(registration => {
-        registration.periodicSync?.register('verificarClientes', {
-            minInterval: 60 * 60 * 1000, // 1 hora
-        }).catch(console.log);
-    });
+        if ('periodicSync' in registration) {
+            registration.periodicSync.register('verificarClientes', {
+                minInterval: 60 * 60 * 1000 // Verifica a cada 1 hora
+            }).catch(err => console.warn("Periodic Sync não suportado:", err));
+        } else {
+            console.warn("Periodic Sync não disponível.");
+        }
+    }).catch(err => console.error("Erro ao registrar Service Worker:", err));
 }
 
 /* codigo novo  termina aqui */
