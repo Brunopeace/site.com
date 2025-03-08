@@ -942,7 +942,7 @@ function verificarClientesAVencer() {
 
     if (clientesNotificar.length > 0) {
         const nomesClientes = clientesNotificar.map(c => c.nome).join(', ');
-        enviarNotificacao("Aviso de Vencimento", `Faltam 2 dias para o Cluente: ${nomesClientes}`);
+        enviarNotificacao("Aviso de Vencimento", `Faltam 2 dias para o Cliente: ${nomesClientes}`);
     }
 }
 
