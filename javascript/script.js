@@ -931,45 +931,39 @@ function excluirClientesSelecionados() {
 /* codigo novo */
 function verificarClientesAVencer() {
     const clientes = carregarClientes();
-    if (!Array.isArray(clientes) || clientes.length === 0) return;
-
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
-    const clientesNotificar = clientes
-        .map(cliente => ({ nome: cliente.nome, dataVencimento: new Date(cliente.data) }))
-        .filter(cliente => {
-            if (isNaN(cliente.dataVencimento)) return false;
-            const diferencaDias = Math.ceil((cliente.dataVencimento - hoje) / (1000 * 60 * 60 * 24));
-            return diferencaDias === 2;
-        });
+    const clientesNotificar = clientes.filter(cliente => {
+        const dataVencimento = new Date(cliente.data);
+        const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
+        return diferencaDias === 2;
+    });
 
     if (clientesNotificar.length > 0) {
         const nomesClientes = clientesNotificar.map(c => c.nome).join(', ');
-        enviarNotificacao(`Os seguintes clientes vencem em 2 dias: ${nomesClientes}`);
+        enviarNotificacao(`Clientes a vencer em 2 dias: ${nomesClientes}`);
     }
 }
 
 function enviarNotificacao(mensagem) {
-    if (!("serviceWorker" in navigator && "Notification" in window)) return;
-
-    Notification.requestPermission().then(permission => {
-        if (permission !== "granted") return;
-
-        navigator.serviceWorker.ready
-            .then(registration => {
-                registration.showNotification("Aviso de Vencimento", {
-                    body: mensagem,
-                    icon: "img/icon512.png",
-                    vibrate: [200, 100, 200],
+    if ('serviceWorker' in navigator && 'Notification' in window) {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.showNotification("Aviso de Vencimento", {
+                        body: mensagem,
+                        icon: "img/icon512.png",
+                        vibrate: [200, 100, 200],
+                    });
                 });
-            })
-            .catch(console.error);
-    }).catch(console.error);
+            }
+        });
+    }
 }
 
 // Verificar clientes ao carregar a página
-document.addEventListener("DOMContentLoaded", verificarClientesAVencer);
+document.addEventListener('DOMContentLoaded', verificarClientesAVencer);
 
 // Agendar verificação a cada 1 hora mesmo com o app fechado
 if ('serviceWorker' in navigator) {
