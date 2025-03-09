@@ -58,8 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function verificarAcesso() {
-    const uuidEsperado = ['886b2958-4b1a-4665-82a8-267890353726',
- '9e20816e-3c57-4ad5-b3f3-37925812850d'];
+    const uuidEsperado = ['897e3ac3-1bff-49e3-b0e1-b0640c9a2c40'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
