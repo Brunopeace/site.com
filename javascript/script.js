@@ -1,14 +1,20 @@
 if ('serviceWorker' in navigator) {
 window.addEventListener('load', function() {
  navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-        console.log('Service Worker registrado com sucesso:', registration);
+        console.log('Service Worker1 registrado com sucesso:', registration);
       }, function(err) {
-        console.log('Falha ao registrar o Service Worker:', err);
+console.log('Falha ao registrar o Service Worker:', err);
       });
     });
   }
-
-/* código para instalar o aplicativo */
+   
+ if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker2.js')
+.then(reg => console.log("✅ Service Worker2 de Notificações registrado!", reg))
+.catch(err => console.error("❌ Erro ao registrar o SW:", err));
+}
+  
+  /* código para instalar o aplicativo */
   let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -58,7 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function verificarAcesso() {
-    const uuidEsperado = ['897e3ac3-1bff-49e3-b0e1-b0640c9a2c40'];
+    const uuidEsperado = ['897e3ac3-1bff-49e3-b0e1-b0640c9a2c40',
+ '3158a53e-23a2-47bf-a053-a68cf1f1999e'];
     let uuidArmazenado = localStorage.getItem('uuid');
 
     if (!uuidArmazenado) {
@@ -925,68 +932,6 @@ function excluirClientesSelecionados() {
         }, 4000);
     }
 }
-
-
-/* codigo novo */
-function verificarClientesAVencer() {
-    const clientes = carregarClientes();
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    // Filtra clientes com vencimento em 2 dias
-    const clientesNotificar = clientes.filter(cliente => {
-        const dataVencimento = new Date(cliente.data);
-        return Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24)) === 2;
-    });
-
-    if (clientesNotificar.length > 0) {
-        const nomesClientes = clientesNotificar.map(c => c.nome).join(', ');
-        enviarNotificacao("Aviso de Vencimento", `Faltam 2 dias para o Cliente: ${nomesClientes}`);
-    }
-}
-
-function enviarNotificacao(titulo, mensagem) {
-    if (!("Notification" in window) || !("serviceWorker" in navigator)) {
-        console.warn("Notificações ou Service Workers não são suportados.");
-        return;
-    }
-
-    Notification.requestPermission().then(permission => {
-        if (permission !== "granted") {
-            console.warn("Permissão de notificação negada.");
-            return;
-        }
-
-        navigator.serviceWorker.ready.then(registration => {
-            registration.showNotification(titulo, {
-                body: mensagem,
-                icon: "img/icon512.png",
-                vibrate: [200, 100, 200],
-                actions: [{ action: "abrir_app", title: "Abrir Aplicativo" }],
-                requireInteraction: true, // Mantém a notificação na tela até interação
-            });
-        }).catch(err => console.error("Erro ao exibir notificação:", err));
-    });
-}
-
-// Verificar clientes ao carregar a página
-document.addEventListener('DOMContentLoaded', verificarClientesAVencer);
-
-// Verificação periódica automática (mesmo com o app fechado)
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then(registration => {
-        if ('periodicSync' in registration) {
-            registration.periodicSync.register('verificarClientes', {
-                minInterval: 60 * 60 * 1000 // Verifica a cada 1 hora
-            }).catch(err => console.warn("Periodic Sync não suportado:", err));
-        } else {
-            console.warn("Periodic Sync não disponível.");
-        }
-    }).catch(err => console.error("Erro ao registrar Service Worker:", err));
-}
-
-/* codigo novo  termina aqui */
-
 
 window.onload = function() {
 
