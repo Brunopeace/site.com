@@ -911,6 +911,11 @@ document.getElementById('select-all').addEventListener('change', function() {
 
 
 function verificarClientesParaNotificacao() {
+    if (!document.hidden) {
+        console.log("🟢 App está aberto, notificações desativadas.");
+        return;
+    }
+
     const clientes = JSON.parse(localStorage.getItem("clientes")) || [];
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -945,10 +950,11 @@ function enviarNotificacaoPush(clientes) {
     }
 }
 
-// Executar a verificação ao carregar a página
-document.addEventListener("DOMContentLoaded", () => {
-    verificarClientesParaNotificacao();
-    setInterval(verificarClientesParaNotificacao, 60 * 60 * 1000); // Verifica a cada 1 hora
+// Verifica a cada 1 hora, mas só envia notificações se o app estiver fechado
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        verificarClientesParaNotificacao();
+    }
 });
 
 
