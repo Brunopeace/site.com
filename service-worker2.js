@@ -1,3 +1,8 @@
+self.addEventListener("notificationclick", event => {
+    event.notification.close();
+    clients.openWindow("/"); // Abre o app ao clicar na notificação
+});
+
 // Importa o Firebase dentro do Service Worker
 importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js");
