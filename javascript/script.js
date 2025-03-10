@@ -899,13 +899,79 @@ document.getElementById('select-all').addEventListener('change', function() {
 
 
 
-/* Código novo*/
 
 
 
-/* Código novo termina aqui*/
+
+/*inicio do código novo*/
 
 
+
+
+
+
+function verificarClientesParaNotificacao() {
+    const clientes = JSON.parse(localStorage.getItem("clientes")) || [];
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    let clientesVencendo = [];
+
+    clientes.forEach(cliente => {
+        const dataVencimento = new Date(cliente.data);
+        const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
+
+        if (diferencaDias === 2) {
+            clientesVencendo.push(cliente.nome);
+        }
+    });
+
+    if (clientesVencendo.length > 0) {
+        enviarNotificacaoPush(clientesVencendo);
+    }
+}
+
+function enviarNotificacaoPush(clientes) {
+    if ("serviceWorker" in navigator && "PushManager" in window) {
+        navigator.serviceWorker.ready.then(registration => {
+            clientes.forEach(cliente => {
+                registration.showNotification("📢 Aviso de Vencimento", {
+                    body: `O cliente ${cliente} vence em 2 dias!`,
+                    icon: "img/icon512.png",
+                    badge: "img/icon512.png"
+                });
+            });
+        });
+    }
+}
+
+// Executar a verificação ao carregar a página
+document.addEventListener("DOMContentLoaded", () => {
+    verificarClientesParaNotificacao();
+    setInterval(verificarClientesParaNotificacao, 60 * 60 * 1000); // Verifica a cada 1 hora
+});
+
+
+
+function solicitarPermissaoNotificacoes() {
+    if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                console.log("✅ Permissão concedida para notificações");
+            } else {
+                console.log("❌ Permissão negada para notificações");
+            }
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded", solicitarPermissaoNotificacoes);
+
+
+
+
+
+/* fim do código novo aqui*/
 
 
 
