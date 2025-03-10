@@ -1,6 +1,6 @@
 self.addEventListener("notificationclick", event => {
     event.notification.close();
-    clients.openWindow("/"); // Abre o app ao clicar na notificação
+    clients.openWindow("https://brunopeace.github.io/site.com/"); // Abre o app ao clicar na notificação
 });
 
 // Importa o Firebase dentro do Service Worker
