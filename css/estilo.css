@@ -1,3 +1,16 @@
+.input-erro {
+    border: 2px solid red;
+    background-color: #ffe6e6;
+}
+
+.erro-mensagem {
+    color: red;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 4px;
+    display: block;
+}
+
 .dropdown {
     position: relative;
     display: inline-block;
@@ -466,7 +479,7 @@ footer {
 
         .table-container {
             opacity: 0;
-            animation: slideIn 0.5s ease forwards 0.5s;
+          animation: slideIn 0.5s ease forwards 0.5s;
         }
 
         @keyframes slideIn {
@@ -508,7 +521,7 @@ footer {
         }
         
         .corpo {
-            backgrouns-color: #000000;
+            background-color: #000000;
         }
         
         .logo {
@@ -535,10 +548,12 @@ footer {
         table, th, td {
             border: 1px solid #ddd;
         }
+        
         th, td {
             padding: 12px;
             text-align: center;
         }
+        
         th {
             background-color: #d6ffe8;
             color: #333;
@@ -546,6 +561,7 @@ footer {
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+        
         tr:hover {
             background-color: #a3ffcc;
         }
@@ -642,6 +658,7 @@ footer {
     color: #ffffff;
    
 }
+
 #backup {
        background: linear-gradient(45deg, #1e90ff, #00bfff);
        color: #ffffff;
