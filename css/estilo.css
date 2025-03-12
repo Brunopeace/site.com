@@ -5,7 +5,7 @@
 
 .erro-mensagem {
     color: red;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
     margin-top: 4px;
     display: block;
@@ -196,13 +196,26 @@
     font-family: Arial, sans-serif;
 }
 
+@keyframes brilhoPulsante {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(0, 153, 255, 0.8);
+    }
+    50% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 1), 0 0 20px rgba(0, 153, 255, 1);
+    }
+    100% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(0, 153, 255, 0.8);
+    }
+}
+
 .titulo-clientes-renovados {
     display: block;
-    font-size: 1.2em;
+    font-size: 20px;
     font-weight: bold;
     margin-bottom: 10px;
     font-weight: bold;
     color: #ffffff;
+    animation: brilhoPulsante 1.5s infinite alternate;
 }
 
 .nenhum-cliente-renovado {
