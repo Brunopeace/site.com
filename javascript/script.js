@@ -157,7 +157,7 @@ function restaurarCliente(nome) {
     const clienteIndex = lixeira.findIndex(c => c.nome === nome);
 
     if (clienteIndex !== -1) {
-     const cliente = lixeira.splice(clienteIndex, 1)[0];
+const cliente = lixeira.splice(clienteIndex, 1)[0];
         clientes.push(cliente);
         salvarClientes(clientes);
         salvarLixeira(lixeira);
@@ -233,10 +233,10 @@ function pesquisarClientesLixeira() {
     const trs = document.querySelectorAll('#tabelaLixeira tbody tr');
 
     trs.forEach(tr => {
-        const td = tr.querySelector('td:nth-child(2)');
+  const td = tr.querySelector('td:nth-child(2)');
         if (td) {
-            const textValue = td.textContent || td.innerText;
-            tr.style.display = textValue.toLowerCase().includes(filter) ? '' : 'none';
+  const textValue = td.textContent || td.innerText;
+  tr.style.display = textValue.toLowerCase().includes(filter) ? '' : 'none';
         }
     });
 }
@@ -304,7 +304,7 @@ function adicionarCliente() {
 
     // Verifica o nome
     if (!nome) {
-        exibirErro(nomeInput, "Nome inválido. Preencha corretamente.");
+        exibirErro(nomeInput, "O campo nome não pode estar vazio.");
         erro = true;
     } else {
         limparErro(nomeInput);
@@ -312,7 +312,7 @@ function adicionarCliente() {
 
     // Verifica o telefone
     if (!validarTelefone(telefone)) {
-        exibirErro(telefoneInput, "Telefone inválido. Deve conter 11 dígitos numéricos.");
+        exibirErro(telefoneInput, "Telefone inválido, Deve conter 11 dígitos.");
         erro = true;
     } else {
         limparErro(telefoneInput);
@@ -321,7 +321,7 @@ function adicionarCliente() {
     // Verifica a data
     const dataFormatada = new Date(data);
     if (!data || isNaN(dataFormatada.getTime())) {
-        exibirErro(dataInput, "Data inválida. Escolha uma data válida.");
+        exibirErro(dataInput, "Data inválida, Escolha uma data válida.");
         erro = true;
     } else {
         limparErro(dataInput);
@@ -331,9 +331,9 @@ function adicionarCliente() {
 
     const clientes = carregarClientes();
 
-    // 🔹 Agora só verifica se o nome já existe, permitindo números repetidos
-    const clienteExistente = clientes.some(cliente => 
-        cliente.nome.toLowerCase() === nome.toLowerCase()
+    // 🔹 verifica se o nome já existe, permitindo números repetidos
+const clienteExistente = clientes.some(cliente => 
+cliente.nome.toLowerCase() === nome.toLowerCase()
     );
 
     if (clienteExistente) {
@@ -380,7 +380,7 @@ function validarTelefone(telefone) {
     return dddsValidos.includes(ddd) && primeiroDigito === '9'; // Celulares no Brasil sempre começam com 9
 }
 
-// Função para formatar telefone (adiciona código do país +55)
+// Função para formatar celular com o codigo do país +55)
 function formatarTelefone(telefone) {
     const numeroLimpo = telefone.replace(/\D/g, '');
 
@@ -432,29 +432,24 @@ function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
     novaLinha.setAttribute('data-nome', nome);
-
     const celulaSelecionar = novaLinha.insertCell(0);
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.classList.add('cliente-checkbox');
     celulaSelecionar.appendChild(checkbox);
-
     const celulaNome = novaLinha.insertCell(1);
     celulaNome.innerText = nome;
-
     const celulaTelefone = novaLinha.insertCell(2);
     celulaTelefone.innerText = telefone;
-
     const celulaData = novaLinha.insertCell(3);
     celulaData.innerText = new Date(data).toLocaleDateString('pt-BR');
-
-    const celulaAcoes = novaLinha.insertCell(4);
+const celulaAcoes = novaLinha.insertCell(4);
 
     // Botão de editar
     celulaAcoes.appendChild(criarBotao("Editar", function() {
-        const novoNome = prompt("Digite o novo nome do cliente:", nome);
-        const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
-        const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", new Date(data).toLocaleDateString('pt-BR'));
+const novoNome = prompt("Digite o novo nome do cliente:", nome);
+const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
+const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", new Date(data).toLocaleDateString('pt-BR'));
         if (novoNome !== null && novoTelefone !== null && novaData !== null && novoNome && validarTelefone(novoTelefone)) {
             const partesData = novaData.split('/');
             if (partesData.length === 3) {
@@ -462,19 +457,19 @@ function adicionarLinhaTabela(nome, telefone, data) {
                 if (!isNaN(novaDataVencimento.getTime())) {
                     const dataAnterior = new Date(data).toLocaleDateString('pt-BR');
                     const novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
-                    if (dataAnterior !== novaDataFormatada) {
+if (dataAnterior !== novaDataFormatada) {
                         atualizarClientesAlterados(nome, dataAnterior, novaDataFormatada);
                     }
-                    celulaNome.innerText = novoNome;
-                    celulaTelefone.innerText = novoTelefone;
-                    celulaData.innerText = novaDataFormatada;
+celulaNome.innerText = novoNome;
+celulaTelefone.innerText = novoTelefone;
+celulaData.innerText = novaDataFormatada;
 
-                    const clientes = carregarClientes();
-                    const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
-                    if (clienteIndex !== -1) {
-                        clientes[clienteIndex].nome = novoNome;
-                        clientes[clienteIndex].telefone = novoTelefone;
-                        clientes[clienteIndex].data = novaDataVencimento;
+const clientes = carregarClientes();
+const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
+if (clienteIndex !== -1) {
+clientes[clienteIndex].nome = novoNome;
+clientes[clienteIndex].telefone = novoTelefone;
+clientes[clienteIndex].data = novaDataVencimento;
                         salvarClientes(clientes);
                         atualizarCorCelulaData(celulaData, novaDataVencimento);
                         location.reload();
@@ -494,36 +489,55 @@ function adicionarLinhaTabela(nome, telefone, data) {
     // Dropdown para enviar mensagem
     const dropdownDiv = document.createElement('div');
     dropdownDiv.classList.add('dropdown');
-
     const botaoDropdown = document.createElement('button');
     botaoDropdown.innerText = 'WhatsApp';
     botaoDropdown.classList.add('dropbtn');
-
     const conteudoDropdown = document.createElement('div');
-    conteudoDropdown.classList.add('dropdown-content');
+ conteudoDropdown.classList.add('dropdown-content');
 
     // Botão para WhatsApp
     const botaoWhatsApp = document.createElement('button');
-    botaoWhatsApp.innerText = 'Enviar para WhatsApp';
-    botaoWhatsApp.classList.add('WhatsApp');
-    botaoWhatsApp.onclick = function() {
-        const dataVencimentoDestacada = `\`${celulaData.innerText}\``;
-        const horaAtual = new Date().getHours();
-        let saudacao;
-        if (horaAtual >= 0 && horaAtual < 12) {
-            saudacao = "bom dia";
-        } else if (horaAtual >= 12 && horaAtual < 18) {
-            saudacao = "boa tarde";
-        } else {
-            saudacao = "boa noite";
-        }
-        const mensagem = encodeURIComponent(
-            `*Olá ${saudacao}, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato.* \n \n *PIX EMAIL* \n \n brunopeaceandlove60@gmail.com `
-        );
-        const telefoneCliente = telefone.replace(/\D/g, '');
-        abrirWhatsApp(telefoneCliente, mensagem);
-    };
-    conteudoDropdown.appendChild(botaoWhatsApp);
+botaoWhatsApp.innerText = 'Enviar para WhatsApp';
+botaoWhatsApp.classList.add('WhatsApp');
+botaoWhatsApp.onclick = function() {
+    const dataVencimento = celulaData.innerText.trim();
+    const saudacao = obterSaudacao();
+    const telefoneCliente = telefone ? telefone.replace(/\D/g, '') : '';
+
+    if (!telefoneCliente) {
+        alert('Número de telefone inválido.');
+        return;
+    }
+
+    const mensagem = criarMensagemWhatsApp(saudacao, dataVencimento);
+    abrirWhatsApp(telefoneCliente, mensagem);
+};
+
+conteudoDropdown.appendChild(botaoWhatsApp);
+
+// Função para obter a saudação baseada no horário atual
+function obterSaudacao() {
+    const hora = new Date().getHours();
+    if (hora < 12) return "bom dia";
+    if (hora < 18) return "boa tarde";
+    return "boa noite";
+}
+
+// Função para criar a mensagem do WhatsApp formatada
+function criarMensagemWhatsApp(saudacao, dataVencimento) {
+    return encodeURIComponent(
+        `*Olá, ${saudacao}!* \n\n` +
+        `Seu plano de canais está vencendo em *${dataVencimento}*.\n` +
+        `Caso queira renovar após esta data, favor entrar em contato.\n\n` +
+        `*PIX EMAIL:* \n\n brunopeaceandlove60@gmail.com`
+    );
+}
+
+// Função para abrir o WhatsApp com a mensagem
+function abrirWhatsApp(telefone, mensagem) {
+    const url = `https://api.whatsapp.com/send?phone=55${telefone}&text=${mensagem}`;
+    window.open(url, '_blank');
+}
 
     // Botão para Telegram
     const botaoTelegram = document.createElement('button');
@@ -564,12 +578,11 @@ botaoTelegram.onclick = function() {
         window.open(urlTelegramShare, '_blank');
     }
 };
+    
     conteudoDropdown.appendChild(botaoTelegram);
-
     dropdownDiv.appendChild(botaoDropdown);
     dropdownDiv.appendChild(conteudoDropdown);
     celulaAcoes.appendChild(dropdownDiv);
-
     atualizarCorCelulaData(celulaData, data);
     tabela.appendChild(novaLinha);
 }
@@ -587,13 +600,19 @@ function atualizarCorCelulaData(celulaData, dataVencimento) {
 
     const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
 
+    // Mapeamento das classes de cor para cada condição
+    const classesPorDias = {
+        '-1': 'red',  // Vencido
+        '0': 'yellow', // Vence hoje
+        '2': 'orange'  // Vence em 2 dias
+    };
+
+    // Remove classes existentes
     celulaData.classList.remove('red', 'yellow', 'orange');
-    if (diferencaDias < 0) {
-        celulaData.classList.add('red');
-    } else if (diferencaDias === 0) {
-        celulaData.classList.add('yellow');
-    } else if (diferencaDias === 2) {
-        celulaData.classList.add('orange');
+
+    // Aplica a classe correspondente se existir no mapeamento
+    if (classesPorDias.hasOwnProperty(diferencaDias)) {
+        celulaData.classList.add(classesPorDias[diferencaDias]);
     }
 }
 
@@ -714,10 +733,10 @@ function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
             let clientes = carregarClientes();
             let clienteExistente = clientes.find(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
             if (clienteExistente) {
-                let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
-                let novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
-                if (dataAnterior !== novaDataFormatada) {
-                    clienteExistente.nome = novoNome;
+            let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
+            let novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
+      if (dataAnterior !== novaDataFormatada) {
+      clienteExistente.nome = novoNome;
       clienteExistente.telefone = novoTelefone;
       clienteExistente.data = novaDataVencimento;
 
@@ -879,10 +898,10 @@ function exportarClientes() {
 function importarClientes(event) {
     const file = event.target.files[0];
     if (file) {
-        const reader = new FileReader();
+      const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                const data = JSON.parse(e.target.result);
+      const data = JSON.parse(e.target.result);
                 let clientesImportados = [];
                 let lixeiraImportada = [];
                 if (Array.isArray(data)) {
@@ -900,16 +919,16 @@ function importarClientes(event) {
                         }
                     }
                 }
-                const clientesAtuais = carregarClientes();
-                const lixeiraAtual = carregarLixeira();
-                const mapaClientes = new Map();
-                clientesAtuais.forEach(cliente => {
+       const clientesAtuais = carregarClientes();
+       const lixeiraAtual = carregarLixeira();
+       const mapaClientes = new Map();
+       clientesAtuais.forEach(cliente => {
 mapaClientes.set(cliente.nome.toLowerCase(), cliente);
                 });
 clientesImportados.forEach(clienteImportado => {
-                    const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+       const nomeClienteImportado = clienteImportado.nome.toLowerCase();
                     if (mapaClientes.has(nomeClienteImportado)) {
-                    const clienteExistente = mapaClientes.get(nomeClienteImportado);
+       const clienteExistente = mapaClientes.get(nomeClienteImportado);
    clienteExistente.telefone = clienteImportado.telefone;
    clienteExistente.data = clienteImportado.data;
                     } else {
