@@ -304,7 +304,7 @@ function adicionarCliente() {
 
     // Verifica o nome
     if (!nome) {
-        exibirErro(nomeInput, "O campo nome não pode estar vazio.");
+        exibirErro(nomeInput, "Nome do cliente não pode estar vazio.");
         erro = true;
     } else {
         limparErro(nomeInput);
