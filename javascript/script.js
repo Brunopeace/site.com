@@ -8,7 +8,6 @@ console.log('Falha ao registrar o Service Worker:', err);
     });
   }  
     
-  
   /* código para instalar o aplicativo */
   let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -764,7 +763,9 @@ function pesquisarCliente() {
 
     for (let i = 0; i < linhas.length; i++) {
         const nome = linhas[i].getElementsByTagName('td')[1].innerText.toLowerCase();
-        if (nome.includes(termoPesquisa)) {
+        const telefone = linhas[i].getElementsByTagName('td')[2].innerText.toLowerCase();
+
+        if (nome.includes(termoPesquisa) || telefone.includes(termoPesquisa)) {
             linhas[i].style.display = '';
         } else {
             linhas[i].style.display = 'none';
