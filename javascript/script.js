@@ -757,6 +757,7 @@ function abrirWhatsApp(telefoneCliente, mensagem) {
     window.open(`https://api.whatsapp.com/send?phone=55${telefoneCliente}&text=${mensagem}`, '_blank');
 }
 
+//funções atualizadas
 function pesquisarCliente() {
     const termoPesquisa = document.getElementById('inputPesquisar').value.toLowerCase();
     const linhas = document.getElementById('corpoTabela').getElementsByTagName('tr');
@@ -776,37 +777,147 @@ function pesquisarCliente() {
 function atualizarInfoClientes() {
     const totalVencidos = calcularTotalClientesVencidos();
     const totalNaoVencidos = calcularTotalClientesNaoVencidos();
-document.getElementById('infoClientes2').innerHTML = `
-<span class="clientes-vencidos">Clientes vencidos: ${totalVencidos}</span><br>
-<span class="clientes-ativos">Clientes ativos: ${totalNaoVencidos}</span>
-    `;
+    const infoDiv = document.getElementById('infoClientes2');
+
+    // Limpa conteúdo anterior
+    infoDiv.innerHTML = '';
+
+    // Cria elementos
+    const vencidosSpan = document.createElement('span');
+    vencidosSpan.className = 'clientes-vencidos';
+    vencidosSpan.textContent = `Clientes vencidos: ${totalVencidos}`;
+
+    const ativosSpan = document.createElement('span');
+    ativosSpan.className = 'clientes-ativos';
+    ativosSpan.textContent = `Clientes ativos: ${totalNaoVencidos}`;
+
+    // Adiciona ao container
+    infoDiv.appendChild(vencidosSpan);
+    infoDiv.appendChild(document.createElement('br'));
+    infoDiv.appendChild(ativosSpan);
+}
+
+function contarClientesPorCondicao(condicaoCallback) {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const clientes = carregarClientes();
+    return clientes.reduce((total, cliente) => {
+        const dataVencimento = new Date(cliente.data);
+        return condicaoCallback(dataVencimento, hoje) ? total + 1 : total;
+    }, 0);
 }
 
 function calcularTotalClientesVencidos() {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const clientes = carregarClientes();
-    let totalVencidos = 0;
-    clientes.forEach(function(cliente) {
-        const dataVencimento = new Date(cliente.data);
-        if (dataVencimento < hoje) {
-            totalVencidos++; }
-    });
-    return totalVencidos;
+    return contarClientesPorCondicao((vencimento, hoje) => vencimento < hoje);
 }
 
 function calcularTotalClientesNaoVencidos() {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const clientes = carregarClientes();
-    let totalNaoVencidos = 0;
-    clientes.forEach(function(cliente) {
-        const dataVencimento = new Date(cliente.data);
-        if (dataVencimento >= hoje) {
-            totalNaoVencidos++;
+    return contarClientesPorCondicao((vencimento, hoje) => vencimento >= hoje);
+}
+
+function toggleDarkMode() {
+    const isDarkMode = document.body.classList.toggle('dark-mode');
+
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.classList.toggle('dark-mode-footer', isDarkMode);
+    }
+
+    localStorage.setItem('dark-mode', isDarkMode);
+}
+
+function carregarDarkMode() {
+    let isDarkMode = localStorage.getItem('dark-mode');
+
+    if (isDarkMode === null) {
+        // Ativar automaticamente após as 18h
+        const horaAtual = new Date().getHours();
+        isDarkMode = horaAtual >= 18 || horaAtual < 6; // também ativa entre 0h e 6h
+        localStorage.setItem('dark-mode', isDarkMode);
+    } else {
+        isDarkMode = isDarkMode === 'true';
+    }
+
+    document.body.classList.toggle('dark-mode', isDarkMode);
+
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.classList.toggle('dark-mode-footer', isDarkMode);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', carregarDarkMode);
+
+function verificarBackupDiario() {
+    // Verificar compatibilidade com localStorage e Blob
+    if (typeof Storage === "undefined" || typeof Blob === "undefined") {
+        alert("Seu navegador não suporta os recursos necessários para realizar o backup.");
+        return;
+    }
+
+    const hoje = new Date().toLocaleDateString();
+    const ultimoBackup = localStorage.getItem('ultimoBackup');
+    
+    if (ultimoBackup !== hoje) {
+        try {
+            // Carregar clientes e lixeira
+            const clientes = carregarClientes();
+            const lixeira = carregarLixeira();
+            
+            // Preparar os dados para backup
+            const backupData = {
+                data: hoje,
+                clientes: clientes || [],
+                lixeira: lixeira || []
+            };
+
+            // Gerar o arquivo de backup
+            const backupJson = JSON.stringify(backupData, null, 2);
+            const blob = new Blob([backupJson], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+
+            // Criar um link para download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup-${hoje}.json`;
+
+            // Simular o clique para download automático
+            a.click();
+
+            // Limpar o URL do blob
+            URL.revokeObjectURL(url);
+
+            // Salvar a data do último backup
+            localStorage.setItem('ultimoBackup', hoje);
+
+            // Feedback de sucesso (se desejar)
+            mostrarMensagemSucesso("Backup realizado com sucesso!");
+
+        } catch (error) {
+            console.error("Erro ao gerar o backup diário:", error);
+            alert("Houve um erro ao gerar o backup diário. Tente novamente.");
         }
-    });
-    return totalNaoVencidos;
+    }
+}
+
+// Função para exibir uma mensagem de sucesso
+function mostrarMensagemSucesso(mensagem) {
+    const mensagemElemento = document.createElement('div');
+    mensagemElemento.textContent = mensagem;
+    mensagemElemento.style.position = 'fixed';
+    mensagemElemento.style.top = '10px';
+    mensagemElemento.style.right = '10px';
+    mensagemElemento.style.backgroundColor = '#28a745';
+    mensagemElemento.style.color = '#fff';
+    mensagemElemento.style.padding = '10px';
+    mensagemElemento.style.borderRadius = '5px';
+    mensagemElemento.style.zIndex = '1000';
+    document.body.appendChild(mensagemElemento);
+
+    // Remover a mensagem após 5 segundos
+    setTimeout(() => {
+        mensagemElemento.remove();
+    }, 5000);
 }
 
 function carregarPagina() {
@@ -854,27 +965,6 @@ function carregarPagina() {
         adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
     });
     atualizarInfoClientes();
-}
-
-function toggleDarkMode() {
-    const body = document.body;
-    body.classList.toggle('dark-mode');
-    const footer = document.querySelector('footer');
-    footer.classList.toggle('footer-light');
-    const isDarkMode = body.classList.contains('dark-mode');
-    localStorage.setItem('dark-mode', isDarkMode);
-}
-
-function carregarDarkMode() {
-    const isDarkMode = localStorage.getItem('dark-mode') === 'true';
-    const body = document.body;
-    const footer = document.querySelector('footer');
-    if (isDarkMode) {
-        body.classList.add('dark-mode');
-        footer.classList.remove('footer-light');
-    } else {
-        footer.classList.add('footer-light');
-    }
 }
 
 function exportarClientes() {
@@ -964,35 +1054,6 @@ document.addEventListener('DOMContentLoaded', function() { document.getElementBy
         displayClients();
     }
 });
-
-function verificarBackupDiario() {
-    const hoje = new Date().toLocaleDateString();
-    const ultimoBackup = localStorage.getItem('ultimoBackup');
-    if (ultimoBackup !== hoje) {
-        const clientes = carregarClientes();
-        const lixeira = carregarLixeira();
-        const backupData = {
-            data: hoje,
-            clientes: clientes || [],
-            lixeira: lixeira || []
-        };
-
-        try {
- const backupJson = JSON.stringify(backupData, null, 2);
-            const blob = new Blob([backupJson], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `backup-${hoje}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            localStorage.setItem('ultimoBackup', hoje);
-        } catch (error) {
-            console.error("Erro ao gerar o backup diário:", error);
-            alert("Houve um erro ao gerar o backup diário. Tente novamente.");
-        }
-    }
-}
 
 window.addEventListener('load', verificarBackupDiario);
 setInterval(verificarBackupDiario, 60 * 60 * 1000);
