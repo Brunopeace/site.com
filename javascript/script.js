@@ -47,12 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const esconderLoader = () => {
         if (loading) {
             loading.classList.add("hidden");
+            setTimeout(() => loading.style.display = "none", 500);
         }
     };
 
     if (!hasVisited) {
         sessionStorage.setItem("hasVisited", "true");
-        setTimeout(esconderLoader, 3000); // 3 segundos de exibição
+        setTimeout(esconderLoader, 3000);
     } else {
         esconderLoader();
     }
