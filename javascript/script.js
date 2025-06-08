@@ -843,24 +843,41 @@ function toggleDarkMode() {
     localStorage.setItem('dark-mode', isDarkMode);
 }
 
-function carregarDarkMode() {
-    let isDarkMode = localStorage.getItem('dark-mode');
-
-    if (isDarkMode === null) {
-        // Ativar automaticamente após as 18h
-        const horaAtual = new Date().getHours();
-        isDarkMode = horaAtual >= 18 || horaAtual < 6; // também ativa entre 0h e 6h
-        localStorage.setItem('dark-mode', isDarkMode);
-    } else {
-        isDarkMode = isDarkMode === 'true';
-    }
-
+function aplicarDarkMode(isDarkMode) {
     document.body.classList.toggle('dark-mode', isDarkMode);
 
     const footer = document.querySelector('footer');
     if (footer) {
         footer.classList.toggle('dark-mode-footer', isDarkMode);
     }
+}
+
+function carregarDarkMode() {
+    let isDarkMode = localStorage.getItem('dark-mode');
+
+    if (isDarkMode === null) {
+        const horaAtual = new Date().getHours();
+        isDarkMode = horaAtual >= 18 || horaAtual < 6;
+        localStorage.setItem('dark-mode', isDarkMode);
+    } else {
+        isDarkMode = isDarkMode === 'true';
+    }
+
+    aplicarDarkMode(isDarkMode);
+
+    // Verifica a hora a cada minuto para atualizar automaticamente se necessário
+    setInterval(() => {
+        const hora = new Date().getHours();
+        const deveAtivar = hora >= 18 || hora < 6;
+
+        // Só muda se for diferente do que está no localStorage
+        const modoAtual = localStorage.getItem('dark-mode') === 'true';
+
+        if (deveAtivar !== modoAtual) {
+            localStorage.setItem('dark-mode', deveAtivar);
+            aplicarDarkMode(deveAtivar);
+        }
+    }, 60000); // Verifica a cada 1 minuto
 }
 
 document.addEventListener('DOMContentLoaded', carregarDarkMode);
