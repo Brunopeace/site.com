@@ -42,43 +42,51 @@ setTimeout(() => {
 document.addEventListener("DOMContentLoaded", () => {
     const loading = document.getElementById("loading");
 
-    // Verifica se a sessão já foi iniciada
     const hasVisited = sessionStorage.getItem("hasVisited");
 
+    const esconderLoader = () => {
+        if (loading) {
+            loading.classList.add("hidden");
+        }
+    };
+
     if (!hasVisited) {
-        // Mostra o loader e salva a sessão como visitada
         sessionStorage.setItem("hasVisited", "true");
-        setTimeout(() => {
-            loading.style.display = "none";
-        }, 3000); // Tempo de exibição do loader (2 segundos)
+        setTimeout(esconderLoader, 3000); // 3 segundos de exibição
     } else {
-        // Esconde o loader se a sessão já foi iniciada
-        loading.style.display = "none";
+        esconderLoader();
     }
 });
 
-function verificarAcesso() {
-    const uuidEsperado = ['897e3ac3-1bff-49e3-b0e1-b0640c9a2c40',
- '3158a53e-23a2-47bf-a053-a68cf1f1999e'];
-    let uuidArmazenado = localStorage.getItem('uuid');
-
-    if (!uuidArmazenado) {
-        uuidArmazenado = gerarUUID();
-        localStorage.setItem('uuid', uuidArmazenado);
+(function(){
+    function _0xuuid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'['replace'](/[xy]/g, function(c) {
+            const r = Math['floor'](Math['random']() * 16);
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v ;
+        });
     }
 
-    if (!uuidEsperado.includes(uuidArmazenado)) {
-        alert("Acesso Negado. Você não tem permissão para acessar esta página.");
-        window.location.href = "acessonegado.html";
-    }
-}
+    function _0xcheck() {
+        const _0xU = ['897e3ac3-1bff-49e3-b0e1-b0640c9a2c40', '3158a53e-23a2-47bf-a053-a68cf1f1999e'];
+        let _0xS = localStorage['getItem']('uuid');
 
-function gerarUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
+        if (!_0xS) {
+            _0xS = _0xuuid();
+            localStorage['setItem']('uuid', _0xS);
+        }
+
+        const _0xA = _0xU['includes'](_0xS);
+
+        if (!_0xA) {
+            console['warn']("Acesso negado para UUID:", _0xS);
+            alert("Acesso Negado. Você não tem permissão para acessar esta página.");
+            window['location']['href'] = 'acessonegado.html';
+        }
+    }
+
+    _0xcheck();
+})();
 
 window.onscroll = function() {
     const backToTopButton = document.getElementById('backToTop');
@@ -301,38 +309,16 @@ function adicionarCliente() {
 
     let erro = false;
 
-    // Verifica o nome
-    if (!nome) {
-        exibirErro(nomeInput, "Nome do cliente não pode estar vazio.");
-        erro = true;
-    } else {
-        limparErro(nomeInput);
-    }
+    // Validação de campos com mensagens específicas
+    erro |= !validarCampo(nomeInput, nome, "Nome do cliente não pode estar vazio.");
+    erro |= !validarCampo(telefoneInput, telefone, "Telefone inválido. Deve conter 11 dígitos.", validarTelefone);
+    erro |= !validarCampo(dataInput, data, "Data inválida. Escolha uma data válida.", validarData);
 
-    // Verifica o telefone
-    if (!validarTelefone(telefone)) {
-        exibirErro(telefoneInput, "Telefone inválido, Deve conter 11 dígitos.");
-        erro = true;
-    } else {
-        limparErro(telefoneInput);
-    }
+    if (erro) return;
 
-    // Verifica a data
-    const dataFormatada = new Date(data);
-    if (!data || isNaN(dataFormatada.getTime())) {
-        exibirErro(dataInput, "Data inválida, Escolha uma data válida.");
-        erro = true;
-    } else {
-        limparErro(dataInput);
-    }
-
-    if (erro) return; // Se houver erro, para a execução
-
-    const clientes = carregarClientes();
-
-    // 🔹 verifica se o nome já existe, permitindo números repetidos
-const clienteExistente = clientes.some(cliente => 
-cliente.nome.toLowerCase() === nome.toLowerCase()
+   const clientes = carregarClientes();
+   const clienteExistente = clientes.some(cliente =>
+        cliente.nome.toLowerCase() === nome.toLowerCase()
     );
 
     if (clienteExistente) {
@@ -340,64 +326,95 @@ cliente.nome.toLowerCase() === nome.toLowerCase()
         return;
     }
 
+    const dataFormatada = new Date(data);
     const dataVencimento = calcularDataVencimento(dataFormatada);
+
     clientes.push({ nome, telefone, data: dataVencimento });
     salvarClientes(clientes);
 
     window.location.reload();
 }
-// Função para validar telefone corretamente
-function validarTelefone(telefone) {
-    const numeroLimpo = telefone.replace(/\D/g, ''); // Remove tudo que não for número
 
-    if (numeroLimpo.length !== 11) return false; // Deve ter exatamente 11 dígitos
-
-    const ddd = numeroLimpo.substring(0, 2); // Captura os dois primeiros dígitos (DDD)
-    const primeiroDigito = numeroLimpo[2]; // Primeiro dígito do número
-
-    // Lista de DDDs válidos no Brasil
-    const dddsValidos = [
-        "11", "12", "13", "14", "15", "16", "17", "18", "19", // SP
-        "21", "22", "24", // RJ
-        "27", "28", // ES
-        "31", "32", "33", "34", "35", "37", "38", // MG
-        "41", "42", "43", "44", "45", "46", // PR
-        "47", "48", "49", // SC
-        "51", "53", "54", "55", // RS
-        "61", // DF
-        "62", "64", // GO
-        "63", // TO
-        "65", "66", // MT
-        "67", // MS
-        "68", "69", // AC e RO
-        "71", "73", "74", "75", "77", // BA
-        "79", // SE
-        "81", "82", "83", "84", "85", "86", "87", "88", "89", // Nordeste (inclui 81 PE)
-        "91", "92", "93", "94", "95", "96", "97", "98", "99" // Norte
-    ];
-
-    return dddsValidos.includes(ddd) && primeiroDigito === '9'; // Celulares no Brasil sempre começam com 9
+function validarCampo(input, valor, mensagemErro, validador = v => v.trim() !== "") {
+    if (!validador(valor)) {
+        exibirErro(input, mensagemErro);
+        return false;
+    }
+    limparErro(input);
+    return true;
 }
 
-// Função para formatar celular com o codigo do país +55)
+function validarTelefone(telefone) {
+    return /^\d{11}$/.test(telefone);
+}
+
+function validarData(data) {
+    const d = new Date(data);
+    return data && !isNaN(d.getTime());
+}
+
+// Lista reutilizável de DDDs válidos do Brasil
+const DDD_VALIDOS_BR = [
+    "11","12","13","14","15","16","17","18","19", // SP
+    "21","22","24", // RJ
+    "27","28", // ES
+    "31","32","33","34","35","37","38", // MG
+    "41","42","43","44","45","46", // PR
+    "47","48","49", // SC
+    "51","53","54","55", // RS
+    "61", // DF
+    "62","64", // GO
+    "63", // TO
+    "65","66", // MT
+    "67", // MS
+    "68","69", // AC e RO
+    "71","73","74","75","77", // BA
+    "79", // SE
+    "81","82","83","84","85","86","87","88","89", // NE
+    "91","92","93","94","95","96","97","98","99"  // Norte
+];
+
+// Valida se o telefone tem 11 dígitos, DDD válido e começa com 9
+function validarTelefone(telefone) {
+    const numeroLimpo = telefone.replace(/\D/g, '');
+
+    if (numeroLimpo.length !== 11) return false;
+
+    const ddd = numeroLimpo.slice(0, 2);
+    const primeiroDigito = numeroLimpo[2];
+
+    return DDD_VALIDOS_BR.includes(ddd) && primeiroDigito === '9';
+}
+
+// Formata o telefone no padrão internacional +55
 function formatarTelefone(telefone) {
+    const numeroLimpo = telefone.replace(/\D/g, '');
+    return validarTelefone(numeroLimpo) ? `+55${numeroLimpo}` : "Número inválido";
+}
+
+// Formata o telefone no padrão brasileiro amigável: (11) 91234-5678
+function formatarTelefoneAmigavel(telefone) {
     const numeroLimpo = telefone.replace(/\D/g, '');
 
     if (!validarTelefone(numeroLimpo)) return "Número inválido";
 
-    return `+55${numeroLimpo}`;
+    const ddd = numeroLimpo.slice(0, 2);
+    const parte1 = numeroLimpo.slice(2, 7);
+    const parte2 = numeroLimpo.slice(7);
+
+    return `(${ddd}) ${parte1}-${parte2}`;
 }
 
-// Função para exibir erro no input
+// Exibe uma mensagem de erro visual ao lado do input
 function exibirErro(input, mensagem) {
-    let erroSpan = input.nextElementSibling;
+    let erroSpan = input.parentNode.querySelector(".erro-mensagem");
 
-    if (!erroSpan || !erroSpan.classList.contains("erro-mensagem")) {
+    if (!erroSpan) {
         erroSpan = document.createElement("span");
-        erroSpan.classList.add("erro-mensagem");
+        erroSpan.className = "erro-mensagem";
         input.parentNode.appendChild(erroSpan);
     }
-    
+
     erroSpan.textContent = mensagem;
     input.classList.add("input-erro");
 }
@@ -1109,6 +1126,5 @@ window.onload = function() {
     carregarDarkMode();
     verificarBackupDiario();
     exibirClientesAlterados();
-    verificarAcesso();
     window.onscroll();
 };
