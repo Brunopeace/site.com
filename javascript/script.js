@@ -217,11 +217,14 @@ function excluirCliente(nome) {
     if (clienteIndex !== -1) {
         const somExclusao = new Audio('sounds/exclusao.mp3');
         somExclusao.play();
-     const cliente = clientes.splice(clienteIndex, 1)[0];
+        const cliente = clientes.splice(clienteIndex, 1)[0];
         salvarClientes(clientes);
         const lixeira = carregarLixeira();
         lixeira.push(cliente);
         salvarLixeira(lixeira);
+
+        // ✅ Exclui do Firebase também
+        excluirClienteDoFirebase(nome);
 
         const linhaCliente = document.querySelector(`tr[data-nome="${nome}"]`);
         if (linhaCliente) {
@@ -233,6 +236,21 @@ function excluirCliente(nome) {
             }, 500);
         }
     }
+}
+
+function excluirClienteDoFirebase(nome) {
+    const id = nome.toLowerCase()
+        .replace(/\s+/g, '') // remove espaços
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+        .replace(/[.#$/[\]]/g, ''); // remove caracteres inválidos
+
+    firebase.database().ref('clientes/' + id).remove()
+        .then(() => {
+            console.log(`🗑️ Cliente removido do Firebase: ${id}`);
+        })
+        .catch((error) => {
+            console.error("❌ Erro ao remover cliente do Firebase:", error);
+        });
 }
 
 function pesquisarClientesLixeira() {
@@ -310,15 +328,14 @@ function adicionarCliente() {
 
     let erro = false;
 
-    // Validação de campos com mensagens específicas
     erro |= !validarCampo(nomeInput, nome, "Nome do cliente não pode estar vazio.");
     erro |= !validarCampo(telefoneInput, telefone, "Telefone inválido. Deve conter 11 dígitos.", validarTelefone);
     erro |= !validarCampo(dataInput, data, "Data inválida. Escolha uma data válida.", validarData);
 
     if (erro) return;
 
-   const clientes = carregarClientes();
-   const clienteExistente = clientes.some(cliente =>
+    const clientes = carregarClientes();
+    const clienteExistente = clientes.some(cliente =>
         cliente.nome.toLowerCase() === nome.toLowerCase()
     );
 
@@ -329,12 +346,36 @@ function adicionarCliente() {
 
     const dataFormatada = new Date(data);
     const dataVencimento = calcularDataVencimento(dataFormatada);
-
     clientes.push({ nome, telefone, data: dataVencimento });
     salvarClientes(clientes);
-
+    atualizarDataNoFirebase({ nome, telefone, data: dataVencimento })
+  .then(() => {
     window.location.reload();
+  });
+  
 }
+
+function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
+    let clientes = carregarClientes();
+    let clienteExistente = clientes.find(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
+
+    if (clienteExistente) {
+        let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
+        let novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
+
+        if (dataAnterior !== novaDataFormatada) {
+            clienteExistente.nome = novoNome;
+            clienteExistente.telefone = novoTelefone;
+            clienteExistente.data = novaDataVencimento;
+            salvarClientes(clientes);
+            atualizarDataNoFirebase(clienteExistente);
+            atualizarClientesAlterados(novoNome, dataAnterior, novaDataFormatada);
+        }
+    }
+}
+        document.addEventListener('DOMContentLoaded', () => {
+            exibirClientesAlterados();
+        });
 
 function validarCampo(input, valor, mensagemErro, validador = v => v.trim() !== "") {
     if (!validador(valor)) {
@@ -487,9 +528,13 @@ if (clienteIndex !== -1) {
 clientes[clienteIndex].nome = novoNome;
 clientes[clienteIndex].telefone = novoTelefone;
 clientes[clienteIndex].data = novaDataVencimento;
-                        salvarClientes(clientes);
-                        atualizarCorCelulaData(celulaData, novaDataVencimento);
-                        location.reload();
+salvarClientes(clientes);
+
+// ✅ Atualiza também no Firebase
+atualizarDataNoFirebase(clientes[clienteIndex]);
+
+atualizarCorCelulaData(celulaData, novaDataVencimento);
+location.reload();
                     }
                 }
             }
@@ -742,27 +787,6 @@ function atualizarDataVencimento(nomeCliente, novaData) {
         }
     }
 }
-
-function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
-            let clientes = carregarClientes();
-            let clienteExistente = clientes.find(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
-            if (clienteExistente) {
-            let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
-            let novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
-      if (dataAnterior !== novaDataFormatada) {
-      clienteExistente.nome = novoNome;
-      clienteExistente.telefone = novoTelefone;
-      clienteExistente.data = novaDataVencimento;
-
-                    salvarClientes(clientes);
-                    atualizarClientesAlterados(novoNome, dataAnterior, novaDataFormatada);
-                }
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            exibirClientesAlterados();
-        });
 
 function criarBotao(texto, callback) {
     const btn = document.createElement("button");
@@ -1021,47 +1045,53 @@ function exportarClientes() {
 function importarClientes(event) {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-        reader.onload = function(e) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
             try {
-      const data = JSON.parse(e.target.result);
+                const data = JSON.parse(e.target.result);
                 let clientesImportados = [];
                 let lixeiraImportada = [];
+
                 if (Array.isArray(data)) {
-        clientesImportados = data;
+                    clientesImportados = data;
                 } else if (typeof data === 'object') {
-        clientesImportados = data.clientes || [];
-           lixeiraImportada = data.lixeira || [];
+                    clientesImportados = data.clientes || [];
+                    lixeiraImportada = data.lixeira || [];
                     if (!clientesImportados.length && !lixeiraImportada.length) {
                         for (let key in data) {
                             if (key.toLowerCase().includes('cliente')) {
-         clientesImportados = data[key];
+                                clientesImportados = data[key];
                             } else if (key.toLowerCase().includes('lixeira')) {
-           lixeiraImportada = data[key];
+                                lixeiraImportada = data[key];
                             }
                         }
                     }
                 }
-       const clientesAtuais = carregarClientes();
-       const lixeiraAtual = carregarLixeira();
-       const mapaClientes = new Map();
-       clientesAtuais.forEach(cliente => {
-mapaClientes.set(cliente.nome.toLowerCase(), cliente);
+
+                const clientesAtuais = carregarClientes();
+                const lixeiraAtual = carregarLixeira();
+                const mapaClientes = new Map();
+
+                clientesAtuais.forEach(cliente => {
+                    mapaClientes.set(cliente.nome.toLowerCase(), cliente);
                 });
+
 clientesImportados.forEach(clienteImportado => {
-       const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+                    const nomeClienteImportado = clienteImportado.nome.toLowerCase();
                     if (mapaClientes.has(nomeClienteImportado)) {
-       const clienteExistente = mapaClientes.get(nomeClienteImportado);
-   clienteExistente.telefone = clienteImportado.telefone;
-   clienteExistente.data = clienteImportado.data;
+                        const clienteExistente = mapaClientes.get(nomeClienteImportado);
+                        clienteExistente.telefone = clienteImportado.telefone;
+                        clienteExistente.data = clienteImportado.data;
                     } else {
                         clientesAtuais.push(clienteImportado);
                     }
                 });
+
                 const mapaLixeira = new Map();
                 lixeiraAtual.forEach(cliente => {
-mapaLixeira.set(cliente.nome.toLowerCase(), cliente);
+                    mapaLixeira.set(cliente.nome.toLowerCase(), cliente);
                 });
+
 lixeiraImportada.forEach(clienteImportado => {
                     const nomeClienteImportado = clienteImportado.nome.toLowerCase();
                     if (mapaLixeira.has(nomeClienteImportado)) {
@@ -1072,12 +1102,18 @@ lixeiraImportada.forEach(clienteImportado => {
                         lixeiraAtual.push(clienteImportado);
                     }
                 });
+
                 salvarClientes(clientesAtuais);
                 salvarLixeira(lixeiraAtual);
-      alert("Importação realizada com sucesso!");
+
+                // ✅ Espera todos os clientes serem salvos no Firebase
+                const promessasFirebase = clientesAtuais.map(cliente => atualizarDataNoFirebase(cliente));
+                await Promise.all(promessasFirebase);
+
+                alert("Importação realizada com sucesso!");
                 window.location.reload();
             } catch (error) {
-alert("Erro ao importar o arquivo: " + error.message);
+                alert("Erro ao importar o arquivo: " + error.message);
             }
         };
         reader.readAsText(file);
@@ -1146,3 +1182,19 @@ window.onload = function() {
     exibirClientesAlterados();
     window.onscroll();
 };
+
+function atualizarDataNoFirebase(cliente) {
+    const id = cliente.nome.toLowerCase()
+        .replace(/\s+/g, '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[.#$/[\]]/g, '');
+
+    return firebase.database().ref('clientes/' + id).set({
+        vencimento: new Date(cliente.data).toLocaleDateString('pt-BR'),
+        telefone: cliente.telefone
+    }).then(() => {
+        console.log("✅ Cliente salvo no Firebase:", id);
+    }).catch((error) => {
+        console.error("❌ Erro ao salvar cliente no Firebase:", error);
+    });
+}
