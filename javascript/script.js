@@ -544,7 +544,7 @@ function adicionarLinhaTabela(nome, telefone, data) {
                         const atualizarFirebase = () => {
                             return atualizarDataNoFirebase(clienteAtualizado).then(() => {
                                 console.log("✏️ Cliente atualizado no Firebase:", clienteAtualizado);
-location.reload();
+atualizarTabelaClientes();
                             });
                         };
 
