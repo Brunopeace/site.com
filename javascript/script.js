@@ -335,9 +335,11 @@ function adicionarCliente() {
 
     if (erro) return;
 
+    const nomeNormalizado = nome.toLowerCase(); // ⬅️ Nome sempre em minúsculo
     const clientes = carregarClientes();
+
     const clienteExistente = clientes.some(cliente =>
-        cliente.nome.toLowerCase() === nome.toLowerCase()
+        cliente.nome.toLowerCase() === nomeNormalizado
     );
 
     if (clienteExistente) {
@@ -347,34 +349,22 @@ function adicionarCliente() {
 
     const dataFormatada = new Date(data);
     const dataVencimento = calcularDataVencimento(dataFormatada);
-    clientes.push({ nome, telefone, data: dataVencimento });
+
+    const novoCliente = {
+        nome: nomeNormalizado,
+        telefone,
+        data: dataVencimento
+    };
+
+    clientes.push(novoCliente);
     salvarClientes(clientes);
-    atualizarDataNoFirebase({ nome, telefone, data: dataVencimento })
-  .then(() => {
-    window.location.reload();
-  });
-  
+
+    atualizarDataNoFirebase(novoCliente).then(() => {
+        window.location.reload();
+    });
 }
 
-function editarCliente(nomeAntigo, novoNome, novoTelefone, novaDataVencimento) {
-    let clientes = carregarClientes();
-    let clienteExistente = clientes.find(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
-
-    if (clienteExistente) {
-        let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
-        let novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
-
-        if (dataAnterior !== novaDataFormatada) {
-            clienteExistente.nome = novoNome;
-            clienteExistente.telefone = novoTelefone;
-            clienteExistente.data = novaDataVencimento;
-            salvarClientes(clientes);
-            atualizarDataNoFirebase(clienteExistente);
-            atualizarClientesAlterados(novoNome, dataAnterior, novaDataFormatada);
-        }
-    }
-}
-        document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
             exibirClientesAlterados();
         });
 
@@ -487,55 +477,84 @@ function calcularDataVencimento(data) {
     return dataVencimento;
 }
 
+function gerarIdFirebase(nome) {
+    return nome.toLowerCase()
+        .replace(/\s+/g, '') // remove espaços
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+        .replace(/[.#$/[\]]/g, ''); // remove caracteres inválidos para o Firebase
+}
+
 function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
     novaLinha.setAttribute('data-nome', nome);
+
     const celulaSelecionar = novaLinha.insertCell(0);
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.classList.add('cliente-checkbox');
     celulaSelecionar.appendChild(checkbox);
+
     const celulaNome = novaLinha.insertCell(1);
     celulaNome.innerText = nome;
+
     const celulaTelefone = novaLinha.insertCell(2);
     celulaTelefone.innerText = telefone;
+
     const celulaData = novaLinha.insertCell(3);
     celulaData.innerText = new Date(data).toLocaleDateString('pt-BR');
-const celulaAcoes = novaLinha.insertCell(4);
+
+    const celulaAcoes = novaLinha.insertCell(4);
 
     // Botão de editar
-    celulaAcoes.appendChild(criarBotao("Editar", function() {
-const novoNome = prompt("Digite o novo nome do cliente:", nome);
-const novoTelefone = prompt("Digite o novo telefone do cliente:", telefone);
-const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", new Date(data).toLocaleDateString('pt-BR'));
-        if (novoNome !== null && novoTelefone !== null && novaData !== null && novoNome && validarTelefone(novoTelefone)) {
+    celulaAcoes.appendChild(criarBotao("Editar", function () {
+        const nomeAntigo = celulaNome.innerText;
+        const novoNome = prompt("Digite o novo nome do cliente:", nomeAntigo);
+        const novoTelefone = prompt("Digite o novo telefone do cliente:", celulaTelefone.innerText);
+        const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", celulaData.innerText);
+
+        if (novoNome && novoTelefone && novaData && validarTelefone(novoTelefone)) {
             const partesData = novaData.split('/');
             if (partesData.length === 3) {
                 const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
                 if (!isNaN(novaDataVencimento.getTime())) {
-                    const dataAnterior = new Date(data).toLocaleDateString('pt-BR');
-                    const novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
-if (dataAnterior !== novaDataFormatada) {
-                        atualizarClientesAlterados(nome, dataAnterior, novaDataFormatada);
-                    }
-celulaNome.innerText = novoNome;
-celulaTelefone.innerText = novoTelefone;
-celulaData.innerText = novaDataFormatada;
+                    const clientes = carregarClientes();
+                    const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
 
-const clientes = carregarClientes();
-const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nome.toLowerCase());
-if (clienteIndex !== -1) {
-clientes[clienteIndex].nome = novoNome;
-clientes[clienteIndex].telefone = novoTelefone;
-clientes[clienteIndex].data = novaDataVencimento;
-salvarClientes(clientes);
+                    if (clienteIndex !== -1) {
+                        const clienteAtualizado = {
+                            nome: novoNome.toLowerCase(),
+                            telefone: novoTelefone,
+                            data: novaDataVencimento
+                        };
 
-// ✅ Atualiza também no Firebase
-atualizarDataNoFirebase(clientes[clienteIndex]);
+                        const idAntigo = gerarIdFirebase(nomeAntigo);
+                        const idNovo = gerarIdFirebase(clienteAtualizado.nome);
 
-atualizarCorCelulaData(celulaData, novaDataVencimento);
-location.reload();
+                        clientes[clienteIndex] = clienteAtualizado;
+                        salvarClientes(clientes);
+
+                        // Atualiza UI
+                        celulaNome.innerText = clienteAtualizado.nome;
+                        celulaTelefone.innerText = clienteAtualizado.telefone;
+                        celulaData.innerText = novaDataVencimento.toLocaleDateString('pt-BR');
+                        atualizarCorCelulaData(celulaData, novaDataVencimento);
+
+                        // Atualiza Firebase
+                        const atualizarFirebase = () => {
+                            return atualizarDataNoFirebase(clienteAtualizado).then(() => {
+                                console.log("✏️ Cliente atualizado no Firebase:", clienteAtualizado);
+                            });
+                        };
+
+                        if (idAntigo !== idNovo) {
+                            firebase.database().ref('clientes/' + idAntigo).remove().then(atualizarFirebase);
+                        } else {
+                            atualizarFirebase();
+                        }
+
+                        // Atualiza a referência da linha (para edições futuras funcionarem)
+                        novaLinha.setAttribute('data-nome', clienteAtualizado.nome);
                     }
                 }
             }
@@ -1075,6 +1094,17 @@ function importarClientes(event) {
                     }
                 }
 
+                // 🔁 Normaliza nomes de todos os clientes para minúsculo
+                clientesImportados = clientesImportados.map(cliente => ({
+                    ...cliente,
+                    nome: cliente.nome.toLowerCase()
+                }));
+
+                lixeiraImportada = lixeiraImportada.map(cliente => ({
+                    ...cliente,
+                    nome: cliente.nome.toLowerCase()
+                }));
+
                 const clientesAtuais = carregarClientes();
                 const lixeiraAtual = carregarLixeira();
                 const mapaClientes = new Map();
@@ -1083,8 +1113,8 @@ function importarClientes(event) {
                     mapaClientes.set(cliente.nome.toLowerCase(), cliente);
                 });
 
-clientesImportados.forEach(clienteImportado => {
-                    const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+                clientesImportados.forEach(clienteImportado => {
+                    const nomeClienteImportado = clienteImportado.nome;
                     if (mapaClientes.has(nomeClienteImportado)) {
                         const clienteExistente = mapaClientes.get(nomeClienteImportado);
                         clienteExistente.telefone = clienteImportado.telefone;
@@ -1099,8 +1129,8 @@ clientesImportados.forEach(clienteImportado => {
                     mapaLixeira.set(cliente.nome.toLowerCase(), cliente);
                 });
 
-lixeiraImportada.forEach(clienteImportado => {
-                    const nomeClienteImportado = clienteImportado.nome.toLowerCase();
+                lixeiraImportada.forEach(clienteImportado => {
+                    const nomeClienteImportado = clienteImportado.nome;
                     if (mapaLixeira.has(nomeClienteImportado)) {
                         const clienteExistente = mapaLixeira.get(nomeClienteImportado);
                         clienteExistente.telefone = clienteImportado.telefone;
@@ -1113,8 +1143,10 @@ lixeiraImportada.forEach(clienteImportado => {
                 salvarClientes(clientesAtuais);
                 salvarLixeira(lixeiraAtual);
 
-                // ✅ Espera todos os clientes serem salvos no Firebase
-                const promessasFirebase = clientesAtuais.map(cliente => atualizarDataNoFirebase(cliente));
+                // 🔄 Atualiza todos no Firebase com nomes já normalizados
+                const promessasFirebase = clientesAtuais.map(cliente =>
+                    atualizarDataNoFirebase(cliente)
+                );
                 await Promise.all(promessasFirebase);
 
                 alert("Importação realizada com sucesso!");
@@ -1191,17 +1223,14 @@ window.onload = function() {
 };
 
 function atualizarDataNoFirebase(cliente) {
-    const id = cliente.nome.toLowerCase()
-        .replace(/\s+/g, '')
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/[.#$/[\]]/g, '');
+    const id = gerarIdFirebase(cliente.nome);
 
     return firebase.database().ref('clientes/' + id).set({
         vencimento: new Date(cliente.data).toLocaleDateString('pt-BR'),
         telefone: cliente.telefone
     }).then(() => {
-        console.log("✅ Cliente salvo no Firebase:", id);
+        console.log("✅ Cliente atualizado no Firebase:", id);
     }).catch((error) => {
-        console.error("❌ Erro ao salvar cliente no Firebase:", error);
+        console.error("❌ Erro ao atualizar cliente no Firebase:", error);
     });
 }
