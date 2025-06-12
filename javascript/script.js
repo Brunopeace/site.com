@@ -777,14 +777,20 @@ document.addEventListener('DOMContentLoaded', () => {
 function atualizarDataVencimento(nomeCliente, novaData) {
     let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
     let clienteExistente = clientes.find(c => c.nome === nomeCliente);
+
     if (clienteExistente) {
         let dataAnterior = new Date(clienteExistente.data).toLocaleDateString('pt-BR');
         let novaDataFormatada = new Date(novaData).toLocaleDateString('pt-BR');
+
         if (dataAnterior !== novaDataFormatada) {
             clienteExistente.data = novaData;
             localStorage.setItem('clientes', JSON.stringify(clientes));
+
+            // ✅ Atualiza no Firebase
+            atualizarDataNoFirebase(clienteExistente);
+
+            // Atualiza o histórico
             atualizarClientesAlterados(nomeCliente, dataAnterior, novaDataFormatada);
-    
         }
     }
 }
