@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function _0xcheck() {
-        const _0xU = ['897e3ac3-1bff-49e3-b0e1-b0640c9a2c40', '3158a53e-23a2-47bf-a053-a68cf1f1999e'];
+        const _0xU = ['111314440415-09912-46615-913115-1013910111011611189', '3158a53e-23a2-47bf-a053-a68cf1f1999e'];
         let _0xS = localStorage['getItem']('uuid');
 
         if (!_0xS) {
