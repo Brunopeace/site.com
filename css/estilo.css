@@ -1,3 +1,16 @@
+/* Transição suave para mudanças de cor */
+body,
+input,
+button,
+table,
+th,
+td,
+div,
+footer,
+header,
+h1 {
+  transition: background-color 1.5s ease, color 1.5s ease, border-color 1.5s ease;
+}
 .input-erro {
     border: 2px solid red;
     background-color: #ffe6e6;
