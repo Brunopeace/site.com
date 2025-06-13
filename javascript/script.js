@@ -365,8 +365,9 @@ function adicionarCliente() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-            exibirClientesAlterados();
-        });
+   exibirClientesAlterados();
+   
+});
 
 function validarCampo(input, valor, mensagemErro, validador = v => v.trim() !== "") {
     if (!validador(valor)) {
@@ -487,7 +488,7 @@ function gerarIdFirebase(nome) {
 function adicionarLinhaTabela(nome, telefone, data) {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
-    novaLinha.setAttribute('data-nome', nome);
+    novaLinha.setAttribute('data-nome', nome.toLowerCase()); // garante minúsculo
 
     const celulaSelecionar = novaLinha.insertCell(0);
     const checkbox = document.createElement('input');
@@ -518,6 +519,15 @@ function adicionarLinhaTabela(nome, telefone, data) {
             if (partesData.length === 3) {
                 const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
                 if (!isNaN(novaDataVencimento.getTime())) {
+                    const dataAnterior = new Date(data).toLocaleDateString('pt-BR');
+                    const novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
+
+                    if (dataAnterior !== novaDataFormatada) {
+                        atualizarClientesAlterados(nomeAntigo, dataAnterior, novaDataFormatada);
+                        // ⬅️ Marca que a lista deve ser exibida após o reload
+                        sessionStorage.setItem("mostrarRenovadosHoje", "true");
+                    }
+
                     const clientes = carregarClientes();
                     const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
 
@@ -538,13 +548,14 @@ function adicionarLinhaTabela(nome, telefone, data) {
                         celulaNome.innerText = clienteAtualizado.nome;
                         celulaTelefone.innerText = clienteAtualizado.telefone;
                         celulaData.innerText = novaDataVencimento.toLocaleDateString('pt-BR');
+                        novaLinha.setAttribute('data-nome', clienteAtualizado.nome.toLowerCase());
                         atualizarCorCelulaData(celulaData, novaDataVencimento);
 
                         // Atualiza Firebase
                         const atualizarFirebase = () => {
                             return atualizarDataNoFirebase(clienteAtualizado).then(() => {
                                 console.log("✏️ Cliente atualizado no Firebase:", clienteAtualizado);
-location.reload();
+                                location.reload(); // só depois de tudo
                             });
                         };
 
@@ -553,21 +564,19 @@ location.reload();
                         } else {
                             atualizarFirebase();
                         }
-
-                        // Atualiza a referência da linha (para edições futuras funcionarem)
-                        novaLinha.setAttribute('data-nome', clienteAtualizado.nome);
                     }
                 }
             }
         }
     }));
-
+    
     // Botão de excluir
-    celulaAcoes.appendChild(criarBotao("Excluir", function() {
-        if (confirm("Tem certeza de que deseja excluir este cliente?")) {
-            excluirCliente(nome);
-        }
-    }));
+celulaAcoes.appendChild(criarBotao("Excluir", function() {
+    const nomeCliente = novaLinha.getAttribute('data-nome'); // ⬅️ PEGA O NOME ATUAL
+    if (confirm("Tem certeza de que deseja excluir este cliente?")) {
+        excluirCliente(nomeCliente);
+    }
+}));
 
     // Dropdown para enviar mensagem
     const dropdownDiv = document.createElement('div');
