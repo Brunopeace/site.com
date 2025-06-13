@@ -935,20 +935,6 @@ function carregarDarkMode() {
 
 document.addEventListener('DOMContentLoaded', carregarDarkMode);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function verificarBackupDiario() {
     // Verificar compatibilidade com localStorage e Blob
     if (typeof Storage === "undefined" || typeof Blob === "undefined") {
