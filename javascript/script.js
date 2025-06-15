@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function _0xcheck() {
         const _0xU = ['111314440415-09912-46615-913115-1013910111011611189',
- '3158a53e-23a2-47bf-a053-a68cf1f1999e'];
+ 'f94d86e1-1072-4553-a0d5-493de09fd975'];
         let _0xS = localStorage['getItem']('uuid');
 
         if (!_0xS) {
@@ -737,8 +737,9 @@ function exibirClientesRenovadosHoje() {
     const campoClientesRenovados = document.getElementById('infoClientes');
 
     if (clientesHoje.nomes.length > 0) {
-        const listaClientes = clientesHoje.nomes.map(nome => `<li>${nome}</li>`).join('');
+        const listaClientes = clientesHoje.nomes.map(nome => `<li class="cliente-scroll" data-nome="${nome.toLowerCase()}">${nome}</li>`).join('');
         campoClientesRenovados.innerHTML = `<span class="titulo-clientes-renovados">Clientes renovados hoje:</span><ul>${listaClientes}</ul>`;
+        adicionarEventoScrollClientes();
     } else {
         campoClientesRenovados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
     }
@@ -792,8 +793,9 @@ function exibirClientesAlterados() {
 
     if (clientesHoje && clientesHoje.nomes.length > 0) {
         const nomesUnicos = [...new Set(clientesHoje.nomes.map(cliente => cliente.nome))];
-        const listaClientes = nomesUnicos.map(nome => `<li>${nome}</li>`).join('');
+        const listaClientes = nomesUnicos.map(nome => `<li class="cliente-scroll" data-nome="${nome.toLowerCase()}">${nome}</li>`).join('');
         campoClientesAlterados.innerHTML = `<span class="titulo-clientes-renovados">Clientes renovados hoje:</span><ul>${listaClientes}</ul>`;
+        adicionarEventoScrollClientes();
     } else {
         campoClientesAlterados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
     }
@@ -802,6 +804,20 @@ function exibirClientesAlterados() {
 document.addEventListener('DOMContentLoaded', () => {
     exibirClientesAlterados();
 });
+
+function adicionarEventoScrollClientes() {
+    document.querySelectorAll('.cliente-scroll').forEach(li => {
+        li.addEventListener('click', function () {
+            const nome = this.getAttribute('data-nome');
+            const linhaCliente = document.querySelector(`tr[data-nome="${nome}"]`);
+            if (linhaCliente) {
+                linhaCliente.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                linhaCliente.classList.add('destaque-scroll');
+                setTimeout(() => linhaCliente.classList.remove('destaque-scroll'), 2000);
+            }
+        });
+    });
+}
 
 function atualizarDataVencimento(nomeCliente, novaData) {
     let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
