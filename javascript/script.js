@@ -812,8 +812,13 @@ function adicionarEventoScrollClientes() {
             const linhaCliente = document.querySelector(`tr[data-nome="${nome}"]`);
             if (linhaCliente) {
                 linhaCliente.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                linhaCliente.classList.add('destaque-scroll');
-                setTimeout(() => linhaCliente.classList.remove('destaque-scroll'), 2000);
+
+                // Adiciona a classe a cada célula da linha
+                linhaCliente.querySelectorAll('td').forEach(td => td.classList.add('destaque-scroll'));
+
+                setTimeout(() => {
+                    linhaCliente.querySelectorAll('td').forEach(td => td.classList.remove('destaque-scroll'));
+                }, 2000);
             }
         });
     });
