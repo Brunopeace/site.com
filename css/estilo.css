@@ -2,7 +2,7 @@
     background-color: #bdbd00;
     border: 2px solid #bcc900;
     color: #000000;
-   transition: background-color 1.0s ease;
+    transition: background-color 1.0s ease;
 }
 
 /* Transição suave para mudanças de cor */
