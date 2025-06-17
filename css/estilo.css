@@ -1,8 +1,10 @@
 .destaque-scroll {
-    background-color: #bdbd00 !important;
-    border: 2px solid #ffffff;
-    color: #ffffff;
-    transition: background-color 1s ease;
+    background: linear-gradient(90deg, #fffac0, #fff176);
+    border: 2px solid #fbc02d;
+    color: #333;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(251, 192, 45, 0.6);
+    transition: background 0.8s ease, box-shadow 0.8s ease;
 }
 
 /* Transição suave para mudanças de cor */
