@@ -140,7 +140,33 @@
   firebase.initializeApp(firebaseConfig);
 </script>
 
-<!-- Depois disso, carregue seu script -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const logo = document.querySelector('.logo');
+    const hoje = new Date();
+    const mes = hoje.getMonth() + 1; // Janeiro = 1
+    const dia = hoje.getDate();
+    let logoSrc = 'img/logo-padrao.png';
+
+    if (mes === 12 && dia >= 20) {
+      logoSrc = 'img/logo-natal.png';
+    } else if (mes === 1 && dia <= 5) {
+      logoSrc = 'img/logo-ano-novo.png';
+    } else if (mes === 2) {
+      logoSrc = 'img/logo-carnaval.png';
+    } else if (mes === 3 || mes === 4) {
+      logoSrc = 'img/logo-pascoa.png';
+    } else if (mes === 6) {
+      logoSrc = 'img/logo-sao-joao.png';
+    } else if (mes === 10) {
+      logoSrc = 'img/logo-halloween.png';
+    }
+
+    logo.src = logoSrc;
+  });
+</script>
+
 <script src="javascript/script.js"></script>
 
 </body>
