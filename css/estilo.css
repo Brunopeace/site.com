@@ -134,13 +134,13 @@ h1 {
 .face {
   width: 20px;
   height: auto;
-  margin-left: 33px;
+  margin-left: 53px;
 }
 
 .lupa {
   width: 20px;
   height: auto;
-  margin-left: 50px;
+  margin-left: 120px;
 }
 
 .diskette {
@@ -670,6 +670,40 @@ footer {
         margin-bottom: 15px;
         text-align: center;
     }
+    
+    .input-container input, .input-container label modal1{
+        display: block;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;  
+    }
+    
+    .label-pesquisa {
+        display: block;
+        width: 93%;
+        margin-top: 11px;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    
+    #inputPesquisar {
+        display: block;
+        width: 93%;
+        margin-top: 11px;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    
+       
+h2 {
+       color: #ffffff;
+       margin-left: 70px;
+}
 
     .input-container input, .input-container label {
         display: block;
@@ -679,6 +713,7 @@ footer {
         padding: 8px;
         border: 1px solid #ddd;
         border-radius: 5px;
+        color: white;
     }
 
     .input-container input {
@@ -752,7 +787,7 @@ footer {
         }
 
          /* Estilos para o modo escuro */
-        
+      
         body.dark-mode {
             background-color: #000000;
             color: #e0e0e0;
@@ -760,6 +795,7 @@ footer {
         body.dark-mode h1 {
             color: #2fa804;
         }
+        
         body.dark-mode th {
             background-color: #e0ffe4;
             color: #000000;
@@ -866,4 +902,41 @@ footer {
   0% { transform: scale(1); }
   50% { transform: scale(1.03); }
   100% { transform: scale(1); }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.modal-conteudo {
+  background-color: #000000;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 88%;
+  max-width: 400px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: relative;
+  border: 2px dashed yellow;
+}
+
+.fechar {
+  color: #aaa;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.fechar:hover {
+  color: #000;
 }
