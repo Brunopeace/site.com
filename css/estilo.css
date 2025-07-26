@@ -904,6 +904,13 @@ h2 {
   100% { transform: scale(1); }
 }
 
+/* styles do modal */
+
+#inputNome, #inputTelefone, #inputData {
+    color: #005c0c;
+    font-weight: bold;
+}
+
 .modal {
   display: none;
   position: fixed;
