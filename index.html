@@ -7,15 +7,14 @@
     <title>Gerenciador de clientes</title>
     <link rel="stylesheet" type="text/css" href="css/estilo.css">
     <link rel="manifest" href="manifest.json">
-
-    </head>
+</head>
 
 <!-- Tela de Loader Interativa -->
 <div id="loading">
   <div class="loader-box">
     <div class="glow-spinner"></div>
     <div class="typing-text">
-      <span>Carregando</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+<span>Carregando</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
     </div>
   </div>
 </div>
@@ -48,28 +47,36 @@
     <div class="input-container slide-in">
 <input type="file" id="importarClientes" style="display: none;"/>
 <label for="importarClientes" class="button">Importar Backup <img src="img/diskette.png" class="diskette"></label><br>
-        <label for="inputPesquisar">Pesquisar Cliente <img src="img/lupa.png" class="lupa"></label>
-        <input type="text" id="inputPesquisar" oninput="pesquisarCliente()" placeholder="Por nome / Telefone">
+</div>
+
+<div id="modalCadastro" class="modal">
+  <div class="modal-conteudo">
+    <span class="fechar" onclick="fecharModalCadastro()">&times;</span>
+    
+    <h2>Cadastrar Cliente</h2>
+    
+    <div class="input-container">
+      <label for="inputNome" class="modal1">Nome do cliente <img src="img/face.png" class="face"></label>
+      <input type="text" id="inputNome" required placeholder="Nome do cliente">
     </div>
 
-    <div class="input-container slide-in">
-        <label for="inputNome">Adicionar cliente aqui<img src="img/face.png" class="face"></label>
-        <input type="text" id="inputNome" required placeholder="Nome do cliente">
+    <div class="input-container">
+      <label for="inputTelefone">Telefone do cliente <img src="img/cell.png" class="cell"></label>
+      <input type="tel" id="inputTelefone" required placeholder="Telefone do cliente">
     </div>
-    
-    <div class="input-container slide-in">
-        <label for="inputTelefone">Telefone do cliente <img src="img/cell.png" class="cell"></label>
-        <input type="tel" id="inputTelefone" required placeholder="Telefone do cliente">
+
+    <div class="input-container">
+      <label for="inputData">Data de vencimento <img src="img/calendario.png" class="calendario"></label>
+      <input type="date" id="inputData" required>
     </div>
+
+    <button onclick="adicionarCliente()">Adicionar Cliente</button>
+  </div>
+</div>
     
-    <div class="input-container slide-in">
-        <label for="inputData">Data de vencimento <img src="img/calendario.png" class="calendario"></label>
-        <input type="date" id="inputData" required>
-    </div>
+<button id="btnExcluirSelecionados" onclick="excluirClientesSelecionados()">Excluir Seleção</button><button onclick="abrirModalCadastro()" class="slide-in btn-modal">Cadastrar Cliente</button><br><br>
     
-    <button id="btnExcluirSelecionados" onclick="excluirClientesSelecionados()">Excluir Seleção</button><button onclick="adicionarCliente()" class="slide-in">Adicionar Cliente</button><br><br>
-    
-  <div id="feedback" style="display: none;"></div>
+<div id="feedback" style="display: none;"></div>
 <div id="infoClientes2" class="slide-in"></div><br>
     <div id="infoClientes" class="slide-in"></div>
     <div class="table-container slide-in">
@@ -77,15 +84,19 @@
 <br>
 <button id="toggleLixeira" onclick="alternarLixeira()">Abrir Lixeira</button>
 <br>
+<label for="inputPesquisar" class="label-pesquisa">Pesquisar Cliente <img src="img/lupa.png" class="lupa"></label>
+        <input type="text" id="inputPesquisar" oninput="pesquisarCliente()" placeholder="Por nome / Telefone">
+
 <div id="containerLixeira" style="display: none;">
     <div id="quantidadeClientesLixeira"></div>
     
     <div id="lixeira">
     <div id="feedbackR" style="display: none;"></div>
-        <button id="restaurarSelecionados" onclick="restaurarSelecionados()">Restaurar /Sel</button>
-        <button id="esvaziarLixeira" onclick="esvaziarLixeira()">Esvaziar Lixeira</button>
+<button id="restaurarSelecionados" onclick="restaurarSelecionados()">Restaurar /Sel</button>
+<button id="esvaziarLixeira" onclick="esvaziarLixeira()">Esvaziar Lixeira</button>
         <input type="text" id="pesquisarLixeira" placeholder="Pesquisar na lixeira" oninput="pesquisarClientesLixeira()">
         <table id="tabelaLixeira">
+
             <thead>
                 <tr>
                     <th>
@@ -97,7 +108,7 @@
             </thead>
             
             <tbody id="clientList">
-                <!-- Clientes da lixeira serão carregados aqui -->
+<!-- Clientes da lixeira serão carregados aqui -->
             </tbody>
         </table>
     </div>
