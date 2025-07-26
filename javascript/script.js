@@ -1257,3 +1257,19 @@ function atualizarDataNoFirebase(cliente) {
         console.error("❌ Erro ao atualizar cliente no Firebase:", error);
     });
 }
+
+function abrirModalCadastro() {
+    document.getElementById("modalCadastro").style.display = "block";
+}
+
+function fecharModalCadastro() {
+    document.getElementById("modalCadastro").style.display = "none";
+}
+
+// Fecha o modal ao clicar fora dele
+window.onclick = function(event) {
+    const modal = document.getElementById("modalCadastro");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+}
