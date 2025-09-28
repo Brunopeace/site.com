@@ -69,7 +69,12 @@
       <label for="inputData">Data de vencimento <img src="img/calendario.png" class="calendario"></label>
       <input type="date" id="inputData" required>
     </div>
-
+    
+    <div class="input-container slide-in">
+  <label for="inputHora">Hora de vencimento <img src="img/relogio.png" class="relogio"></label>
+  <input type="time" id="inputHora" required>
+</div>
+    
     <button onclick="adicionarCliente()">Adicionar Cliente</button>
   </div>
 </div>
@@ -121,6 +126,7 @@
             <th>Nome</th>
             <th>Telefone</th>
             <th>Data de Vencimento</th>
+            <th>Hora</th>
             <th>Ações</th>
         </tr>
     </thead>
