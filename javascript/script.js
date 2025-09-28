@@ -183,8 +183,8 @@ function atualizarTabelaClientes() {
     tabela.innerHTML = '';
 
     clientes.forEach(cliente => {
-        adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data);
-    });
+    adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data, cliente.hora || "");
+});
 }
 
 function carregarClientes() {
@@ -197,7 +197,7 @@ function salvarClientes(clientes) {
 
 window.addEventListener('load', function() {
     const clientes = carregarClientes();
-    clientes.forEach(cliente => adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data));
+    clientes.forEach(cliente => adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data, cliente.hora || ""));
 });
 
 function alternarLixeira() {
@@ -322,10 +322,12 @@ function adicionarCliente() {
     const nomeInput = document.getElementById('inputNome');
     const telefoneInput = document.getElementById('inputTelefone');
     const dataInput = document.getElementById('inputData');
+    const horaInput = document.getElementById('inputHora'); // ⏰ novo campo
 
     const nome = nomeInput.value.trim();
     const telefone = telefoneInput.value.trim();
     const data = dataInput.value;
+    const hora = horaInput ? horaInput.value : ""; // garante que não quebre caso não exista
 
     let erro = false;
 
@@ -353,7 +355,8 @@ function adicionarCliente() {
     const novoCliente = {
         nome: nomeNormalizado,
         telefone,
-        data: dataVencimento
+        data: dataVencimento,
+        hora // salva a hora junto
     };
 
     clientes.push(novoCliente);
@@ -366,7 +369,6 @@ function adicionarCliente() {
 
 document.addEventListener('DOMContentLoaded', () => {
    exibirClientesAlterados();
-   
 });
 
 function validarCampo(input, valor, mensagemErro, validador = v => v.trim() !== "") {
@@ -485,7 +487,7 @@ function gerarIdFirebase(nome) {
         .replace(/[.#$/[\]]/g, ''); // remove caracteres inválidos para o Firebase
 }
 
-function adicionarLinhaTabela(nome, telefone, data) {
+function adicionarLinhaTabela(nome, telefone, data, hora = "") {
     const tabela = document.getElementById('corpoTabela');
     const novaLinha = document.createElement('tr');
     novaLinha.setAttribute('data-nome', nome.toLowerCase()); // garante minúsculo
@@ -505,7 +507,13 @@ function adicionarLinhaTabela(nome, telefone, data) {
     const celulaData = novaLinha.insertCell(3);
     celulaData.innerText = new Date(data).toLocaleDateString('pt-BR');
 
-    const celulaAcoes = novaLinha.insertCell(4);
+    // Atualiza cor da célula com data + hora
+    atualizarCorCelulaData(celulaData, data, hora);
+
+    const celulaHora = novaLinha.insertCell(4);
+    celulaHora.innerText = hora || "";
+
+    const celulaAcoes = novaLinha.insertCell(5);
 
     // Botão de editar
     celulaAcoes.appendChild(criarBotao("Editar", function () {
@@ -513,21 +521,14 @@ function adicionarLinhaTabela(nome, telefone, data) {
         const novoNome = prompt("Digite o novo nome do cliente:", nomeAntigo);
         const novoTelefone = prompt("Digite o novo telefone do cliente:", celulaTelefone.innerText);
         const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", celulaData.innerText);
+        const novaHora = prompt("Digite a nova hora de vencimento (HH:MM):", celulaHora.innerText);
 
         if (novoNome && novoTelefone && novaData && validarTelefone(novoTelefone)) {
             const partesData = novaData.split('/');
             if (partesData.length === 3) {
                 const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
+
                 if (!isNaN(novaDataVencimento.getTime())) {
-                    const dataAnterior = new Date(data).toLocaleDateString('pt-BR');
-                    const novaDataFormatada = novaDataVencimento.toLocaleDateString('pt-BR');
-
-                    if (dataAnterior !== novaDataFormatada) {
-                        atualizarClientesAlterados(nomeAntigo, dataAnterior, novaDataFormatada);
-                        // ⬅️ Marca que a lista deve ser exibida após o reload
-                        sessionStorage.setItem("mostrarRenovadosHoje", "true");
-                    }
-
                     const clientes = carregarClientes();
                     const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
 
@@ -535,11 +536,9 @@ function adicionarLinhaTabela(nome, telefone, data) {
                         const clienteAtualizado = {
                             nome: novoNome.toLowerCase(),
                             telefone: novoTelefone,
-                            data: novaDataVencimento
+                            data: novaDataVencimento,
+                            hora: novaHora || ""
                         };
-
-                        const idAntigo = gerarIdFirebase(nomeAntigo);
-                        const idNovo = gerarIdFirebase(clienteAtualizado.nome);
 
                         clientes[clienteIndex] = clienteAtualizado;
                         salvarClientes(clientes);
@@ -548,134 +547,105 @@ function adicionarLinhaTabela(nome, telefone, data) {
                         celulaNome.innerText = clienteAtualizado.nome;
                         celulaTelefone.innerText = clienteAtualizado.telefone;
                         celulaData.innerText = novaDataVencimento.toLocaleDateString('pt-BR');
+                        celulaHora.innerText = clienteAtualizado.hora;
                         novaLinha.setAttribute('data-nome', clienteAtualizado.nome.toLowerCase());
-                        atualizarCorCelulaData(celulaData, novaDataVencimento);
 
-                        // Atualiza Firebase
-                        const atualizarFirebase = () => {
-                            return atualizarDataNoFirebase(clienteAtualizado).then(() => {
-                                console.log("✏️ Cliente atualizado no Firebase:", clienteAtualizado);
-                                location.reload(); // só depois de tudo
-                            });
-                        };
-
-                        if (idAntigo !== idNovo) {
-                            firebase.database().ref('clientes/' + idAntigo).remove().then(atualizarFirebase);
-                        } else {
-                            atualizarFirebase();
-                        }
+                        // Atualiza cor da célula com data + hora
+                        atualizarCorCelulaData(celulaData, clienteAtualizado.data, clienteAtualizado.hora);
                     }
                 }
             }
         }
     }));
-    
-    // Botão de excluir
-celulaAcoes.appendChild(criarBotao("Excluir", function() {
-    const nomeCliente = novaLinha.getAttribute('data-nome'); // ⬅️ PEGA O NOME ATUAL
-    if (confirm("Tem certeza de que deseja excluir este cliente?")) {
-        excluirCliente(nomeCliente);
-    }
-}));
 
-    // Dropdown para enviar mensagem
+    // Botão de excluir
+    celulaAcoes.appendChild(criarBotao("Excluir", function () {
+        const nomeCliente = novaLinha.getAttribute('data-nome');
+        if (confirm("Tem certeza de que deseja excluir este cliente?")) {
+            excluirCliente(nomeCliente);
+        }
+    }));
+
+    // Dropdown WhatsApp / Telegram
     const dropdownDiv = document.createElement('div');
     dropdownDiv.classList.add('dropdown');
     const botaoDropdown = document.createElement('button');
     botaoDropdown.innerText = 'WhatsApp';
     botaoDropdown.classList.add('dropbtn');
     const conteudoDropdown = document.createElement('div');
- conteudoDropdown.classList.add('dropdown-content');
+    conteudoDropdown.classList.add('dropdown-content');
 
-    // Botão para WhatsApp
+    // Botão WhatsApp
     const botaoWhatsApp = document.createElement('button');
-botaoWhatsApp.innerText = 'Enviar para WhatsApp';
-botaoWhatsApp.classList.add('WhatsApp');
-botaoWhatsApp.onclick = function() {
-    const dataVencimento = celulaData.innerText.trim();
-    const saudacao = obterSaudacao();
-    const telefoneCliente = telefone ? telefone.replace(/\D/g, '') : '';
+    botaoWhatsApp.innerText = 'Enviar para WhatsApp';
+    botaoWhatsApp.classList.add('WhatsApp');
+    botaoWhatsApp.onclick = function () {
+        const dataVencimento = celulaData.innerText.trim();
+        const saudacao = obterSaudacao();
+        const telefoneCliente = telefone ? telefone.replace(/\D/g, '') : '';
 
-    if (!telefoneCliente) {
-        alert('Número de telefone inválido.');
-        return;
+        if (!telefoneCliente) {
+            alert('Número de telefone inválido.');
+            return;
+        }
+
+        const mensagem = criarMensagemWhatsApp(saudacao, dataVencimento);
+        abrirWhatsApp(telefoneCliente, mensagem);
+    };
+
+    conteudoDropdown.appendChild(botaoWhatsApp);
+
+    function obterSaudacao() {
+        const horaAtual = new Date().getHours();
+        if (horaAtual < 12) return "bom dia";
+        if (horaAtual < 18) return "boa tarde";
+        return "boa noite";
     }
 
-    const mensagem = criarMensagemWhatsApp(saudacao, dataVencimento);
-    abrirWhatsApp(telefoneCliente, mensagem);
-};
+    function criarMensagemWhatsApp(saudacao, dataVencimento) {
+        return encodeURIComponent(
+            `*Olá, ${saudacao}!* \n\n` +
+            `Seu plano de canais está vencendo em *${dataVencimento}*.\n` +
+            `Caso queira renovar após esta data, favor entrar em contato.\n\n` +
+            `*PIX EMAIL:* \n\n brunopeaceandlove60@gmail.com`
+        );
+    }
 
-conteudoDropdown.appendChild(botaoWhatsApp);
+    function abrirWhatsApp(telefone, mensagem) {
+        const url = `https://api.whatsapp.com/send?phone=55${telefone}&text=${mensagem}`;
+        window.open(url, '_blank');
+    }
 
-// Função para obter a saudação baseada no horário atual
-function obterSaudacao() {
-    const hora = new Date().getHours();
-    if (hora < 12) return "bom dia";
-    if (hora < 18) return "boa tarde";
-    return "boa noite";
-}
-
-// Função para criar a mensagem do WhatsApp formatada
-function criarMensagemWhatsApp(saudacao, dataVencimento) {
-    return encodeURIComponent(
-        `*Olá, ${saudacao}!* \n\n` +
-        `Seu plano de canais está vencendo em *${dataVencimento}*.\n` +
-        `Caso queira renovar após esta data, favor entrar em contato.\n\n` +
-        `*PIX EMAIL:* \n\n brunopeaceandlove60@gmail.com`
-    );
-}
-
-// Função para abrir o WhatsApp com a mensagem
-function abrirWhatsApp(telefone, mensagem) {
-    const url = `https://api.whatsapp.com/send?phone=55${telefone}&text=${mensagem}`;
-    window.open(url, '_blank');
-}
-
-    // Botão para Telegram
+    // Botão Telegram
     const botaoTelegram = document.createElement('button');
-botaoTelegram.innerText = 'Enviar para Telegram';
-botaoTelegram.classList.add('telegram');
-botaoTelegram.onclick = function() {
-    const dataVencimentoDestacada = celulaData.innerText;
-    const horaAtual = new Date().getHours();
-    let saudacao;
-    if (horaAtual >= 0 && horaAtual < 12) {
-        saudacao = "bom dia";
-    } else if (horaAtual >= 12 && horaAtual < 18) {
-        saudacao = "boa tarde";
-    } else {
-        saudacao = "boa noite";
-    }
+    botaoTelegram.innerText = 'Enviar para Telegram';
+    botaoTelegram.classList.add('telegram');
+    botaoTelegram.onclick = function () {
+        const dataVencimentoDestacada = celulaData.innerText;
+        const horaAtual = new Date().getHours();
+        let saudacao;
+        if (horaAtual < 12) {
+            saudacao = "bom dia";
+        } else if (horaAtual < 18) {
+            saudacao = "boa tarde";
+        } else {
+            saudacao = "boa noite";
+        }
 
-    const mensagem = encodeURIComponent(
-        `Olá ${saudacao}, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato. \n\n PIX EMAIL \n\n brunopeaceandlove60@gmail.com`
-    );
+        const mensagem = encodeURIComponent(
+            `Olá ${saudacao}, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato. \n\n PIX EMAIL \n\n brunopeaceandlove60@gmail.com`
+        );
 
-    const numeroTelefone = telefone.replace(/\D/g, ''); // Limpa o número de telefone
-    const usernameCliente = null; // Coloque aqui o username se disponível, ou deixe como null
-
-    if (usernameCliente) {
-        // Se houver username, tenta abrir o chat com o username
-        const telegramAppUrlUsername = `tg://resolve?domain=${usernameCliente}&text=${mensagem}`;
-        window.location.href = telegramAppUrlUsername;
-
-        // Fallback para o navegador
-        setTimeout(() => {
-            const urlTelegram = `https://t.me/${usernameCliente}?text=${mensagem}`;
-            window.open(urlTelegram, '_blank');
-        }, 500);
-    } else {
-        // Se não houver username, usa o link de compartilhamento com número de telefone
+        const numeroTelefone = telefone.replace(/\D/g, '');
         const urlTelegramShare = `https://t.me/share/url?url=tel:+${numeroTelefone}&text=${mensagem}`;
         window.open(urlTelegramShare, '_blank');
-    }
-};
-    
+    };
+
     conteudoDropdown.appendChild(botaoTelegram);
     dropdownDiv.appendChild(botaoDropdown);
     dropdownDiv.appendChild(conteudoDropdown);
     celulaAcoes.appendChild(dropdownDiv);
-    atualizarCorCelulaData(celulaData, data);
+
     tabela.appendChild(novaLinha);
 }
 
@@ -686,22 +656,35 @@ function criarBotao(texto, acao) {
     return botao;
 }
 
-function atualizarCorCelulaData(celulaData, dataVencimento) {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0); // Garante que só a data importa
+function atualizarCorCelulaData(celulaData, data, hora) {
+    let dataVencimento = new Date(data);
 
-    const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
+    // Se tiver hora cadastrada, ajusta a hora
+    if (hora) {
+        const [h, m] = hora.split(":");
+        dataVencimento.setHours(parseInt(h), parseInt(m), 0, 0);
+    } else {
+        // Caso não tenha hora, considera final do dia
+        dataVencimento.setHours(23, 59, 59, 999);
+    }
+
+    const agora = new Date();
 
     // Remove classes antigas
     celulaData.classList.remove('red', 'yellow', 'orange');
 
-    // Define a cor conforme a diferença de dias
-    if (diferencaDias < 0) {
-        celulaData.classList.add('red'); // Já venceu
-    } else if (diferencaDias === 0) {
-        celulaData.classList.add('yellow'); // Vence hoje
-    } else if (diferencaDias === 2) {
-        celulaData.classList.add('orange'); // Faltam 2 dias
+    if (agora > dataVencimento) {
+        celulaData.classList.add('red'); // vencido
+    } else {
+        // Calcular diferença em dias
+        const diffMs = dataVencimento.setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0);
+        const diferencaDias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diferencaDias === 0) {
+            celulaData.classList.add('yellow'); // vence hoje
+        } else if (diferencaDias === 2) {
+            celulaData.classList.add('orange'); // faltam 2 dias
+        }
     }
 }
 
@@ -896,22 +879,35 @@ function atualizarInfoClientes() {
     infoDiv.appendChild(ativosSpan);
 }
 
+// 🔹 Função genérica para contar clientes com base em condição
 function contarClientesPorCondicao(condicaoCallback) {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
+    const agora = new Date();
     const clientes = carregarClientes();
+
     return clientes.reduce((total, cliente) => {
-        const dataVencimento = new Date(cliente.data);
-        return condicaoCallback(dataVencimento, hoje) ? total + 1 : total;
+        let dataVencimento = new Date(cliente.data);
+
+        // Se cliente tem hora definida, aplica
+        if (cliente.hora) {
+            const [h, m] = cliente.hora.split(":");
+            dataVencimento.setHours(parseInt(h), parseInt(m), 0, 0);
+        } else {
+            // Se não tiver hora, considera o final do dia
+            dataVencimento.setHours(23, 59, 59, 999);
+        }
+
+        return condicaoCallback(dataVencimento, agora) ? total + 1 : total;
     }, 0);
 }
 
+// 🔴 Clientes vencidos
 function calcularTotalClientesVencidos() {
-    return contarClientesPorCondicao((vencimento, hoje) => vencimento < hoje);
+    return contarClientesPorCondicao((vencimento, agora) => agora > vencimento);
 }
 
+// 🟢 Clientes ainda ativos
 function calcularTotalClientesNaoVencidos() {
-    return contarClientesPorCondicao((vencimento, hoje) => vencimento >= hoje);
+    return contarClientesPorCondicao((vencimento, agora) => agora <= vencimento);
 }
 
 function toggleDarkMode() {
@@ -1030,8 +1026,6 @@ function mostrarMensagemSucesso(mensagem) {
 
 function carregarPagina() {
     const clientes = carregarClientes();
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
 
     const clientesOrdenados = {
         doisDias: [],
@@ -1040,38 +1034,58 @@ function carregarPagina() {
         outros: []
     };
 
+    const agora = new Date();
+
     clientes.forEach(cliente => {
-        const dataVencimento = new Date(cliente.data);
-        const diferencaDias = Math.ceil((dataVencimento - hoje) / (1000 * 60 * 60 * 24));
-        
-        if (diferencaDias === 2) {
-            clientesOrdenados.doisDias.push(cliente);
-        } else if (diferencaDias === 0) {
-            clientesOrdenados.hoje.push(cliente);
-        } else if (diferencaDias < 0) {
+        // Sempre cria a data completa
+        let dataVencimento = new Date(cliente.data);
+
+        if (cliente.hora) {
+            const [h, m] = cliente.hora.split(":");
+            dataVencimento.setHours(parseInt(h), parseInt(m), 0, 0);
+        } else {
+            // se não tiver hora, define como 23:59:59 (vence no fim do dia)
+            dataVencimento.setHours(23, 59, 59, 999);
+        }
+
+        if (agora > dataVencimento) {
+            // já passou da data + hora
             clientesOrdenados.vencidos.push(cliente);
         } else {
-            clientesOrdenados.outros.push(cliente);
+            // calcula diferença de dias só depois de garantir que não venceu
+            const diffMs = dataVencimento - agora;
+            const diferencaDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+            if (diferencaDias === 0) {
+                clientesOrdenados.hoje.push(cliente);
+            } else if (diferencaDias === 2) {
+                clientesOrdenados.doisDias.push(cliente);
+            } else {
+                clientesOrdenados.outros.push(cliente);
+            }
         }
     });
 
+    // Monta a tabela
     const tabela = document.getElementById('corpoTabela');
     tabela.innerHTML = '';
+
     clientesOrdenados.doisDias.forEach(cliente => {
-        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data), cliente.hora || "");
     });
 
     clientesOrdenados.hoje.forEach(cliente => {
-        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
-    });
+    adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data), cliente.hora || "");
+});
 
     clientesOrdenados.outros.forEach(cliente => {
-        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data), cliente.hora || "");
     });
 
     clientesOrdenados.vencidos.forEach(cliente => {
-        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data));
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data), cliente.hora || "");
     });
+
     atualizarInfoClientes();
 }
 
@@ -1237,6 +1251,7 @@ function excluirClientesSelecionados() {
 }
 
 window.onload = function() {
+setInterval(carregarPagina, 30 * 1000);
 
     carregarPagina();
     carregarDarkMode();
