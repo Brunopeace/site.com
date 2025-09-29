@@ -1026,6 +1026,7 @@ function mostrarMensagemSucesso(mensagem) {
 
 function carregarPagina() {
     const clientes = carregarClientes();
+    const agora = new Date();
 
     const clientesOrdenados = {
         doisDias: [],
@@ -1034,27 +1035,21 @@ function carregarPagina() {
         outros: []
     };
 
-    const agora = new Date();
-
     clientes.forEach(cliente => {
-        // Sempre cria a data completa
         let dataVencimento = new Date(cliente.data);
 
         if (cliente.hora) {
             const [h, m] = cliente.hora.split(":");
             dataVencimento.setHours(parseInt(h), parseInt(m), 0, 0);
         } else {
-            // se não tiver hora, define como 23:59:59 (vence no fim do dia)
             dataVencimento.setHours(23, 59, 59, 999);
         }
 
         if (agora > dataVencimento) {
-            // já passou da data + hora
             clientesOrdenados.vencidos.push(cliente);
         } else {
-            // calcula diferença de dias só depois de garantir que não venceu
-            const diffMs = dataVencimento - agora;
-            const diferencaDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffMs = dataVencimento.setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0);
+            const diferencaDias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
             if (diferencaDias === 0) {
                 clientesOrdenados.hoje.push(cliente);
@@ -1066,24 +1061,26 @@ function carregarPagina() {
         }
     });
 
-    // Monta a tabela
     const tabela = document.getElementById('corpoTabela');
     tabela.innerHTML = '';
 
+    // Sempre no topo → faltam 2 dias e vencem hoje
     clientesOrdenados.doisDias.forEach(cliente => {
-        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data), cliente.hora || "");
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data, cliente.hora || "");
     });
 
     clientesOrdenados.hoje.forEach(cliente => {
-    adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data), cliente.hora || "");
-});
-
-    clientesOrdenados.outros.forEach(cliente => {
-        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data), cliente.hora || "");
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data, cliente.hora || "");
     });
 
+    // Depois os outros
+    clientesOrdenados.outros.forEach(cliente => {
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data, cliente.hora || "");
+    });
+
+    // Sempre no final → vencidos
     clientesOrdenados.vencidos.forEach(cliente => {
-        adicionarLinhaTabela(cliente.nome, cliente.telefone, new Date(cliente.data), cliente.hora || "");
+        adicionarLinhaTabela(cliente.nome, cliente.telefone, cliente.data, cliente.hora || "");
     });
 
     atualizarInfoClientes();
