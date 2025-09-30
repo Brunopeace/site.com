@@ -220,9 +220,13 @@ function excluirCliente(nome) {
         somExclusao.play();
         const cliente = clientes.splice(clienteIndex, 1)[0];
         salvarClientes(clientes);
+
         const lixeira = carregarLixeira();
         lixeira.push(cliente);
         salvarLixeira(lixeira);
+
+        // ✅ Remove também da lista de "clientes renovados hoje"
+        removerDeRenovadosHoje(nome);
 
         // ✅ Exclui do Firebase também
         excluirClienteDoFirebase(nome);
@@ -234,6 +238,7 @@ function excluirCliente(nome) {
                 linhaCliente.remove();
                 atualizarInfoClientes();
                 carregarLixeiraPagina();
+                exibirClientesRenovadosHoje(); // atualiza lista na UI
             }, 500);
         }
     }
@@ -543,6 +548,9 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
                         clientes[clienteIndex] = clienteAtualizado;
                         salvarClientes(clientes);
 
+                        // ✅ Marca cliente como renovado hoje
+                        renovarCliente(clienteAtualizado.nome);
+
                         // Atualiza UI
                         celulaNome.innerText = clienteAtualizado.nome;
                         celulaTelefone.innerText = clienteAtualizado.telefone;
@@ -716,21 +724,74 @@ function registrarClienteRenovadoHoje(nomeCliente) {
 
 function exibirClientesRenovadosHoje() {
     const hoje = new Date().toLocaleDateString('pt-BR');
-    const clientesHoje = JSON.parse(localStorage.getItem('clientesRenovadosHoje')) || { data: hoje, nomes: [] };
+
+    // Recupera os dados do localStorage
+    let clientesHoje = JSON.parse(localStorage.getItem('clientesRenovadosHoje'));
+
+    // Se não existir ou for de outro dia, cria do zero
+    if (!clientesHoje || clientesHoje.data !== hoje) {
+        clientesHoje = { data: hoje, nomes: [] };
+        localStorage.setItem('clientesRenovadosHoje', JSON.stringify(clientesHoje));
+    }
+
     const campoClientesRenovados = document.getElementById('infoClientes');
 
-    if (clientesHoje.nomes.length > 0) {
-        const listaClientes = clientesHoje.nomes.map(nome => `<li class="cliente-scroll" data-nome="${nome.toLowerCase()}">${nome}</li>`).join('');
-        campoClientesRenovados.innerHTML = `<span class="titulo-clientes-renovados">Clientes renovados hoje:</span><ul>${listaClientes}</ul>`;
-        adicionarEventoScrollClientes();
+    // Exibe os nomes que já estavam salvos
+    if (clientesHoje.nomes && clientesHoje.nomes.length > 0) {
+        const listaClientes = clientesHoje.nomes
+            .map(nome => `<li class="cliente-scroll" data-nome="${nome.toLowerCase()}">${nome}</li>`)
+            .join('');
+
+        campoClientesRenovados.innerHTML = `
+            <span class="titulo-clientes-renovados">Clientes renovados hoje:</span>
+            <ul>${listaClientes}</ul>
+        `;
+
+        if (typeof adicionarEventoScrollClientes === "function") {
+            adicionarEventoScrollClientes();
+        }
     } else {
-        campoClientesRenovados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
+        campoClientesRenovados.innerHTML =
+            '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     exibirClientesRenovadosHoje();
 });
+
+function exibirClientesAlterados() {
+    const clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    const clientesHoje = clientesAlterados.find(c => c.data === hoje);
+    const campoClientesAlterados = document.getElementById('infoClientesAlterados');
+
+    if (clientesHoje && clientesHoje.nomes.length > 0) {
+        const nomesUnicos = [...new Set(clientesHoje.nomes.map(cliente => cliente.nome))];
+        const listaClientes = nomesUnicos.map(nome =>
+            `<li class="cliente-scroll" data-nome="${nome.toLowerCase()}">${nome}</li>`
+        ).join('');
+        campoClientesAlterados.innerHTML = `
+            <span class="titulo-clientes-renovados">Clientes alterados hoje:</span>
+            <ul>${listaClientes}</ul>`;
+        adicionarEventoScrollClientes();
+    } else {
+        campoClientesAlterados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente alterado hoje</span>';
+    }
+}
+
+function removerDeRenovadosHoje(nomeCliente) {
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    let clientesHoje = JSON.parse(localStorage.getItem('clientesRenovadosHoje')) || { data: hoje, nomes: [] };
+
+    // Remove o cliente da lista
+    clientesHoje.nomes = clientesHoje.nomes.filter(n => n.toLowerCase() !== nomeCliente.toLowerCase());
+
+    localStorage.setItem('clientesRenovadosHoje', JSON.stringify(clientesHoje));
+
+    // Atualiza a exibição
+    exibirClientesRenovadosHoje();
+}
 
 function atualizarClientesAlterados(nome, dataAnterior, novaData) {
 const hoje = new Date().toLocaleDateString('pt-BR');
@@ -1084,6 +1145,7 @@ function carregarPagina() {
     });
 
     atualizarInfoClientes();
+    exibirClientesRenovadosHoje();
 }
 
 function exportarClientes() {
@@ -1254,6 +1316,7 @@ setInterval(carregarPagina, 30 * 1000);
     carregarDarkMode();
     verificarBackupDiario();
     exibirClientesAlterados();
+    exibirClientesRenovadosHoje();
     window.onscroll();
 };
 
