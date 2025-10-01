@@ -415,18 +415,6 @@ const DDD_VALIDOS_BR = [
     "91","92","93","94","95","96","97","98","99"  // Norte
 ];
 
-// Valida se o telefone tem 11 dígitos, DDD válido e começa com 9
-function validarTelefone(telefone) {
-    const numeroLimpo = telefone.replace(/\D/g, '');
-
-    if (numeroLimpo.length !== 11) return false;
-
-    const ddd = numeroLimpo.slice(0, 2);
-    const primeiroDigito = numeroLimpo[2];
-
-    return DDD_VALIDOS_BR.includes(ddd) && primeiroDigito === '9';
-}
-
 // Formata o telefone no padrão internacional +55
 function formatarTelefone(telefone) {
     const numeroLimpo = telefone.replace(/\D/g, '');
@@ -889,18 +877,6 @@ function atualizarDataVencimento(nomeCliente, novaData) {
     }
 }
 
-function criarBotao(texto, callback) {
-    const btn = document.createElement("button");
-    btn.innerText = texto;
-    btn.onclick = callback;
-    return btn;
-}
-
-function abrirWhatsApp(telefoneCliente, mensagem) {
-    window.open(`https://api.whatsapp.com/send?phone=55${telefoneCliente}&text=${mensagem}`, '_blank');
-}
-
-//funções atualizadas
 function pesquisarCliente() {
     const termoPesquisa = document.getElementById('inputPesquisar').value.toLowerCase();
     const linhas = document.getElementById('corpoTabela').getElementsByTagName('tr');
