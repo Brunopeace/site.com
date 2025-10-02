@@ -39,26 +39,6 @@ setTimeout(() => {
     }
 }, 15000);
 
-document.addEventListener("DOMContentLoaded", () => {
-    const loading = document.getElementById("loading");
-
-    const hasVisited = sessionStorage.getItem("hasVisited");
-
-    const esconderLoader = () => {
-        if (loading) {
-            loading.classList.add("hidden");
-            setTimeout(() => loading.style.display = "none", 500);
-        }
-    };
-
-    if (!hasVisited) {
-        sessionStorage.setItem("hasVisited", "true");
-        setTimeout(esconderLoader, 3000);
-    } else {
-        esconderLoader();
-    }
-});
-
 (function(){
     function _0xuuid() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'['replace'](/[xy]/g, function(c) {
@@ -129,14 +109,47 @@ function carregarLixeiraPagina() {
     esvaziarLixeiraButton.style.display = lixeira.length === 0 ? 'none' : 'block';
     const quantidadeClientes = contarClientesLixeira(); document.getElementById('quantidadeClientesLixeira').textContent = `Clientes na lixeira: ${quantidadeClientes}`;
 }
-document.addEventListener('DOMContentLoaded', function() {
-    carregarLixeiraPagina();
-});
 
 function contarClientesLixeira() {
-const lixeira = carregarLixeira();
-return lixeira.length;
+    const lixeira = carregarLixeira();
+    return lixeira.length;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Loader
+    const loading = document.getElementById("loading");
+    const hasVisited = sessionStorage.getItem("hasVisited");
+
+    const esconderLoader = () => {
+        if (loading) {
+            loading.classList.add("hidden");
+            setTimeout(() => (loading.style.display = "none"), 500);
+        }
+    };
+
+    if (!hasVisited) {
+        sessionStorage.setItem("hasVisited", "true");
+        setTimeout(esconderLoader, 3000);
+    } else {
+        esconderLoader();
+    }
+
+    // Chamadas de inicialização
+    carregarLixeiraPagina();
+    exibirClientesAlterados();
+    exibirClientesRenovadosHoje();
+    carregarDarkMode();
+
+    // Input de importação
+    const importarInput = document.getElementById("importarClientes");
+    if (importarInput) {
+        importarInput.addEventListener("change", importarClientes);
+    }
+
+    if (typeof displayClients === "function") {
+        displayClients();
+    }
+});
 
 function removerPermanentemente(nome) {
     const lixeira = carregarLixeira();
@@ -371,10 +384,6 @@ function adicionarCliente() {
         window.location.reload();
     });
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-   exibirClientesAlterados();
-});
 
 function validarCampo(input, valor, mensagemErro, validador = v => v.trim() !== "") {
     if (!validador(valor)) {
@@ -744,10 +753,6 @@ function exibirClientesRenovadosHoje() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    exibirClientesRenovadosHoje();
-});
-
 function exibirClientesAlterados() {
     const clientesAlterados = JSON.parse(localStorage.getItem('clientesAlterados')) || [];
     const hoje = new Date().toLocaleDateString('pt-BR');
@@ -832,10 +837,6 @@ function exibirClientesAlterados() {
         campoClientesAlterados.innerHTML = '<span class="nenhum-cliente-renovado">Nenhum cliente renovado hoje</span>';
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    exibirClientesAlterados();
-});
 
 function adicionarEventoScrollClientes() {
     document.querySelectorAll('.cliente-scroll').forEach(li => {
@@ -986,8 +987,6 @@ function carregarDarkMode() {
     aplicarDarkMode(isDarkMode);
 
 }
-
-document.addEventListener('DOMContentLoaded', carregarDarkMode);
 
 function verificarBackupDiario() {
     // Verificar compatibilidade com localStorage e Blob
@@ -1230,12 +1229,6 @@ function importarClientes(event) {
         reader.readAsText(file);
     }
 }
-
-document.addEventListener('DOMContentLoaded', function() { document.getElementById('importarClientes').addEventListener('change', importarClientes);
-    if (typeof displayClients === 'function') {
-        displayClients();
-    }
-});
 
 window.addEventListener('load', verificarBackupDiario);
 setInterval(verificarBackupDiario, 60 * 60 * 1000);
