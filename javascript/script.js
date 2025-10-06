@@ -517,7 +517,7 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
 
     const celulaAcoes = novaLinha.insertCell(5);
 
-    // Botão de editar
+    // 🔧 Botão de editar cliente
     celulaAcoes.appendChild(criarBotao("Editar", function () {
         const nomeAntigo = celulaNome.innerText;
         const novoNome = prompt("Digite o novo nome do cliente:", nomeAntigo);
@@ -545,6 +545,11 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
                         clientes[clienteIndex] = clienteAtualizado;
                         salvarClientes(clientes);
 
+                        // ✅ Atualiza também no Firebase
+                        atualizarDataNoFirebase(clienteAtualizado)
+                            .then(() => console.log("✅ Cliente atualizado no Firebase:", clienteAtualizado))
+                            .catch(err => console.error("Erro ao atualizar no Firebase:", err));
+
                         // ✅ Marca cliente como renovado hoje
                         renovarCliente(clienteAtualizado.nome);
 
@@ -563,7 +568,7 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
         }
     }));
 
-    // Botão de excluir
+    // 🗑️ Botão de excluir
     celulaAcoes.appendChild(criarBotao("Excluir", function () {
         const nomeCliente = novaLinha.getAttribute('data-nome');
         if (confirm("Tem certeza de que deseja excluir este cliente?")) {
@@ -571,7 +576,7 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
         }
     }));
 
-    // Dropdown WhatsApp / Telegram
+    // 📱 Dropdown de envio (WhatsApp / Telegram)
     const dropdownDiv = document.createElement('div');
     dropdownDiv.classList.add('dropdown');
     const botaoDropdown = document.createElement('button');
@@ -580,7 +585,7 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
     const conteudoDropdown = document.createElement('div');
     conteudoDropdown.classList.add('dropdown-content');
 
-    // Botão WhatsApp
+    // WhatsApp
     const botaoWhatsApp = document.createElement('button');
     botaoWhatsApp.innerText = 'Enviar para WhatsApp';
     botaoWhatsApp.classList.add('WhatsApp');
@@ -621,7 +626,7 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
         window.open(url, '_blank');
     }
 
-    // Botão Telegram
+    // Telegram
     const botaoTelegram = document.createElement('button');
     botaoTelegram.innerText = 'Enviar para Telegram';
     botaoTelegram.classList.add('telegram');
@@ -629,13 +634,9 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
         const dataVencimentoDestacada = celulaData.innerText;
         const horaAtual = new Date().getHours();
         let saudacao;
-        if (horaAtual < 12) {
-            saudacao = "bom dia";
-        } else if (horaAtual < 18) {
-            saudacao = "boa tarde";
-        } else {
-            saudacao = "boa noite";
-        }
+        if (horaAtual < 12) saudacao = "bom dia";
+        else if (horaAtual < 18) saudacao = "boa tarde";
+        else saudacao = "boa noite";
 
         const mensagem = encodeURIComponent(
             `Olá ${saudacao}, seu plano de canais está vencendo, com data de vencimento dia ${dataVencimentoDestacada}. Caso queira renovar após esta data, favor entrar em contato. \n\n PIX EMAIL \n\n brunopeaceandlove60@gmail.com`
