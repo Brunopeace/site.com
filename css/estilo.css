@@ -149,6 +149,12 @@ h1 {
   margin-left: 50px;
 }
 
+.relogio {
+  width: 20px;
+  height: auto;
+  margin-left: 40px;
+}
+
 #quantidadeClientesLixeira {
     display: inline-block;
     padding: 10px 20px;
