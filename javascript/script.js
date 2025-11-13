@@ -589,19 +589,44 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
     const botaoWhatsApp = document.createElement('button');
     botaoWhatsApp.innerText = 'Enviar para WhatsApp';
     botaoWhatsApp.classList.add('WhatsApp');
+  
     botaoWhatsApp.onclick = function () {
-        const dataVencimento = celulaData.innerText.trim();
-        const saudacao = obterSaudacao();
-        const telefoneCliente = telefone ? telefone.replace(/\D/g, '') : '';
+    const nomeCliente = nome.toLowerCase();
+    const dataVencimento = celulaData.innerText.trim();
+    const saudacao = obterSaudacao();
+    const telefoneCliente = telefone ? telefone.replace(/\D/g, '') : '';
 
-        if (!telefoneCliente) {
-            alert('Número de telefone inválido.');
-            return;
-        }
+    if (!telefoneCliente) {
+        alert('Número de telefone inválido.');
+        return;
+    }
 
-        const mensagem = criarMensagemWhatsApp(saudacao, dataVencimento);
-        abrirWhatsApp(telefoneCliente, mensagem);
-    };
+    const mensagem = criarMensagemWhatsApp(saudacao, dataVencimento);
+    abrirWhatsApp(telefoneCliente, mensagem);
+
+    // ✅ Marca como enviado
+    marcarMensagemEnviada(nomeCliente, botaoWhatsApp);
+};
+
+// 🔹 Função para registrar que o cliente já recebeu mensagem hoje
+function marcarMensagemEnviada(nomeCliente, botao) {
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    let mensagens = JSON.parse(localStorage.getItem('mensagensEnviadasHoje')) || { data: hoje, nomes: [] };
+
+    if (mensagens.data !== hoje) {
+        mensagens = { data: hoje, nomes: [] }; // novo dia, limpa histórico
+    }
+
+    if (!mensagens.nomes.includes(nomeCliente)) {
+        mensagens.nomes.push(nomeCliente);
+        localStorage.setItem('mensagensEnviadasHoje', JSON.stringify(mensagens));
+    }
+
+    // muda o botão visualmente
+    botao.innerText = "✅ Enviado";
+    botao.disabled = true;
+    botao.style.opacity = "0.6";
+}
 
     conteudoDropdown.appendChild(botaoWhatsApp);
 
@@ -646,7 +671,16 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
         const urlTelegramShare = `https://t.me/share/url?url=tel:+${numeroTelefone}&text=${mensagem}`;
         window.open(urlTelegramShare, '_blank');
     };
-
+    
+ // Verifica se o cliente já recebeu mensagem hoje
+const mensagens = JSON.parse(localStorage.getItem('mensagensEnviadasHoje')) || { data: "", nomes: [] };
+const hoje = new Date().toLocaleDateString('pt-BR');
+if (mensagens.data === hoje && mensagens.nomes.includes(nome.toLowerCase())) {
+    botaoWhatsApp.innerText = "✅ Enviado";
+    botaoWhatsApp.disabled = true;
+    botaoWhatsApp.style.opacity = "0.6";
+}
+    
     conteudoDropdown.appendChild(botaoTelegram);
     dropdownDiv.appendChild(botaoDropdown);
     dropdownDiv.appendChild(conteudoDropdown);
