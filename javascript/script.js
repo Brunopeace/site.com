@@ -1352,3 +1352,42 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+
+const messaging = firebase.messaging();
+
+// Pedir permissão e pegar token
+async function registrarToken() {
+    try {
+        const status = await Notification.requestPermission();
+
+        if (status !== "granted") {
+            console.warn("❌ Permissão negada");
+            return;
+        }
+
+        const token = await messaging.getToken({
+            vapidKey: "BLjysHYuYMCgWcARiaeByArVexcnPcBD5q57wcmqDuLx9fNgJAPfksen9mCE8Df7I_KCPhOPxD57SH6IHWof6qc"
+        });
+
+        if (!token) {
+            console.warn("⚠️ Não foi possível gerar token");
+            return;
+        }
+
+        console.log("TOKEN DO DISPOSITIVO:", token);
+
+        salvarTokenNoRealtime(token);
+
+    } catch (e) {
+        console.error("Erro ao registrar token:", e);
+    }
+}
+
+window.addEventListener("load", registrarToken);
+
+function salvarTokenNoRealtime(token) {
+    firebase.database().ref("devices/" + token).set({
+        token: token,
+        criadoEm: new Date().toISOString()
+    });
+}
