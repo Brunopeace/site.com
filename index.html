@@ -161,15 +161,6 @@
 </script>
 
 <script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("firebase-messaging-sw.js")
-    .then(() => console.log("📌 Firebase Messaging SW registrado"))
-    .catch(err => console.error("Erro ao registrar SW:", err));
-}
-</script>
-
-
-<script>
   document.addEventListener('DOMContentLoaded', function () {
     const logo = document.querySelector('.logo');
     const hoje = new Date();
