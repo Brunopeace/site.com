@@ -8,14 +8,7 @@ console.log('Falha ao registrar o Service Worker:', err);
     });
   }
 
-
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("firebase-messaging-sw.js")
-    .then(() => console.log("📌 Firebase Messaging SW registrado"))
-    .catch(err => console.error("Erro ao registrar SW:", err));
-}
-
-    
+   
   /* código para instalar o aplicativo */
   let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
