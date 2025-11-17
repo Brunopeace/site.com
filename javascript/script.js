@@ -1,4 +1,12 @@
 if ('serviceWorker' in navigator) {
+ self.addEventListener('install', () => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', () => {
+  clients.claim();
+});
+
 window.addEventListener('load', function() {
  navigator.serviceWorker.register('service-worker.js').then(function(registration) {
         console.log('✅ Service Worker1 registrado com sucesso:', registration);
