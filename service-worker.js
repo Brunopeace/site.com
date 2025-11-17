@@ -11,7 +11,7 @@ self.addEventListener('install', (event) => {
       '/img/icon192.png',
       '/img/icon512.png',
       '/img/iconpadrao1024.png',
-      '/js/script.js'
+      '/javascript/script.js'
   ];
 
   event.waitUntil(
