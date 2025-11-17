@@ -21,15 +21,6 @@
     
 <body>
 
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("firebase-messaging-sw.js")
-    .then(() => console.log("📌 Firebase Messaging SW registrado"))
-    .catch(err => console.error("Erro ao registrar SW:", err));
-}
-</script>
-
-
     <img src="img/logo-padrao.png" class="logo">
 
     <div class="flex-container">
