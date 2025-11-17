@@ -1,9 +1,10 @@
-// Forçar ativação imediata do SW novo
+// ===============================
+// FORÇAR O SW NOVO A ASSUMIR O CONTROLE
+// ===============================
 self.addEventListener('install', (event) => {
   self.skipWaiting(); // força ativação imediata
 
   const CACHE_NAME = 'gerenciador-de-clientes-v2';
-
   const urlsToCache = [
       '/',
       '/index.html',
@@ -23,14 +24,16 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Ativar imediatamente e assumir controle das abas abertas
+// ===============================
+// ATIVAÇÃO — REMOVE CACHE ANTIGO E ASSUME CONTROLE
+// ===============================
 self.addEventListener('activate', (event) => {
   event.waitUntil(
       caches.keys().then((cacheNames) => {
           return Promise.all(
               cacheNames.map((cache) => {
                   if (cache !== 'gerenciador-de-clientes-v2') {
-                      console.log('Service Worker: removendo cache antigo', cache);
+                      console.log('Service Worker: removendo cache antigo:', cache);
                       return caches.delete(cache);
                   }
               })
@@ -38,21 +41,22 @@ self.addEventListener('activate', (event) => {
       })
   );
 
-  clients.claim(); // força assumir o controle
+  clients.claim(); // assume controle imediato das abas abertas
 });
 
-// Responder com o cache
+// ===============================
+// FETCH — ENTREGA DO CACHE + ONLINE
+// ===============================
 self.addEventListener('fetch', (event) => {
   event.respondWith(
       caches.match(event.request)
           .then((response) => {
               if (response) {
-                  return response;
+                  return response; // retorna do cache
               }
-              console.log('Service Worker: arquivo não encontrado no cache:', event.request.url);
+              console.log('Service Worker: buscando online:', event.request.url);
               return fetch(event.request);
-          }).catch(() => {
-              return caches.match('/index.html');
           })
+          .catch(() => caches.match('/index.html'))
   );
 });
