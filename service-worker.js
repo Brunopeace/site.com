@@ -1,5 +1,5 @@
 // Nome do cache
-const CACHE_NAME = 'gerenciador-de-clientes-v1';
+const CACHE_NAME = 'gerenciador-de-clientes-v2';
 
 // Arquivos a serem cacheados
 const urlsToCache = [
