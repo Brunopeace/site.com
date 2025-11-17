@@ -1,3 +1,11 @@
+self.addEventListener('install', () => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', () => {
+  clients.claim();
+});
+
 // Nome do cache
 const CACHE_NAME = 'gerenciador-de-clientes-v2';
 
