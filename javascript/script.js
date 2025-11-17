@@ -1358,6 +1358,8 @@ const messaging = firebase.messaging();
 
 // Pedir permissão e pegar token
 async function registrarToken() {
+ console.log("🔥 registrarToken() foi chamado!");
+
     try {
         const status = await Notification.requestPermission();
 
