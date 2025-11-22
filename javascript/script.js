@@ -16,7 +16,7 @@ console.log('Falha ao registrar o Service Worker:', err);
 // SW DO FIREBASE MESSAGING
 // ===============================
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/firebase-messaging/firebase-messaging-sw.js", {
+  navigator.serviceWorker.register("firebase-messaging/firebase-messaging-sw.js", {
     scope: "/firebase-messaging/"
   })
   .then(reg => console.log("✔ SW Firebase Messaging registrado:", reg))
