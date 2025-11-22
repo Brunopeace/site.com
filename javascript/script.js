@@ -1369,62 +1369,51 @@ window.onclick = function(event) {
 
 const messaging = firebase.messaging();
 
-// ===============================
-// Pedir permissão e pegar token — SOMENTE após SWs estarem ativos
-// ===============================
 async function registrarToken() {
     console.log("🔥 registrarToken() foi chamado!");
 
     try {
-        // AGUARDAR SERVICE WORKER PRINCIPAL
-        const reg1 = await navigator.serviceWorker.ready;
-        console.log("✔ SW principal pronto:", reg1);
+        // 1 — Esperar os dois service workers estarem ativos
+        const swRegistration = await navigator.serviceWorker.ready;
+        console.log("✔ SW pronto:", swRegistration);
 
-        // AGUARDAR SW DO FIREBASE MESSAGING
-        const reg2 = await navigator.serviceWorker.getRegistration("/firebase-messaging/");
-        if (!reg2) {
-            console.error("❌ SW do Firebase Messaging ainda NÃO está registrado!");
-            return;
-        }
-        console.log("✔ SW Firebase Messaging pronto:", reg2);
-
-        // PEDIR PERMISSÃO
+        // 2 — Solicitar permissão
         const status = await Notification.requestPermission();
+        console.log("🔔 Status da permissão:", status);
 
         if (status !== "granted") {
             console.warn("❌ Permissão negada");
             return;
         }
 
-        // GERAR TOKEN
+        // 3 — Gerar token SOMENTE após o SW do Firebase estar pronto
         const token = await messaging.getToken({
             vapidKey: "BLjysHYuYMCgWcARiaeByArVexcnPcBD5q57wcmqDuLx9fNgJAPfksen9mCE8Df7I_KCPhOPxD57SH6IHWof6qc",
-            serviceWorkerRegistration: reg2 // 🔥 IMPORTANTE!
+            serviceWorkerRegistration: swRegistration
         });
 
+        console.log("🔑 TOKEN GERADO:", token);
+
         if (!token) {
-            console.warn("⚠️ Não foi possível gerar token");
+            console.warn("⚠️ Firebase não retornou token (SW errado ou não carregado)");
             return;
         }
-
-        console.log("TOKEN DO DISPOSITIVO:", token);
 
         salvarTokenNoRealtime(token);
 
     } catch (e) {
-        console.error("Erro ao registrar token:", e);
+        console.error("❌ Erro ao registrar token:", e);
     }
 }
 
-// CHAMAR APENAS QUANDO A PÁGINA CARREGAR
 window.addEventListener("load", registrarToken);
 
-// ===============================
-// SALVAR TOKEN NO REALTIME DATABASE
-// ===============================
+// Salvar token no Realtime Database
 function salvarTokenNoRealtime(token) {
     firebase.database().ref("devices/" + token).set({
         token: token,
         criadoEm: new Date().toISOString()
     });
+
+    console.log("✔ Token salvo no Firebase");
 }
