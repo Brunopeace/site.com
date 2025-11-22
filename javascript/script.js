@@ -1,26 +1,26 @@
 // ===============================
-// SW PRINCIPAL DO PWA
-// ===============================
-
-if ('serviceWorker' in navigator) {
-window.addEventListener('load', function() {
- navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-        console.log('✅ Service Worker1 registrado com sucesso:', registration);
-      }, function(err) {
-console.log('Falha ao registrar o Service Worker:', err);
-      });
-    });
-  }
-
-// ===============================
-// SW DO FIREBASE MESSAGING
+// 1 — REGISTRA O SERVICE WORKER PRINCIPAL DO PWA
 // ===============================
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("firebase-messaging/firebase-messaging-sw.js", {
-    scope: "/firebase-messaging/"
-  })
-  .then(reg => console.log("✔ SW Firebase Messaging registrado:", reg))
-  .catch(err => console.error("Erro ao registrar Messaging SW:", err));
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/service-worker.js")
+        .then(reg => {
+            console.log("✅ SW PRINCIPAL registrado:", reg);
+
+            // ===============================
+            // 2 — SOMENTE DEPOIS, REGISTRAR O SW DO FIREBASE MESSAGING
+            // ===============================
+            return navigator.serviceWorker.register("/firebase-messaging/firebase-messaging-sw.js", {
+                scope: "/firebase-messaging/"
+            });
+        })
+        .then(reg2 => {
+            console.log("✔ SW Firebase Messaging registrado:", reg2);
+        })
+        .catch(err => {
+            console.error("❌ Erro ao registrar Service Workers:", err);
+        });
+    });
 }
    
   /* código para instalar o aplicativo */
