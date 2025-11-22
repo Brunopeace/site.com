@@ -1373,18 +1373,24 @@ async function registrarToken() {
     console.log("🔥 registrarToken() foi chamado!");
 
     try {
-        // Pedir permissão normalmente
         const status = await Notification.requestPermission();
-        console.log("🔔 Status da permissão:", status);
 
         if (status !== "granted") {
             console.warn("❌ Permissão negada");
             return;
         }
 
-        // Gerar token SEM usar navigator.serviceWorker.ready
+        // ⚠️ REGISTRA O SW CORRETO DO FIREBASE MESSAGING
+        const swFirebase = await navigator.serviceWorker.register("/firebase-messaging/firebase-messaging-sw.js", {
+            scope: "/firebase-messaging/"
+        });
+
+        console.log("✔ SW Firebase Messaging carregado:", swFirebase);
+
+        // GENERATE TOKEN USANDO O SW CORRETO
         const token = await messaging.getToken({
-            vapidKey: "BLjysHYuYMCgWcARiaeByArVexcnPcBD5q57wcmqDuLx9fNgJAPfksen9mCE8Df7I_KCPhOPxD57SH6IHWof6qc"
+            vapidKey: "BLjysHYuYMCgWcARiaeByArVexcnPcBD5q57wcmqDuLx9fNgJAPfksen9mCE8Df7I_KCPhOPxD57SH6IHWof6qc",
+            serviceWorkerRegistration: swFirebase
         });
 
         console.log("🔑 TOKEN GERADO:", token);
