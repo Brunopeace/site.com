@@ -1,17 +1,17 @@
 // ===============================
-// 1 — REGISTRA O SERVICE WORKER PRINCIPAL DO PWA
+// 1 — REGISTRAR O SW PRINCIPAL DO PWA (CORRETO PARA GITHUB PAGES)
 // ===============================
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/service-worker.js")
+        navigator.serviceWorker.register("service-worker.js") // sem "/"
         .then(reg => {
             console.log("✅ SW PRINCIPAL registrado:", reg);
 
             // ===============================
-            // 2 — SOMENTE DEPOIS, REGISTRAR O SW DO FIREBASE MESSAGING
+            // 2 — REGISTRAR O SW DO FIREBASE MESSAGING (CORRETO PARA GITHUB PAGES)
             // ===============================
-            return navigator.serviceWorker.register("/firebase-messaging/firebase-messaging-sw.js", {
-                scope: "/firebase-messaging/"
+            return navigator.serviceWorker.register("firebase-messaging/firebase-messaging-sw.js", {
+                scope: "firebase-messaging/" // sem "/"
             });
         })
         .then(reg2 => {
