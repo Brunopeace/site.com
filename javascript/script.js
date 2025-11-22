@@ -1369,11 +1369,26 @@ window.onclick = function(event) {
 
 const messaging = firebase.messaging();
 
-// Pedir permissão e pegar token
+// ===============================
+// Pedir permissão e pegar token — SOMENTE após SWs estarem ativos
+// ===============================
 async function registrarToken() {
- console.log("🔥 registrarToken() foi chamado!");
+    console.log("🔥 registrarToken() foi chamado!");
 
     try {
+        // AGUARDAR SERVICE WORKER PRINCIPAL
+        const reg1 = await navigator.serviceWorker.ready;
+        console.log("✔ SW principal pronto:", reg1);
+
+        // AGUARDAR SW DO FIREBASE MESSAGING
+        const reg2 = await navigator.serviceWorker.getRegistration("/firebase-messaging/");
+        if (!reg2) {
+            console.error("❌ SW do Firebase Messaging ainda NÃO está registrado!");
+            return;
+        }
+        console.log("✔ SW Firebase Messaging pronto:", reg2);
+
+        // PEDIR PERMISSÃO
         const status = await Notification.requestPermission();
 
         if (status !== "granted") {
@@ -1381,8 +1396,10 @@ async function registrarToken() {
             return;
         }
 
+        // GERAR TOKEN
         const token = await messaging.getToken({
-            vapidKey: "BLjysHYuYMCgWcARiaeByArVexcnPcBD5q57wcmqDuLx9fNgJAPfksen9mCE8Df7I_KCPhOPxD57SH6IHWof6qc"
+            vapidKey: "BLjysHYuYMCgWcARiaeByArVexcnPcBD5q57wcmqDuLx9fNgJAPfksen9mCE8Df7I_KCPhOPxD57SH6IHWof6qc",
+            serviceWorkerRegistration: reg2 // 🔥 IMPORTANTE!
         });
 
         if (!token) {
@@ -1399,8 +1416,12 @@ async function registrarToken() {
     }
 }
 
+// CHAMAR APENAS QUANDO A PÁGINA CARREGAR
 window.addEventListener("load", registrarToken);
 
+// ===============================
+// SALVAR TOKEN NO REALTIME DATABASE
+// ===============================
 function salvarTokenNoRealtime(token) {
     firebase.database().ref("devices/" + token).set({
         token: token,
