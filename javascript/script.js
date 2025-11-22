@@ -1373,11 +1373,7 @@ async function registrarToken() {
     console.log("🔥 registrarToken() foi chamado!");
 
     try {
-        // 1 — Esperar os dois service workers estarem ativos
-        const swRegistration = await navigator.serviceWorker.ready;
-        console.log("✔ SW pronto:", swRegistration);
-
-        // 2 — Solicitar permissão
+        // Pedir permissão normalmente
         const status = await Notification.requestPermission();
         console.log("🔔 Status da permissão:", status);
 
@@ -1386,16 +1382,15 @@ async function registrarToken() {
             return;
         }
 
-        // 3 — Gerar token SOMENTE após o SW do Firebase estar pronto
+        // Gerar token SEM usar navigator.serviceWorker.ready
         const token = await messaging.getToken({
-            vapidKey: "BLjysHYuYMCgWcARiaeByArVexcnPcBD5q57wcmqDuLx9fNgJAPfksen9mCE8Df7I_KCPhOPxD57SH6IHWof6qc",
-            serviceWorkerRegistration: swRegistration
+            vapidKey: "BLjysHYuYMCgWcARiaeByArVexcnPcBD5q57wcmqDuLx9fNgJAPfksen9mCE8Df7I_KCPhOPxD57SH6IHWof6qc"
         });
 
         console.log("🔑 TOKEN GERADO:", token);
 
         if (!token) {
-            console.warn("⚠️ Firebase não retornou token (SW errado ou não carregado)");
+            console.warn("⚠️ Firebase não retornou token");
             return;
         }
 
