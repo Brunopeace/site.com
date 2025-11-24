@@ -1,5 +1,5 @@
 // ===============================
-// FORÇAR O SW NOVO A ASSUMIR O CONTROLE
+// 1 — INSTALAÇÃO DO SERVICE WORKER
 // ===============================
 self.addEventListener('install', (event) => {
   self.skipWaiting(); // força ativação imediata
@@ -25,14 +25,14 @@ self.addEventListener('install', (event) => {
 });
 
 // ===============================
-// ATIVAÇÃO — REMOVE CACHE ANTIGO E ASSUME CONTROLE
+// 2 — ATIVAÇÃO (LIMPAR CACHE ANTIGO)
 // ===============================
 self.addEventListener('activate', (event) => {
   event.waitUntil(
       caches.keys().then((cacheNames) => {
           return Promise.all(
               cacheNames.map((cache) => {
-                  if (cache !== 'gerenciador-de-clientes-v2') {
+                  if (cache !== 'gerenciador-de-clientes-v3') {
                       console.log('Service Worker: removendo cache antigo:', cache);
                       return caches.delete(cache);
                   }
@@ -45,9 +45,15 @@ self.addEventListener('activate', (event) => {
 });
 
 // ===============================
-// FETCH — ENTREGA DO CACHE + ONLINE
+// 3 — FETCH (CACHE + ONLINE)
 // ===============================
 self.addEventListener('fetch', (event) => {
+
+  // 🔥 NÃO INTERCEPTAR PEDIDOS DO FIREBASE MESSAGING
+  if (event.request.url.includes("fcm.googleapis.com")) {
+    return; // deixa seguir direto para a internet
+  }
+
   event.respondWith(
       caches.match(event.request)
           .then((response) => {
