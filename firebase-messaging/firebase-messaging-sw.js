@@ -13,12 +13,7 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+// ⚠️ Não mostrar notificação manualmente para mensagens "notification"
 messaging.onBackgroundMessage(payload => {
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: "/img/icon-192.png"
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
+    console.log("Mensagem FCM recebida em segundo plano:", payload);
 });
