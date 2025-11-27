@@ -13,7 +13,16 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// ⚠️ Não mostrar notificação manualmente para mensagens "notification"
+// 👇 ISSO EXIBE A NOTIFICAÇÃO DE VERDADE
 messaging.onBackgroundMessage(payload => {
-    console.log("Mensagem FCM recebida em segundo plano:", payload);
+    console.log("📩 Mensagem FCM recebida em segundo plano:", payload);
+
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: "/img/icon192.png", // use exatamente este nome do seu projeto
+        badge: "/img/icon192.png" // opcional mas recomendado
+    };
+
+    self.registration.showNotification(notificationTitle, notificationOptions);
 });
