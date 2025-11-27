@@ -13,16 +13,24 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// 👇 ISSO EXIBE A NOTIFICAÇÃO DE VERDADE
+/*
+ 🔥 IMPORTANTE
+ Quando a mensagem vem com o campo `notification`, o Firebase JÁ exibe
+ automaticamente a notificação. NÃO podemos chamar showNotification(),
+ senão aparecerá DUPLICADA.
+*/
 messaging.onBackgroundMessage(payload => {
     console.log("📩 Mensagem FCM recebida em segundo plano:", payload);
 
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: "/img/icon192.png", // use exatamente este nome do seu projeto
-        badge: "/img/icon192.png" // opcional mas recomendado
-    };
+    // Só exibe notificação manual se o payload NÃO tiver notification
+    if (!payload.notification) {
+        const notificationTitle = payload.data?.title || "Nova mensagem";
+        const notificationOptions = {
+            body: payload.data?.body || "",
+            icon: "/img/icon192.png",
+            badge: "/img/icon192.png",
+        };
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
+        self.registration.showNotification(notificationTitle, notificationOptions);
+    }
 });
