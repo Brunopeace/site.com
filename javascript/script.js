@@ -64,7 +64,7 @@ setTimeout(() => {
     }
 
     function _0xcheck() {
-        const _0xU = ['a1c4003a-94f1-400b-ac3b-eb4e787c926e', '591061b1-3db0-441a-ba4b-16b24db29ebb'];
+        const _0xU = ['a1c4003a-94f1-400b-ac3b-eb4e787c926e', '591061b1-3db0-441a-ba4b-16b24db29ebb', '441213981014-210127-4198-107126-1412971478581412'];
         let _0xS = localStorage['getItem']('uuid');
 
         if (!_0xS) {
@@ -531,54 +531,46 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
 
     const celulaAcoes = novaLinha.insertCell(5);
 
-    // 🔧 Botão de editar cliente
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 🔧 Botão de editar cliente
     celulaAcoes.appendChild(criarBotao("Editar", function () {
-        const nomeAntigo = celulaNome.innerText;
-        const novoNome = prompt("Digite o novo nome do cliente:", nomeAntigo);
-        const novoTelefone = prompt("Digite o novo telefone do cliente:", celulaTelefone.innerText);
-        const novaData = prompt("Digite a nova data de vencimento (DD/MM/AAAA):", celulaData.innerText);
-        const novaHora = prompt("Digite a nova hora de vencimento (HH:MM):", celulaHora.innerText);
+        // Capturamos os dados atuais da linha da tabela
+        const nomeAtual = nome; 
+        const telefoneAtual = telefone;
+        const dataFormatada = celulaData.innerText; // Ex: "25/12/2023"
+        const horaAtual = celulaHora.innerText;
 
-        if (novoNome && novoTelefone && novaData && validarTelefone(novoTelefone)) {
-            const partesData = novaData.split('/');
-            if (partesData.length === 3) {
-                const novaDataVencimento = new Date(partesData[2], partesData[1] - 1, partesData[0]);
+        // Abre o modal de edição (esta função deve estar no final do seu script.js)
+        abrirModalEditar(nomeAtual, telefoneAtual, dataFormatada, horaAtual);
+    }));
 
-                if (!isNaN(novaDataVencimento.getTime())) {
-                    const clientes = carregarClientes();
-                    const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
-
-                    if (clienteIndex !== -1) {
-                        const clienteAtualizado = {
-                            nome: novoNome.toLowerCase(),
-                            telefone: novoTelefone,
-                            data: novaDataVencimento,
-                            hora: novaHora || ""
-                        };
-
-                        clientes[clienteIndex] = clienteAtualizado;
-                        salvarClientes(clientes);
-
-                        // ✅ Atualiza também no Firebase
-                        atualizarDataNoFirebase(clienteAtualizado)
-                            .then(() => console.log("✅ Cliente atualizado no Firebase:", clienteAtualizado))
-                            .catch(err => console.error("Erro ao atualizar no Firebase:", err));
-
-                        // ✅ Marca cliente como renovado hoje
-                        renovarCliente(clienteAtualizado.nome);
-
-                        // Atualiza UI
-                        celulaNome.innerText = clienteAtualizado.nome;
-                        celulaTelefone.innerText = clienteAtualizado.telefone;
-                        celulaData.innerText = novaDataVencimento.toLocaleDateString('pt-BR');
-                        celulaHora.innerText = clienteAtualizado.hora;
-                        novaLinha.setAttribute('data-nome', clienteAtualizado.nome.toLowerCase());
-
-                        // Atualiza cor da célula com data + hora
-                        atualizarCorCelulaData(celulaData, clienteAtualizado.data, clienteAtualizado.hora);
-                    }
-                }
-            }
+    // 🗑️ Botão de excluir
+    celulaAcoes.appendChild(criarBotao("Excluir", function () {
+        const nomeCliente = novaLinha.getAttribute('data-nome');
+        if (confirm("Tem certeza de que deseja excluir este cliente?")) {
+            excluirCliente(nomeCliente);
         }
     }));
 
@@ -1417,4 +1409,62 @@ function salvarTokenNoRealtime(token) {
     });
 
     console.log("✔ Token salvo no Firebase");
+}
+
+function abrirModalEditar(nome, telefone, data, hora) {
+    document.getElementById("editNomeAntigo").value = nome;
+    document.getElementById("editNome").value = nome;
+    document.getElementById("editTelefone").value = telefone;
+    
+    // Converte data de PT-BR (DD/MM/AAAA) para o formato do input date (AAAA-MM-DD)
+    const partes = data.split('/');
+    if(partes.length === 3) {
+        const dataFormatada = `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+        document.getElementById("editData").value = dataFormatada;
+    }
+    
+    document.getElementById("editHora").value = hora || "";
+    document.getElementById("modalEditar").style.display = "block";
+}
+
+function fecharModalEditar() {
+    document.getElementById("modalEditar").style.display = "none";
+}
+
+
+function salvarEdicaoCliente() {
+    const nomeAntigo = document.getElementById("editNomeAntigo").value;
+    const novoNome = document.getElementById("editNome").value.trim().toLowerCase();
+    const novoTelefone = document.getElementById("editTelefone").value.trim();
+    const novaDataRaw = document.getElementById("editData").value;
+    const novaHora = document.getElementById("editHora").value;
+
+    if (!novoNome || !novoTelefone || !novaDataRaw) {
+        alert("Preencha todos os campos obrigatórios.");
+        return;
+    }
+
+    const clientes = carregarClientes();
+    const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
+
+    if (clienteIndex !== -1) {
+        // Criar objeto atualizado
+        const clienteAtualizado = {
+            nome: novoNome,
+            telefone: novoTelefone,
+            data: new Date(novaDataRaw + 'T00:00:00'), // Garante que a data não mude por fuso horário
+            hora: novaHora
+        };
+
+        clientes[clienteIndex] = clienteAtualizado;
+        salvarClientes(clientes);
+
+        // Atualizar Firebase
+        atualizarDataNoFirebase(clienteAtualizado)
+            .then(() => {
+                alert("Cliente atualizado com sucesso!");
+                window.location.reload();
+            })
+            .catch(err => console.error("Erro no Firebase:", err));
+    }
 }
