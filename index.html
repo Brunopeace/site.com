@@ -81,7 +81,38 @@
 </div>
     
 <button id="btnExcluirSelecionados" onclick="excluirClientesSelecionados()">Excluir Seleção</button><button onclick="abrirModalCadastro()" class="slide-in btn-modal">Cadastrar Cliente</button><br><br>
+
+<div id="modalEditar" class="modal">
+  <div class="modal-conteudo">
+    <span class="fechar" onclick="fecharModalEditar()">&times;</span>
+    <h2>Editar Cliente</h2>
     
+    <input type="hidden" id="editNomeAntigo">
+
+    <div class="input-container">
+      <label for="editNome">Nome do cliente</label>
+      <input type="text" id="editNome" required>
+    </div>
+
+    <div class="input-container">
+      <label for="editTelefone">Telefone</label>
+      <input type="tel" id="editTelefone" required>
+    </div>
+
+    <div class="input-container">
+      <label for="editData">Data de Vencimento</label>
+      <input type="date" id="editData" required>
+    </div>
+    
+    <div class="input-container">
+      <label for="editHora">Hora de Vencimento</label>
+      <input type="time" id="editHora">
+    </div>
+    
+    <button onclick="salvarEdicaoCliente()">Salvar Alterações</button>
+  </div>
+</div>
+
 <div id="feedback" style="display: none;"></div>
 <div id="infoClientes2" class="slide-in"></div><br>
     <div id="infoClientes" class="slide-in"></div>
