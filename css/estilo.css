@@ -953,3 +953,21 @@ h2 {
 .fechar:hover {
   color: #000;
 }
+
+#modalEditar .modal-conteudo input {
+    background-color: #ffffff;
+    font-weight: bold;
+    color: #2B8E28;
+}
+
+
+body.dark-mode #modalEditar .modal-conteudo input {
+    background-color: #ffffff;
+    color: #2B8E28;
+}
+
+#modalEditar .modal-conteudo input::placeholder {
+    color: #2B8E28;
+    font-style: italic;
+    opacity: 0.7;
+}
