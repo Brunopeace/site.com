@@ -1,11 +1,14 @@
 // ===============================
 // 1 — REGISTRAR O SW PRINCIPAL DO PWA (CORRETO PARA GITHUB PAGES)
 // ===============================
+
 if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("service-worker.js") // sem "/"
-        .then(reg => {
-            console.log("✅ SW PRINCIPAL registrado:", reg);
+window.addEventListener("load", () => {
+navigator.serviceWorker.register("service-worker.js") // sem "/"
+.then(reg => {
+console.log("✅ SW PRINCIPAL registrado:", reg);
+
+
 
             // ===============================
             // 2 — REGISTRAR O SW DO FIREBASE MESSAGING (CORRETO PARA GITHUB PAGES)
@@ -64,7 +67,7 @@ setTimeout(() => {
     }
 
     function _0xcheck() {
-        const _0xU = ['5311131215125-1391512-49115-108814-9273140411140130'];
+        const _0xU = ['a1c4003a-94f1-400b-ac3b-eb4e787c926e', '591061b1-3db0-441a-ba4b-16b24db29ebb', '441213981014-210127-4198-107126-1412971478581412'];
         let _0xS = localStorage['getItem']('uuid');
 
         if (!_0xS) {
@@ -1421,19 +1424,28 @@ function salvarEdicaoCliente() {
         const clienteAtualizado = {
             nome: novoNome,
             telefone: novoTelefone,
-            data: new Date(novaDataRaw + 'T00:00:00'), // Garante que a data não mude por fuso horário
+            data: new Date(novaDataRaw + 'T00:00:00'), 
             hora: novaHora
         };
 
         clientes[clienteIndex] = clienteAtualizado;
         salvarClientes(clientes);
 
+        // ✅ ADICIONADO: Marca cliente como renovado hoje para aparecer na lista de renovados
+        if (typeof renovarCliente === "function") {
+            renovarCliente(clienteAtualizado.nome);
+        }
+
         // Atualizar Firebase
         atualizarDataNoFirebase(clienteAtualizado)
             .then(() => {
-                alert("Cliente atualizado com sucesso!");
+                alert("Cliente atualizado e renovado com sucesso!");
                 window.location.reload();
             })
-            .catch(err => console.error("Erro no Firebase:", err));
+            .catch(err => {
+                console.error("Erro no Firebase:", err);
+                // Mesmo com erro no firebase, recarregamos para mostrar a renovação local
+                window.location.reload(); 
+            });
     }
 }
