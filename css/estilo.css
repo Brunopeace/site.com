@@ -160,17 +160,17 @@ h1 {
     padding: 10px 20px;
     margin: 20px 0;
     margin-left: 18.5%;
-    background-color: #007BFF; /* Cor de fundo azul */
-    color: white; /* Cor do texto branco */
-    font-size: 18px; /* Tamanho da fonte */
-    font-weight: bold; /* Texto em negrito */
-    border-radius: 8px; /* Cantos arredondados */
-    border: 1px solid #ffffff;    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    background-color: #007BFF;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 1px solid #ffffff;    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #quantidadeClientesLixeira span {
-    font-size: 20px; /* Tamanho da fonte do número */
-    font-weight: bold; /* Negrito no número */
+    font-size: 20px;
+    font-weight: bold;
 }
 
 #containerLixeira {
@@ -942,16 +942,13 @@ h2 {
 }
 
 .fechar {
-  color: #aaa;
+  color: #ff0000;
   position: absolute;
   top: 10px;
   right: 15px;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
-}
-.fechar:hover {
-  color: #000;
 }
 
 #modalEditar .modal-conteudo input {
