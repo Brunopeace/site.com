@@ -8,8 +8,6 @@ navigator.serviceWorker.register("service-worker.js") // sem "/"
 .then(reg => {
 console.log("✅ SW PRINCIPAL registrado:", reg);
 
-
-
             // ===============================
             // 2 — REGISTRAR O SW DO FIREBASE MESSAGING (CORRETO PARA GITHUB PAGES)
             // ===============================
@@ -1420,31 +1418,43 @@ function salvarEdicaoCliente() {
     const clienteIndex = clientes.findIndex(c => c.nome.toLowerCase() === nomeAntigo.toLowerCase());
 
     if (clienteIndex !== -1) {
-        // Criar objeto atualizado
+        const clienteAnterior = clientes[clienteIndex];
+        
+        // 1. Preparamos a data antiga para comparação (apenas a parte do dia)
+        const dataAntigaStr = new Date(clienteAnterior.data).toLocaleDateString('pt-BR');
+        
+        // 2. Preparamos a nova data selecionada
+        const partesData = novaDataRaw.split('-');
+        const novaDataVencimento = new Date(partesData[0], partesData[1] - 1, partesData[2]);
+        const novaDataStr = novaDataVencimento.toLocaleDateString('pt-BR');
+
         const clienteAtualizado = {
             nome: novoNome,
             telefone: novoTelefone,
-            data: new Date(novaDataRaw + 'T00:00:00'), 
-            hora: novaHora
+            data: novaDataVencimento,
+            hora: novaHora || ""
         };
+
+        // ✅ LÓGICA DE RENOVAÇÃO:
+        // Se a data formatada mudou, significa que você renovou o cliente.
+        if (dataAntigaStr !== novaDataStr) {
+            console.log("📅 Data alterada! Registrando como renovado hoje...");
+            if (typeof renovarCliente === "function") {
+                renovarCliente(clienteAtualizado.nome);
+            }
+        }
 
         clientes[clienteIndex] = clienteAtualizado;
         salvarClientes(clientes);
 
-        // ✅ ADICIONADO: Marca cliente como renovado hoje para aparecer na lista de renovados
-        if (typeof renovarCliente === "function") {
-            renovarCliente(clienteAtualizado.nome);
-        }
-
         // Atualizar Firebase
         atualizarDataNoFirebase(clienteAtualizado)
             .then(() => {
-                alert("Cliente atualizado e renovado com sucesso!");
+                alert("Alterações salvas com sucesso!");
                 window.location.reload();
             })
             .catch(err => {
                 console.error("Erro no Firebase:", err);
-                // Mesmo com erro no firebase, recarregamos para mostrar a renovação local
                 window.location.reload(); 
             });
     }
