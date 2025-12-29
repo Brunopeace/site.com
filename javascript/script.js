@@ -531,29 +531,6 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
 
     const celulaAcoes = novaLinha.insertCell(5);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // 🔧 Botão de editar cliente
     celulaAcoes.appendChild(criarBotao("Editar", function () {
         // Capturamos os dados atuais da linha da tabela
@@ -564,14 +541,6 @@ function adicionarLinhaTabela(nome, telefone, data, hora = "") {
 
         // Abre o modal de edição (esta função deve estar no final do seu script.js)
         abrirModalEditar(nomeAtual, telefoneAtual, dataFormatada, horaAtual);
-    }));
-
-    // 🗑️ Botão de excluir
-    celulaAcoes.appendChild(criarBotao("Excluir", function () {
-        const nomeCliente = novaLinha.getAttribute('data-nome');
-        if (confirm("Tem certeza de que deseja excluir este cliente?")) {
-            excluirCliente(nomeCliente);
-        }
     }));
 
     // 🗑️ Botão de excluir
