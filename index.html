@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (temaAtivo) {
         this.aplicarTema(temaAtivo, logo);
       } else if (logo) {
-        logo.src = '../img/logo-padrao.png';
+        logo.src = 'img/logo-padrao.png';
       }
     },
 
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.add(`tema-${tema.name}`);
       
       if (logo) {
-        logo.src = `../img/logo-${tema.name}.png`;
+        logo.src = `img/logo-${tema.name}.png`;
       }
 
       if (typeof tema.action === 'function') {
