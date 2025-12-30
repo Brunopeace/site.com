@@ -968,3 +968,405 @@ body.dark-mode #modalEditar .modal-conteudo input {
     font-style: italic;
     opacity: 0.7;
 }
+
+/* 🎄 TEMA DE NATAL */
+.tema-natal {
+  background: radial-gradient(circle, #0b3d0b, #051f05);
+}
+
+.tema-natal h2 {
+  color: #ffd700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+.tema-natal .btn {
+  background: linear-gradient(45deg, #c40000, #0f8a0f);
+  border: none;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.tema-natal .copy-link-btn {
+  border: 1px solid #ffd700;
+}
+
+.tema-natal footer strong a {
+  background: linear-gradient(to right, #ff0000, #00ff00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.neve {
+  position: fixed;
+  top: -10px;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: cair linear infinite;
+  z-index: 9999;
+}
+
+@keyframes cair {
+  to {
+    transform: translateY(110vh);
+  }
+}
+
+.fogo {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  pointer-events: none;
+  z-index: 9999;
+  filter: drop-shadow(0 0 8px #ffffff);
+  animation: explodir 1.2s ease-out forwards;
+}
+
+@keyframes explodir {
+  0% {
+    opacity: 1;
+    transform: scale(0.3);
+  }
+
+  100% {
+    box-shadow:
+      0 -45px #ff1a1a,
+      35px -35px #ffe600,
+      45px 0 #00ffe1,
+      35px 35px #ffffff,
+      0 45px #ff9f00,
+      -35px 35px #00ff3c,
+      -45px 0 #ff00ff,
+      -35px -35px #00ccff,
+
+      /* brilho extra */
+      0 -45px 15px #ff1a1a,
+      35px -35px 15px #ffe600,
+      45px 0 15px #00ffe1,
+      35px 35px 15px #ffffff,
+      0 45px 15px #ff9f00,
+      -35px 35px 15px #00ff3c,
+      -45px 0 15px #ff00ff,
+      -35px -35px 15px #00ccff;
+
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+
+/* ✨ TEMA DE ANO NOVO - LUXO E BRILHO */
+.tema-ano-novo {
+  /* Fundo inspirado no céu noturno profundo */
+  background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+  color: #ffffff;
+  transition: all 0.5s ease;
+}
+
+/* Títulos com efeito de ouro metálico */
+.tema-ano-novo h2 {
+  background: linear-gradient(to bottom, #cfad48 0%, #fff2ad 50%, #cfad48 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 5px rgba(207, 173, 72, 0.5));
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Botões com estilo "Black & Gold" */
+.tema-ano-novo .btn {
+  background: linear-gradient(45deg, #000000, #434343);
+  color: #ffd700;
+  border: 1px solid #ffd700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efeito de brilho passando no botão */
+.tema-ano-novo .btn:after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+  animation: brilhoBotao 3s infinite;
+}
+
+@keyframes brilhoBotao {
+  0% { margin-left: -100%; }
+  100% { margin-left: 100%; }
+}
+
+/* Estilo para links e rodapé */
+.tema-ano-novo footer strong a {
+  background: linear-gradient(to right, #ffd700, #ffffff, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+}
+
+/* Inputs e containers de link */
+.tema-ano-novo .copy-link-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: #fff;
+}
+
+/* fogos realistas */
+.foguete-realista {
+  position: fixed;
+  bottom: 0;
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(to top, transparent, #fff);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 8px var(--cor));
+  animation: subirFoguete 1s ease-out forwards;
+  z-index: 9999;
+}
+
+.particula-realista {
+  position: fixed;
+  width: 5px;
+  height: 5px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #fff, 0 0 20px var(--cor), 0 0 30px var(--cor);
+  z-index: 9999;
+  animation: explodirParticula 1.5s cubic-bezier(0.1, 0.5, 0.3, 1) forwards;
+}
+
+@keyframes subirFoguete {
+  0% { transform: translateY(0) scaleY(1); opacity: 1; }
+  100% { transform: translateY(-80vh) scaleY(2); opacity: 0; }
+}
+
+@keyframes explodirParticula {
+  0% { transform: translate(0, 0) scale(1.5); opacity: 1; }
+  100% { transform: translate(var(--tx), calc(var(--ty) + 200px)) scale(0); opacity: 0; }
+}
+
+
+/* 🎉 TEMA DE CARNAVAL */
+.tema-carnaval {
+  /* Fundo degradê animado */
+  background: linear-gradient(-45deg, #6a11cb, #2575fc, #ff0080, #ff8c00);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+  color: #fff;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Títulos com efeito arco-íris */
+.tema-carnaval h2 {
+  color: #fff;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0px #ff0080, 6px 6px 0px #00ffff;
+}
+
+/* Botões Neon Carnaval */
+.tema-carnaval .btn {
+  background: #fff;
+  color: #6a11cb;
+  border: none;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+  transition: transform 0.2s;
+}
+
+.tema-carnaval .btn:hover {
+  transform: scale(1.1) rotate(-2deg);
+}
+
+/* Input e containers */
+.tema-carnaval .copy-link-btn {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border: 2px dashed #ffff00;
+  color: #fff;
+}
+
+/* Rodapé animado */
+.tema-carnaval footer strong a {
+  color: #ffff00;
+  text-decoration: underline wavy #ff0080;
+}
+
+/* Classe base para os confetes (caso precise de ajustes fixos) */
+.confete {
+  border-radius: 2px;
+}
+
+/* 🐰 TEMA DE PÁSCOA - DOCE E SUAVE */
+.tema-pascoa {
+  background: linear-gradient(135deg, #000 0%, #ebedee 100%);
+  /* Ou um tom pastel azul/rosa */
+  background-color: #e3f2fd; 
+  color: 5d4037; /* Marrom chocolate para os textos */
+}
+
+/* Títulos com estilo "fofinho" */
+.tema-pascoa h2 {
+  color: #ff80ab; /* Rosa pastel */
+  font-family: 'Comic Sans MS', 'cursive', sans-serif; /* Opcional: fonte mais lúdica */
+  text-shadow: 2px 2px 0px #ffffff, 4px 4px 0px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+/* Botões Estilo Ovo de Chocolate */
+.tema-pascoa .btn {
+  background: linear-gradient(45deg, #8d6e63, #5d4037); /* Cores de chocolate */
+  color: #fff;
+  border: 3px solid #fff;
+  border-radius: 50px; /* Bem arredondado como um ovo */
+  box-shadow: 0 4px 15px rgba(93, 64, 55, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tema-pascoa .btn:hover {
+  background: #ff80ab;
+  transform: translateY(-3px);
+}
+
+/* Input e containers */
+.tema-pascoa .copy-link-btn {
+  background: #ffffff;
+  border: 2px solid #ff80ab;
+  color: #5d4037;
+  border-radius: 15px;
+}
+
+/* Rodapé */
+.tema-pascoa footer strong a {
+  color: #8d6e63;
+  border-bottom: 2px dotted #ff80ab;
+}
+
+/* Itens que caem */
+.item-pascoa {
+  transition: transform 0.3s ease;
+}
+
+/* 🎃 TEMA DE HALLOWEEN - SOMBRIO E MÍSTICO */
+.tema-halloween {
+  background: radial-gradient(circle at center, #2c3e50 0%, #000000 100%);
+  color: #f39c12; /* Laranja Abóbora */
+}
+
+/* Títulos com efeito de "Sangue" ou "Venenoso" */
+.tema-halloween h2 {
+  color: #e67e22;
+  text-transform: uppercase;
+  font-family: 'Creepster', cursive, serif; /* Opcional: fonte de terror */
+  text-shadow: 0 0 10px #8e44ad, 0 0 20px #8e44ad; /* Aura Roxa */
+}
+
+/* Botões Estilo Caldeirão */
+.tema-halloween .btn {
+  background: #8e44ad; /* Roxo Místico */
+  color: #fff;
+  border: 2px solid #e67e22;
+  box-shadow: 0 0 15px rgba(142, 68, 173, 0.6);
+  text-shadow: 1px 1px 2px #000;
+  transition: all 0.3s;
+}
+
+.tema-halloween .btn:hover {
+  background: #e67e22;
+  color: #000;
+  box-shadow: 0 0 25px #e67e22;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text y="15">🔪</text></svg>'), auto;
+}
+
+/* Container de links */
+.tema-halloween .copy-link-btn {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px dashed #8e44ad;
+  color: #bdc3c7;
+}
+
+/* Rodapé */
+.tema-halloween footer strong a {
+  color: #e67e22;
+  background: linear-gradient(to right, #8e44ad, #e67e22);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Efeito de névoa no fundo (opcional) */
+.tema-halloween::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* 🔥 TEMA DE SÃO JOÃO - RÚSTICO E QUENTE */
+.tema-sao-joao {
+  background: linear-gradient(180deg, #5d4037 0%, #3e2723 100%);
+  background-attachment: fixed;
+  color: #fff;
+}
+
+/* Títulos com estilo de cordel/madeira */
+.tema-sao-joao h2 {
+  color: #ffeb3b; /* Amarelo milho */
+  text-transform: uppercase;
+  font-weight: 900;
+  text-shadow: 2px 2px 0px #bf360c;
+  border-bottom: 3px dashed #ffeb3b;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+/* Botões Estilo Retalho */
+.tema-sao-joao .btn {
+  background: #bf360c; /* Laranja queimado */
+  color: #fff;
+  border: 2px solid #ffeb3b;
+  border-radius: 0px; /* Quadrado estilo rústico */
+  box-shadow: 4px 4px 0px #3e2723;
+  font-weight: bold;
+}
+
+.tema-sao-joao .btn:hover {
+  background: #ffeb3b;
+  color: #bf360c;
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px #3e2723;
+}
+
+/* Container de link */
+.tema-sao-joao .copy-link-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #4caf50;
+  color: #fff;
+}
+
+/* Bandeirinha (CSS dinâmico) */
+.bandeirinha-junina {
+  width: 15px;
+  height: 20px;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 80%, 0% 100%);
+}
+
+/* Rodapé */
+.tema-sao-joao footer strong a {
+  color: #ffeb3b;
+  text-decoration: underline wavy #bf360c;
+}
