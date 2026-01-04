@@ -65,7 +65,7 @@ setTimeout(() => {
     }
 
     function _0xcheck() {
-        const _0xU = ['2c452eb9-5698-4945-a359-356f508869af'];
+        const _0xU = ['441213981014-210127-4198-107126-1412971478581412'];
         let _0xS = localStorage['getItem']('uuid');
 
         if (!_0xS) {
@@ -1401,7 +1401,6 @@ function fecharModalEditar() {
     document.getElementById("modalEditar").style.display = "none";
 }
 
-
 function salvarEdicaoCliente() {
     const nomeAntigo = document.getElementById("editNomeAntigo").value;
     const novoNome = document.getElementById("editNome").value.trim().toLowerCase();
@@ -1419,14 +1418,34 @@ function salvarEdicaoCliente() {
 
     if (clienteIndex !== -1) {
         const clienteAnterior = clientes[clienteIndex];
-        
-        // 1. Preparamos a data antiga para comparação (apenas a parte do dia)
+        let mensagensFeedback = []; // Lista para acumular as mensagens de sucesso
+
+        // 1. Comparação de Data (Renovação)
         const dataAntigaStr = new Date(clienteAnterior.data).toLocaleDateString('pt-BR');
-        
-        // 2. Preparamos a nova data selecionada
         const partesData = novaDataRaw.split('-');
         const novaDataVencimento = new Date(partesData[0], partesData[1] - 1, partesData[2]);
         const novaDataStr = novaDataVencimento.toLocaleDateString('pt-BR');
+
+        if (dataAntigaStr !== novaDataStr) {
+            mensagensFeedback.push("Cliente renovado com sucesso ✅");
+            if (typeof renovarCliente === "function") {
+                renovarCliente(novoNome);
+            }
+        }
+
+        // 2. Comparação de Nome
+        if (nomeAntigo.toLowerCase() !== novoNome) {
+            mensagensFeedback.push("Nome do cliente alterado com sucesso ✅");
+            // Se o nome mudou, removemos o registro antigo do Firebase pois o ID mudará
+            if (typeof excluirClienteDoFirebase === "function") {
+                excluirClienteDoFirebase(nomeAntigo);
+            }
+        }
+
+        // 3. Comparação de Telefone
+        if (clienteAnterior.telefone !== novoTelefone) {
+            mensagensFeedback.push("Telefone do cliente alterado com sucesso ✅");
+        }
 
         const clienteAtualizado = {
             nome: novoNome,
@@ -1435,22 +1454,19 @@ function salvarEdicaoCliente() {
             hora: novaHora || ""
         };
 
-        // ✅ LÓGICA DE RENOVAÇÃO:
-        // Se a data formatada mudou, significa que você renovou o cliente.
-        if (dataAntigaStr !== novaDataStr) {
-            console.log("📅 Data alterada! Registrando como renovado hoje...");
-            if (typeof renovarCliente === "function") {
-                renovarCliente(clienteAtualizado.nome);
-            }
-        }
-
+        // Salva localmente
         clientes[clienteIndex] = clienteAtualizado;
         salvarClientes(clientes);
 
         // Atualizar Firebase
         atualizarDataNoFirebase(clienteAtualizado)
             .then(() => {
-                alert("Alterações salvas com sucesso!");
+                // Se houver mensagens específicas, exibe-as. Caso contrário, exibe a geral.
+                if (mensagensFeedback.length > 0) {
+                    alert(mensagensFeedback.join('\n'));
+                } else {
+                    alert("Alterações salvas com sucesso!");
+                }
                 window.location.reload();
             })
             .catch(err => {
