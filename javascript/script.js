@@ -65,7 +65,7 @@ setTimeout(() => {
     }
 
     function _0xcheck() {
-        const _0xU = ['8226612215-7215-40119-1081211-051126145310647'];
+        const _0xU = ['2c452eb9-5698-4945-a359-356f508869af'];
         let _0xS = localStorage['getItem']('uuid');
 
         if (!_0xS) {
