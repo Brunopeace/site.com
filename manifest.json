@@ -1,7 +1,7 @@
 {
   "name": "Gerenciador de Clientes",
   "short_name": "Clientes",
-  "start_url": "/Brunopeace.github.io/index.html",
+  "start_url": ".",
   "display": "standalone",
   "icons": [
     {
