@@ -4,7 +4,7 @@
 self.addEventListener('install', (event) => {
   self.skipWaiting(); // força ativação imediata
 
-  const CACHE_NAME = 'gerenciador-de-clientes-v5';
+  const CACHE_NAME = 'gerenciador-de-clientes-v6';
   const urlsToCache = [
       '/',
       '/index.html',
